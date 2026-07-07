@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
 import { LoginPage } from "@/components/LoginPage";
@@ -24,11 +24,37 @@ export default function Page() {
 }
 
 function LeadLaunchApp() {
-  const { loading, quota, signOutUser, user } = useAuth();
+  const { getIdToken, loading, quota, signOutUser, user } = useAuth();
   const [phase, setPhase] = useState(1);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [audits, setAudits] = useState<Record<string, AuditResult>>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+
+    let cancelled = false;
+
+    async function loadSavedLeads() {
+      try {
+        const token = await getIdToken();
+        const res = await fetch("/api/leads", {
+          headers: { authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? "Unable to load saved leads.");
+        if (!cancelled && Array.isArray(data.leads)) setLeads(data.leads);
+      } catch {
+        // Keep local/unconfigured environments usable.
+      }
+    }
+
+    loadSavedLeads();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [getIdToken, user]);
 
   const completed = useMemo(() => {
     const s = new Set<number>();

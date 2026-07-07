@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PhaseShell } from "./PhaseShell";
 import { IncompleteState } from "./IncompleteState";
-import { Copy, ExternalLink, Sparkles, Loader2 } from "lucide-react";
+import { Check, Copy, ExternalLink, Save, Sparkles, Loader2 } from "lucide-react";
 import type { RankedLead } from "@/lib/types";
 import { toast } from "sonner";
+import { useAuth } from "@/components/AuthProvider";
 
 const PLATFORMS = [
   { id: "lovable", label: "Lovable", url: "https://lovable.dev" },
@@ -27,32 +27,38 @@ export function Phase4Build({
   onNext: () => void;
   onPrev: () => void;
 }) {
+  const { getIdToken } = useAuth();
   const [platform, setPlatform] = useState("lovable");
-  const [prompt, setPrompt] = useState("");
-  const [typed, setTyped] = useState("");
   const [building, setBuilding] = useState(false);
-
-  useEffect(() => {
-    if (!selected) return;
-    const p = buildPrompt(selected, platform);
-    setPrompt(p);
-  }, [selected, platform]);
-
-  useEffect(() => {
-    setTyped("");
-    if (!prompt) return;
-    let i = 0;
-    const id = setInterval(() => {
-      i += 8;
-      setTyped(prompt.slice(0, i));
-      if (i >= prompt.length) clearInterval(id);
-    }, 12);
-    return () => clearInterval(id);
-  }, [prompt]);
+  const [saving, setSaving] = useState(false);
+  const [savedKey, setSavedKey] = useState("");
+  const prompt = useMemo(() => (selected ? buildPrompt(selected, platform) : ""), [selected, platform]);
 
   function copyPrompt() {
     navigator.clipboard.writeText(prompt);
     toast.success("Prompt copied. Paste into " + PLATFORMS.find((p) => p.id === platform)?.label);
+  }
+
+  async function savePrompt() {
+    if (!selected || !prompt) return;
+
+    setSaving(true);
+    try {
+      const token = await getIdToken();
+      const res = await fetch("/api/prompts", {
+        method: "POST",
+        headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+        body: JSON.stringify({ lead: selected, platform, prompt }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Unable to save prompt.");
+      setSavedKey(`${selected.id}:${platform}`);
+      toast.success("Prompt saved to this lead");
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setSaving(false);
+    }
   }
 
   function openPlatform() {
@@ -112,6 +118,10 @@ export function Phase4Build({
             </SelectContent>
           </Select>
           <Button variant="outline" onClick={openPlatform}><ExternalLink className="h-4 w-4 mr-2" /> Open</Button>
+          <Button variant="outline" onClick={savePrompt} disabled={saving || savedKey === `${selected.id}:${platform}`}>
+            {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : savedKey === `${selected.id}:${platform}` ? <Check className="h-4 w-4 mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+            {savedKey === `${selected.id}:${platform}` ? "Saved" : "Save"}
+          </Button>
           <Button onClick={copyPrompt}><Copy className="h-4 w-4 mr-2" /> Copy prompt</Button>
         </div>
       </div>
@@ -123,7 +133,7 @@ export function Phase4Build({
           </CardHeader>
           <CardContent>
             <pre className="text-xs leading-relaxed whitespace-pre-wrap font-mono bg-muted/30 rounded-md p-4 max-h-[520px] overflow-y-auto border border-border">
-              {typed}<span className="animate-pulse">▌</span>
+              {prompt}
             </pre>
           </CardContent>
         </Card>

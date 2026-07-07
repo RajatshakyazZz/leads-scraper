@@ -17,6 +17,7 @@ Optional — for live data, copy `app/.env.local.example` to `app/.env.local` an
 - `GOOGLE_PAGESPEED_KEY` (PageSpeed audits)
 - Firebase Web config values for Google login
 - Firebase Admin service account for secure quota tracking
+- Firebase Storage bucket for export files
 
 Without them, the app serves the seeded demo dataset of 12 Bandra dentists — perfect for a reel.
 
@@ -31,12 +32,14 @@ Without them, the app serves the seeded demo dataset of 12 Bandra dentists — p
    - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
    - `NEXT_PUBLIC_FIREBASE_APP_ID`
    - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+   - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
 5. Create a Firebase Admin service account and add it to `app/.env.local` as `FIREBASE_SERVICE_ACCOUNT_KEY`.
    Use base64 JSON for the cleanest deploy setup.
-6. Deploy Firestore rules from this folder:
+6. Add `FIREBASE_STORAGE_BUCKET` to `app/.env.local`. It is usually the same value as `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`.
+7. Deploy Firestore and Storage rules from this folder:
 
 ```bash
-firebase deploy --only firestore:rules
+firebase deploy --only firestore:rules,storage
 ```
 
 Free quota is controlled on the server with Firestore transactions. Default values:
@@ -45,6 +48,11 @@ Free quota is controlled on the server with Firestore transactions. Default valu
 - `SCRAPE_RATE_LIMIT_WINDOW_SECONDS=60`
 
 To increase one user's limit, edit their Firestore document at `users/{uid}` and set `leadLimit` to the new number.
+
+Saved data:
+- User leads are stored in Firestore at `users/{uid}/leads/{leadId}`.
+- Generated prompts are stored in Firestore at `users/{uid}/prompts/{promptId}`.
+- CSV exports are downloaded by the browser and also saved to Firebase Storage at `users/{uid}/exports/*.csv` when `FIREBASE_STORAGE_BUCKET` is configured.
 
 ## Run the skill
 

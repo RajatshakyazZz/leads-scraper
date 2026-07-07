@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PhaseShell } from "./PhaseShell";
-import { Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail, ShieldCheck } from "lucide-react";
+import { Download, Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail, ShieldCheck } from "lucide-react";
 import type { Lead, ScrapeInput } from "@/lib/types";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
@@ -33,6 +33,7 @@ export function Phase1Scrape({
   const { getIdToken, quota, updateQuota } = useAuth();
   const [input, setInput] = useState<ScrapeInput>({ niche: "Dentist", city: "Bandra, Mumbai", count: 12 });
   const [loading, setLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
   const remaining = quota?.remaining ?? 0;
   const maxCount = Math.max(1, Math.min(25, remaining || 1));
@@ -78,6 +79,34 @@ export function Phase1Scrape({
       toast.error((e as Error).message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function exportCsv() {
+    setExporting(true);
+    try {
+      const token = await getIdToken();
+      const res = await fetch("/api/export/leads", {
+        headers: { authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error ?? "Export failed");
+      }
+
+      const csv = await res.blob();
+      const url = URL.createObjectURL(csv);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "lead-to-launch-leads.csv";
+      link.click();
+      URL.revokeObjectURL(url);
+      toast.success("CSV exported");
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setExporting(false);
     }
   }
 
@@ -138,8 +167,12 @@ export function Phase1Scrape({
       </div>
 
       <Card className="mt-4">
-        <CardHeader>
-          <CardTitle>Results</CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between gap-3">
+          <CardTitle>Saved leads</CardTitle>
+          <Button size="sm" variant="outline" onClick={exportCsv} disabled={exporting || leads.length === 0}>
+            {exporting ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Download className="h-3.5 w-3.5 mr-1.5" />}
+            Export CSV
+          </Button>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -197,7 +230,7 @@ export function Phase1Scrape({
               </TableBody>
             </Table>
             {leads.length === 0 && !loading && (
-              <div className="text-center py-12 text-sm text-muted-foreground">Run a scrape to populate leads</div>
+              <div className="text-center py-12 text-sm text-muted-foreground">Run a scrape to save leads to your account</div>
             )}
           </div>
         </CardContent>

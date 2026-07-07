@@ -4,6 +4,7 @@ import path from "node:path";
 import type { Lead, ScrapeInput } from "@/lib/types";
 import { AuthRequestError, verifyRequestUser } from "@/lib/firebase-admin";
 import { refundUnusedLeads, reserveLeadsForScrape, ScrapeAccessError } from "@/lib/quota";
+import { saveScrapedLeads } from "@/lib/user-data";
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN;
 const APIFY_ACTOR = process.env.APIFY_ACTOR ?? "compass~crawler-google-places";
@@ -76,8 +77,9 @@ export async function POST(req: Request) {
   if (!APIFY_TOKEN) {
     const { leads } = await loadSeed();
     const sliced = leads.slice(0, Math.max(1, Math.min(allowedInput.count, leads.length)));
+    const savedLeads = await saveScrapedLeads(decoded.uid, sliced, allowedInput, "seed");
     const refundedQuota = await refundUnusedLeads(decoded.uid, reservation.reserved - sliced.length);
-    return NextResponse.json({ source: "seed", leads: sliced, quota: refundedQuota ?? reservation.quota });
+    return NextResponse.json({ source: "seed", leads: savedLeads, quota: refundedQuota ?? reservation.quota });
   }
 
   try {
@@ -113,12 +115,14 @@ export async function POST(req: Request) {
       photosCount: typeof it.imagesCount === "number" ? (it.imagesCount as number) : undefined,
     }));
 
+    const savedLeads = await saveScrapedLeads(decoded.uid, leads, allowedInput, "apify");
     const refundedQuota = await refundUnusedLeads(decoded.uid, reservation.reserved - leads.length);
-    return NextResponse.json({ source: "apify", leads, quota: refundedQuota ?? reservation.quota });
+    return NextResponse.json({ source: "apify", leads: savedLeads, quota: refundedQuota ?? reservation.quota });
   } catch (e) {
     const { leads } = await loadSeed();
     const sliced = leads.slice(0, allowedInput.count);
+    const savedLeads = await saveScrapedLeads(decoded.uid, sliced, allowedInput, "seed-fallback");
     const refundedQuota = await refundUnusedLeads(decoded.uid, reservation.reserved - sliced.length);
-    return NextResponse.json({ source: "seed-fallback", error: (e as Error).message, leads: sliced, quota: refundedQuota ?? reservation.quota });
+    return NextResponse.json({ source: "seed-fallback", error: (e as Error).message, leads: savedLeads, quota: refundedQuota ?? reservation.quota });
   }
 }

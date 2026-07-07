@@ -1,5 +1,6 @@
 export type Lead = {
   id: string;
+  sourceLeadId?: string;
   name: string;
   category: string;
   address: string;
@@ -14,6 +15,8 @@ export type Lead = {
   lng: number;
   photosCount?: number;
   yearsInBusiness?: number;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type AuditResult = {
@@ -63,3 +66,13 @@ export type AccountProfile = {
 
 export type OutreachChannel = "whatsapp" | "email" | "instagram";
 export type OutreachLanguage = "english" | "hinglish";
+
+export type SavedPrompt = {
+  id: string;
+  leadId: string;
+  leadName: string;
+  platform: string;
+  prompt: string;
+  createdAt?: string;
+  updatedAt?: string;
+};

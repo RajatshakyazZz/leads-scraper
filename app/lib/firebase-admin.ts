@@ -3,6 +3,7 @@ import "server-only";
 import { cert, getApps, initializeApp, applicationDefault } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import { getStorage } from "firebase-admin/storage";
 
 type ServiceAccountShape = {
   project_id?: string;
@@ -60,12 +61,14 @@ function getAdminApp() {
     return initializeApp({
       credential: cert(serviceAccount),
       projectId: serviceAccount.projectId,
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET ?? process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
     });
   }
 
   return initializeApp({
     credential: applicationDefault(),
     projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET ?? process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   });
 }
 
@@ -75,6 +78,10 @@ export function getAdminAuth() {
 
 export function getAdminDb() {
   return getFirestore(getAdminApp());
+}
+
+export function getAdminStorageBucket(bucketName?: string) {
+  return getStorage(getAdminApp()).bucket(bucketName);
 }
 
 export async function verifyRequestUser(req: Request) {
