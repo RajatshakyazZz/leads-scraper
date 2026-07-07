@@ -1,0 +1,108 @@
+import "server-only";
+
+import { cert, getApps, initializeApp, applicationDefault } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
+
+type ServiceAccountShape = {
+  project_id?: string;
+  projectId?: string;
+  client_email?: string;
+  clientEmail?: string;
+  private_key?: string;
+  privateKey?: string;
+};
+
+function normalizePrivateKey(value?: string) {
+  return value?.replace(/\\n/g, "\n");
+}
+
+function readServiceAccountFromJson() {
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_KEY?.trim();
+  if (!raw) return null;
+
+  const json = raw.startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf-8");
+  const parsed = JSON.parse(json) as ServiceAccountShape;
+
+  return {
+    projectId: parsed.project_id ?? parsed.projectId,
+    clientEmail: parsed.client_email ?? parsed.clientEmail,
+    privateKey: normalizePrivateKey(parsed.private_key ?? parsed.privateKey),
+  };
+}
+
+function readServiceAccountFromParts() {
+  if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_CLIENT_EMAIL || !process.env.FIREBASE_PRIVATE_KEY) {
+    return null;
+  }
+
+  return {
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: normalizePrivateKey(process.env.FIREBASE_PRIVATE_KEY),
+  };
+}
+
+export function hasFirebaseAdminConfig() {
+  return Boolean(
+    process.env.FIREBASE_SERVICE_ACCOUNT_KEY ||
+      (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) ||
+      process.env.GOOGLE_APPLICATION_CREDENTIALS,
+  );
+}
+
+function getAdminApp() {
+  const existing = getApps()[0];
+  if (existing) return existing;
+
+  const serviceAccount = readServiceAccountFromJson() ?? readServiceAccountFromParts();
+  if (serviceAccount) {
+    return initializeApp({
+      credential: cert(serviceAccount),
+      projectId: serviceAccount.projectId,
+    });
+  }
+
+  return initializeApp({
+    credential: applicationDefault(),
+    projectId: process.env.FIREBASE_PROJECT_ID,
+  });
+}
+
+export function getAdminAuth() {
+  return getAuth(getAdminApp());
+}
+
+export function getAdminDb() {
+  return getFirestore(getAdminApp());
+}
+
+export async function verifyRequestUser(req: Request) {
+  if (!hasFirebaseAdminConfig()) {
+    throw new AuthRequestError("FIREBASE_NOT_CONFIGURED", "Firebase backend is not configured.", 503);
+  }
+
+  const header = req.headers.get("authorization") ?? "";
+  const [scheme, token] = header.split(" ");
+
+  if (scheme !== "Bearer" || !token) {
+    throw new AuthRequestError("AUTH_REQUIRED", "Sign in with Google before scraping leads.", 401);
+  }
+
+  try {
+    return await getAdminAuth().verifyIdToken(token);
+  } catch {
+    throw new AuthRequestError("INVALID_AUTH_TOKEN", "Your login session expired. Sign in again.", 401);
+  }
+}
+
+export class AuthRequestError extends Error {
+  constructor(
+    public code: "AUTH_REQUIRED" | "INVALID_AUTH_TOKEN" | "FIREBASE_NOT_CONFIGURED",
+    message: string,
+    public status: number,
+  ) {
+    super(message);
+    this.name = "AuthRequestError";
+  }
+}

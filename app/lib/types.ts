@@ -48,5 +48,18 @@ export type ScrapeInput = {
   count: number;
 };
 
+export type AccountQuota = {
+  leadLimit: number;
+  leadsUsed: number;
+  remaining: number;
+};
+
+export type AccountProfile = {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+};
+
 export type OutreachChannel = "whatsapp" | "email" | "instagram";
 export type OutreachLanguage = "english" | "hinglish";

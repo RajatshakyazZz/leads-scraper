@@ -2,9 +2,12 @@ import { NextResponse } from "next/server";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { Lead, ScrapeInput } from "@/lib/types";
+import { AuthRequestError, verifyRequestUser } from "@/lib/firebase-admin";
+import { refundUnusedLeads, reserveLeadsForScrape, ScrapeAccessError } from "@/lib/quota";
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN;
 const APIFY_ACTOR = process.env.APIFY_ACTOR ?? "compass~crawler-google-places";
+export const runtime = "nodejs";
 
 async function loadSeed(): Promise<{ leads: Lead[] }> {
   const p = path.join(process.cwd(), "data", "leads-seed.json");
@@ -13,14 +16,68 @@ async function loadSeed(): Promise<{ leads: Lead[] }> {
   return { leads: json.leads as Lead[] };
 }
 
-export async function POST(req: Request) {
-  const input = (await req.json()) as ScrapeInput;
+function cleanText(value: unknown, maxLength: number) {
+  return String(value ?? "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, maxLength);
+}
 
-  // No token = serve cached seed (matches user's input where possible)
+function parseScrapeInput(value: unknown): ScrapeInput {
+  const raw = typeof value === "object" && value !== null ? (value as Record<string, unknown>) : {};
+  const niche = cleanText(raw.niche, 80);
+  const city = cleanText(raw.city, 120);
+  const count = Math.max(1, Math.min(25, Math.floor(Number(raw.count) || 1)));
+
+  if (!niche || !city) {
+    throw new Error("Niche and location are required.");
+  }
+
+  return { niche, city, count };
+}
+
+function accessErrorResponse(e: ScrapeAccessError) {
+  const headers = e.retryAfterSeconds ? { "Retry-After": String(e.retryAfterSeconds) } : undefined;
+  return NextResponse.json(
+    { code: e.code, error: e.message, quota: e.quota, retryAfterSeconds: e.retryAfterSeconds },
+    { status: e.status, headers },
+  );
+}
+
+export async function POST(req: Request) {
+  let input: ScrapeInput;
+  try {
+    input = parseScrapeInput(await req.json());
+  } catch (e) {
+    return NextResponse.json({ code: "BAD_INPUT", error: (e as Error).message }, { status: 400 });
+  }
+
+  let decoded;
+  try {
+    decoded = await verifyRequestUser(req);
+  } catch (e) {
+    if (e instanceof AuthRequestError) {
+      return NextResponse.json({ code: e.code, error: e.message }, { status: e.status });
+    }
+    return NextResponse.json({ code: "AUTH_ERROR", error: "Unable to verify login." }, { status: 401 });
+  }
+
+  let reservation;
+  try {
+    reservation = await reserveLeadsForScrape(decoded, input.count);
+  } catch (e) {
+    if (e instanceof ScrapeAccessError) return accessErrorResponse(e);
+    return NextResponse.json({ code: "QUOTA_ERROR", error: "Unable to reserve lead quota." }, { status: 500 });
+  }
+
+  const allowedInput = { ...input, count: reservation.reserved };
+
+  // No Apify token = serve cached seed data after quota has been reserved.
   if (!APIFY_TOKEN) {
     const { leads } = await loadSeed();
-    const sliced = leads.slice(0, Math.max(1, Math.min(input.count, leads.length)));
-    return NextResponse.json({ source: "seed", leads: sliced });
+    const sliced = leads.slice(0, Math.max(1, Math.min(allowedInput.count, leads.length)));
+    const refundedQuota = await refundUnusedLeads(decoded.uid, reservation.reserved - sliced.length);
+    return NextResponse.json({ source: "seed", leads: sliced, quota: refundedQuota ?? reservation.quota });
   }
 
   try {
@@ -30,8 +87,8 @@ export async function POST(req: Request) {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          searchStringsArray: [`${input.niche} in ${input.city}`],
-          maxCrawledPlacesPerSearch: input.count,
+          searchStringsArray: [`${allowedInput.niche} in ${allowedInput.city}`],
+          maxCrawledPlacesPerSearch: allowedInput.count,
           language: "en",
         }),
       },
@@ -39,12 +96,12 @@ export async function POST(req: Request) {
     if (!runRes.ok) throw new Error(`Apify ${runRes.status}`);
     const items = (await runRes.json()) as Array<Record<string, unknown>>;
 
-    const leads: Lead[] = items.slice(0, input.count).map((it, i) => ({
+    const leads: Lead[] = items.slice(0, allowedInput.count).map((it, i) => ({
       id: `live-${String(i + 1).padStart(2, "0")}`,
       name: String(it.title ?? it.name ?? "Unknown"),
-      category: String(it.categoryName ?? input.niche),
+      category: String(it.categoryName ?? allowedInput.niche),
       address: String(it.address ?? ""),
-      city: input.city,
+      city: allowedInput.city,
       phone: it.phone ? String(it.phone) : undefined,
       whatsapp: it.phone ? String(it.phone) : undefined,
       email: undefined,
@@ -56,9 +113,12 @@ export async function POST(req: Request) {
       photosCount: typeof it.imagesCount === "number" ? (it.imagesCount as number) : undefined,
     }));
 
-    return NextResponse.json({ source: "apify", leads });
+    const refundedQuota = await refundUnusedLeads(decoded.uid, reservation.reserved - leads.length);
+    return NextResponse.json({ source: "apify", leads, quota: refundedQuota ?? reservation.quota });
   } catch (e) {
     const { leads } = await loadSeed();
-    return NextResponse.json({ source: "seed-fallback", error: (e as Error).message, leads: leads.slice(0, input.count) });
+    const sliced = leads.slice(0, allowedInput.count);
+    const refundedQuota = await refundUnusedLeads(decoded.uid, reservation.reserved - sliced.length);
+    return NextResponse.json({ source: "seed-fallback", error: (e as Error).message, leads: sliced, quota: refundedQuota ?? reservation.quota });
   }
 }

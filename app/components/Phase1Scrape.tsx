@@ -5,16 +5,19 @@ import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PhaseShell } from "./PhaseShell";
-import { Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail } from "lucide-react";
+import { Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail, ShieldCheck } from "lucide-react";
 import type { Lead, ScrapeInput } from "@/lib/types";
 import { toast } from "sonner";
+import { useAuth } from "@/components/AuthProvider";
 
 const LeadMap = dynamic(() => import("./LeadMap"), { ssr: false });
+const WHATSAPP_LIMIT_URL = `https://wa.me/917895317940?text=${encodeURIComponent("Hi, I want to increase my Lead to Launch leads limit.")}`;
 
 export function Phase1Scrape({
   leads,
@@ -27,26 +30,50 @@ export function Phase1Scrape({
   onNext: () => void;
   onPrev?: () => void;
 }) {
+  const { getIdToken, quota, updateQuota } = useAuth();
   const [input, setInput] = useState<ScrapeInput>({ niche: "Dentist", city: "Bandra, Mumbai", count: 12 });
   const [loading, setLoading] = useState(false);
+  const [limitDialogOpen, setLimitDialogOpen] = useState(false);
+  const remaining = quota?.remaining ?? 0;
+  const maxCount = Math.max(1, Math.min(25, remaining || 1));
 
   async function runScrape() {
+    if (remaining <= 0) {
+      setLimitDialogOpen(true);
+      return;
+    }
+
+    const nextInput = {
+      ...input,
+      count: Math.max(1, Math.min(Number(input.count) || 1, maxCount)),
+    };
+
+    if (nextInput.count !== input.count) {
+      setInput(nextInput);
+    }
+
     setLoading(true);
-    setLeads([]);
     try {
+      const token = await getIdToken();
       const res = await fetch("/api/scrape", {
         method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(input),
+        headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+        body: JSON.stringify(nextInput),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Scrape failed");
+      if (data.quota) updateQuota(data.quota);
+      if (!res.ok) {
+        if (data.code === "LEAD_LIMIT_REACHED") setLimitDialogOpen(true);
+        throw new Error(data.error ?? "Scrape failed");
+      }
+
+      setLeads([]);
       // Stagger in for visual drama
       for (let i = 0; i < data.leads.length; i++) {
         await new Promise((r) => setTimeout(r, 80));
         setLeads(data.leads.slice(0, i + 1));
       }
-      toast.success(`${data.leads.length} leads scraped from ${input.city}`);
+      toast.success(`${data.leads.length} leads scraped from ${nextInput.city}`);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -79,11 +106,18 @@ export function Phase1Scrape({
             </div>
             <div className="space-y-2">
               <Label htmlFor="count" className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Count</Label>
-              <Input id="count" type="number" inputMode="numeric" min={1} max={50} value={input.count} onChange={(e) => setInput({ ...input, count: Number(e.target.value) })} className="h-10 text-base font-mono tabular-nums" />
-              <p className="text-[11px] text-muted-foreground">Max 25 for free Apify tier.</p>
+              <Input id="count" type="number" inputMode="numeric" min={1} max={maxCount} value={input.count} onChange={(e) => setInput({ ...input, count: Number(e.target.value) })} className="h-10 text-base font-mono tabular-nums" />
+              <p className="text-[11px] text-muted-foreground">Max {maxCount} available right now.</p>
+            </div>
+            <div className="rounded-md border border-border bg-muted/40 px-3 py-2 flex items-center justify-between gap-3">
+              <div>
+                <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Free account</div>
+                <div className="font-mono text-sm tabular-nums">{remaining}/{quota?.leadLimit ?? 15} leads left</div>
+              </div>
+              <ShieldCheck className="h-4 w-4 text-[color:var(--accent-foreground)]" aria-hidden="true" />
             </div>
             <Button onClick={runScrape} disabled={loading} className="w-full h-11 transition-transform duration-150 active:scale-[0.98]">
-              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Scraping...</> : "Scrape leads"}
+              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Scraping...</> : remaining <= 0 ? "Increase lead limit" : "Scrape leads"}
             </Button>
             <div className="grid grid-cols-3 gap-2 pt-2">
               <Stat label="Found" value={leads.length} />
@@ -168,6 +202,28 @@ export function Phase1Scrape({
           </div>
         </CardContent>
       </Card>
+      <Dialog open={limitDialogOpen} onOpenChange={setLimitDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Free leads finished</DialogTitle>
+            <DialogDescription>
+              Aapka 15 free leads quota complete ho gaya hai. Limit increase karne ke liye WhatsApp par message bhejo.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline" />}>Close</DialogClose>
+            <a
+              href={WHATSAPP_LIMIT_URL}
+              target="_blank"
+              rel="noreferrer"
+              className={buttonVariants({ className: "h-10" })}
+            >
+              <MessageCircle className="h-4 w-4 mr-2" aria-hidden="true" />
+              WhatsApp
+            </a>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PhaseShell>
   );
 }

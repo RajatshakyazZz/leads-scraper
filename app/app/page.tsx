@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import { AuthProvider, useAuth } from "@/components/AuthProvider";
+import { LoginPage } from "@/components/LoginPage";
 import { Stepper } from "@/components/Stepper";
 import { Phase1Scrape } from "@/components/Phase1Scrape";
 import { Phase2Audit } from "@/components/Phase2Audit";
@@ -10,9 +12,19 @@ import { Phase4Build } from "@/components/Phase4Build";
 import { Phase5Outreach } from "@/components/Phase5Outreach";
 import { scoreLead } from "@/lib/scoring";
 import type { Lead, AuditResult } from "@/lib/types";
-import { Sparkles } from "lucide-react";
+import { Loader2, LogOut, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function Page() {
+  return (
+    <AuthProvider>
+      <LeadLaunchApp />
+    </AuthProvider>
+  );
+}
+
+function LeadLaunchApp() {
+  const { loading, quota, signOutUser, user } = useAuth();
   const [phase, setPhase] = useState(1);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [audits, setAudits] = useState<Record<string, AuditResult>>({});
@@ -37,6 +49,21 @@ export default function Page() {
     return scoreLead(lead, audit);
   }, [selectedId, leads, audits]);
 
+  if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center px-4">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+          Loading account
+        </div>
+      </main>
+    );
+  }
+
+  if (!user) {
+    return <LoginPage />;
+  }
+
   return (
     <>
       <a
@@ -56,9 +83,19 @@ export default function Page() {
               <div className="text-[11px] text-muted-foreground leading-tight tracking-wide uppercase mt-1">Scrape · Audit · Rank · Build · Outreach</div>
             </div>
           </div>
-          <div className="hidden sm:flex items-center gap-2 text-[11px] text-muted-foreground tracking-[0.15em] uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent-foreground/60" aria-hidden="true" />
-            Local · private · yours
+          <div className="flex items-center gap-2">
+            {quota && (
+              <div className="hidden sm:block rounded-md border border-border bg-card px-3 py-1.5 text-right">
+                <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Leads left</div>
+                <div className="font-mono text-sm tabular-nums">
+                  {quota.remaining}/{quota.leadLimit}
+                </div>
+              </div>
+            )}
+            <Button variant="outline" size="sm" onClick={signOutUser} aria-label="Sign out">
+              <LogOut className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+              Sign out
+            </Button>
           </div>
         </div>
         <Stepper current={phase} completed={completed} onJump={(n) => setPhase(n)} />
