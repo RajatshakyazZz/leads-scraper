@@ -97,10 +97,15 @@ export async function verifyRequestUser(req: Request) {
   }
 
   try {
-    return await getAdminAuth().verifyIdToken(token);
-  } catch {
-    throw new AuthRequestError("INVALID_AUTH_TOKEN", "Your login session expired. Sign in again.", 401);
-  }
+  return await getAdminAuth().verifyIdToken(token);
+} catch (error) {
+  console.error("verifyIdToken failed:", error);
+
+  throw new AuthRequestError(
+    "INVALID_AUTH_TOKEN",
+    error instanceof Error ? error.message : "Invalid Firebase token",
+    401,
+  );
 }
 
 export class AuthRequestError extends Error {
