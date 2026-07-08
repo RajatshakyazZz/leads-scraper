@@ -98,12 +98,10 @@ export async function verifyRequestUser(req: Request) {
 
   try {
   return await getAdminAuth().verifyIdToken(token);
-} catch (error) {
-  console.error("verifyIdToken failed:", error);
-
+} catch {
   throw new AuthRequestError(
     "INVALID_AUTH_TOKEN",
-    error instanceof Error ? error.message : "Invalid Firebase token",
+    "Your login session expired. Sign in again.",
     401,
   );
 }
