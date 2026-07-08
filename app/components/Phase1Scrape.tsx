@@ -35,11 +35,12 @@ export function Phase1Scrape({
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
-  const remaining = quota?.remaining ?? 0;
-  const maxCount = Math.max(1, Math.min(25, remaining || 1));
+  const DEFAULT_LEAD_LIMIT = 15;
+  const remaining = quota?.remaining ?? DEFAULT_LEAD_LIMIT;
+  const maxCount = Math.max(1, Math.min(25, remaining));
 
   async function runScrape() {
-    if (remaining <= 0) {
+    if (quota && quota.remaining <= 0) {
       setLimitDialogOpen(true);
       return;
     }
@@ -141,12 +142,12 @@ export function Phase1Scrape({
             <div className="rounded-md border border-border bg-muted/40 px-3 py-2 flex items-center justify-between gap-3">
               <div>
                 <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Free account</div>
-                <div className="font-mono text-sm tabular-nums">{remaining}/{quota?.leadLimit ?? 15} leads left</div>
+                <div className="font-mono text-sm tabular-nums">{quota ? remaining : DEFAULT_LEAD_LIMIT}/{quota?.leadLimit ?? DEFAULT_LEAD_LIMIT} leads left</div>
               </div>
               <ShieldCheck className="h-4 w-4 text-[color:var(--accent-foreground)]" aria-hidden="true" />
             </div>
             <Button onClick={runScrape} disabled={loading} className="w-full h-11 transition-transform duration-150 active:scale-[0.98]">
-              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Scraping...</> : remaining <= 0 ? "Increase lead limit" : "Scrape leads"}
+              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Scraping...</> : (quota && quota.remaining <= 0) ? "Increase lead limit" : "Scrape leads"}
             </Button>
             <div className="grid grid-cols-3 gap-2 pt-2">
               <Stat label="Found" value={leads.length} />

@@ -74,6 +74,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await refreshAccountForUser(nextUser);
       } catch (e) {
         setAuthError((e as Error).message);
+        // If quota failed to load (e.g. Firebase Admin not configured),
+        // provide a default so the UI doesn't show 0 remaining.
+        if (!quota) {
+          setQuota({ leadLimit: 15, leadsUsed: 0, remaining: 15 });
+        }
       } finally {
         setLoading(false);
       }
