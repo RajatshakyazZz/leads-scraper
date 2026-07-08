@@ -15,6 +15,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ uid: s
     
     const db = getAdminDb();
     const userRef = db.collection("users").doc(uid);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updates: Record<string, any> = { updatedAt: FieldValue.serverTimestamp() };
 
     switch (action) {

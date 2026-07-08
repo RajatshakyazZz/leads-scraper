@@ -83,6 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(false);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshAccountForUser]);
 
   const signInWithGoogle = useCallback(async () => {

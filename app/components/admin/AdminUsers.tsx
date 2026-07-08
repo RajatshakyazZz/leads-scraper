@@ -14,6 +14,7 @@ import { toast } from "sonner";
 
 export function AdminUsers() {
   const { adminFetch } = useAdmin();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -26,6 +27,7 @@ export function AdminUsers() {
       loadUsers();
     }, 300);
     return () => clearTimeout(delayDebounceFn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   async function loadUsers() {
@@ -34,13 +36,14 @@ export function AdminUsers() {
       const res = await adminFetch(`/api/admin/users?search=${encodeURIComponent(search)}`);
       const data = await res.json();
       if (res.ok) setUsers(data.users);
-    } catch (e) {
+    } catch {
       toast.error("Failed to load users");
     } finally {
       setLoading(false);
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function handleAction(uid: string, action: string, value?: any) {
     if (action === "ban" || action === "delete" || action === "reset_usage") {
       const user = users.find(u => u.uid === uid);
@@ -51,6 +54,7 @@ export function AdminUsers() {
     await executeAction(uid, action, value);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function executeAction(uid: string, action: string, value?: any) {
     setActionLoading(true);
     try {
@@ -71,7 +75,7 @@ export function AdminUsers() {
         const data = await res.json();
         toast.error(data.error || "Action failed");
       }
-    } catch (e) {
+    } catch {
       toast.error("Network error");
     } finally {
       setActionLoading(false);

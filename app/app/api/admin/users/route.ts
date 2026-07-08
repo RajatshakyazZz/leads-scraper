@@ -5,6 +5,7 @@ import { getAdminDb } from "@/lib/firebase-admin";
 
 export const runtime = "nodejs";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function timestampToIso(value: any) {
   if (!value) return undefined;
   if (typeof value.toDate === "function") return value.toDate().toISOString();

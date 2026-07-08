@@ -22,11 +22,13 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const stored = sessionStorage.getItem("admin_token");
     if (stored) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setToken(stored);
       verifyToken(stored);
     } else {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function verifyToken(t: string) {
@@ -63,7 +65,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       }
       toast.error(data.error || "Login failed");
       return false;
-    } catch (e) {
+    } catch {
       toast.error("Network error");
       return false;
     }

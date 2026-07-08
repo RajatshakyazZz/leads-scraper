@@ -32,6 +32,7 @@ export function Phase2Audit({
 
   // Default-select all leads on mount or when leads change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedIds(new Set(leads.map((l) => l.id)));
   }, [leads]);
 

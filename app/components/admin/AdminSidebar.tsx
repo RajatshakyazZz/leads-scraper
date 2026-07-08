@@ -24,7 +24,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
     { id: "logs", label: "Logs", icon: ScrollText },
   ];
 
-  const SidebarContent = () => (
+  const renderSidebarContent = () => (
     <div className="flex flex-col h-full bg-card border-r border-border w-64 shrink-0">
       <div className="p-6 flex items-center gap-2">
         <div className="bg-primary/10 p-1.5 rounded-lg">
@@ -79,14 +79,14 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
 
       {/* Desktop Sidebar */}
       <div className="hidden lg:block h-screen sticky top-0">
-        <SidebarContent />
+        {renderSidebarContent()}
       </div>
 
       {/* Mobile Sidebar Overlay */}
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-background/80 backdrop-blur-sm" onClick={() => setMobileOpen(false)}>
           <div className="fixed inset-y-0 left-0" onClick={e => e.stopPropagation()}>
-            <SidebarContent />
+            {renderSidebarContent()}
           </div>
         </div>
       )}

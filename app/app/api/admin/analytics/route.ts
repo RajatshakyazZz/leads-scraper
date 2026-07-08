@@ -12,7 +12,7 @@ export async function GET(req: Request) {
     
     const usersSnap = await db.collection("users").get();
     
-    let topUsersArray: { uid: string, email: string, leadsUsed: number }[] = [];
+    const topUsersArray: { uid: string, email: string, leadsUsed: number }[] = [];
     
     usersSnap.forEach((doc) => {
       const data = doc.data();

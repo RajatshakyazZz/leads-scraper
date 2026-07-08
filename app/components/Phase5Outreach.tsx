@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PhaseShell } from "./PhaseShell";
@@ -28,6 +27,7 @@ export function Phase5Outreach({
   useEffect(() => {
     if (!selected) return;
     const m = buildOutreach(selected, channel, lang);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMessage(m.first);
     setFollowUp(m.followUp);
   }, [selected, channel, lang]);

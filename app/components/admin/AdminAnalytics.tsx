@@ -9,6 +9,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveCont
 
 export function AdminAnalytics() {
   const { adminFetch } = useAdmin();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -118,6 +119,7 @@ export function AdminAnalytics() {
               {data.topUsers.length === 0 ? (
                 <TableRow><TableCell colSpan={3} className="text-center py-8 text-muted-foreground">No data available.</TableCell></TableRow>
               ) : (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 data.topUsers.map((user: any, idx: number) => (
                   <TableRow key={user.uid}>
                     <TableCell className="text-center font-mono text-muted-foreground">{idx + 1}</TableCell>

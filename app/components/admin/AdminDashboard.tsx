@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAdmin } from "./AdminProvider";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Users, Database, UserPlus, User, Crown, Activity } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
@@ -65,7 +65,7 @@ export function AdminDashboard() {
     <div className="space-y-8 max-w-6xl mx-auto">
       <div>
         <h1 className="font-display text-3xl">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">Overview of your platform's performance.</p>
+        <p className="text-muted-foreground mt-1">Overview of your platform&apos;s performance.</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -111,6 +111,7 @@ export function AdminDashboard() {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                     <RechartsTooltip formatter={(value: any) => [value, "Users"]} />
                   </PieChart>
                 </ResponsiveContainer>

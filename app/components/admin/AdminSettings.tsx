@@ -14,6 +14,7 @@ import { Save, Loader2 } from "lucide-react";
 
 export function AdminSettings() {
   const { adminFetch } = useAdmin();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [settings, setSettings] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -26,7 +27,7 @@ export function AdminSettings() {
         if (res.ok) {
           setSettings(await res.json());
         }
-      } catch (e) {
+      } catch {
         toast.error("Failed to load settings");
       } finally {
         setLoading(false);
@@ -35,7 +36,9 @@ export function AdminSettings() {
     loadSettings();
   }, [adminFetch]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (key: string, value: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setSettings((prev: any) => ({ ...prev, [key]: value }));
     setDirty(true);
   };
@@ -55,7 +58,7 @@ export function AdminSettings() {
       } else {
         toast.error("Failed to save settings");
       }
-    } catch (e) {
+    } catch {
       toast.error("Network error");
     } finally {
       setSaving(false);
