@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,12 +11,14 @@ import { IncompleteState } from "./IncompleteState";
 import { Crown, IndianRupee, MessageCircle, Phone, Mail } from "lucide-react";
 import type { Lead, AuditResult, RankedLead } from "@/lib/types";
 import { scoreLead } from "@/lib/scoring";
+import { useAuth } from "@/components/AuthProvider";
 
 export function Phase3Rank({
   leads,
   audits,
   selectedId,
   setSelectedId,
+  sessionId,
   onNext,
   onPrev,
 }: {
@@ -24,15 +26,48 @@ export function Phase3Rank({
   audits: Record<string, AuditResult>;
   selectedId: string | null;
   setSelectedId: (id: string | null) => void;
+  sessionId?: string | null;
   onNext: () => void;
   onPrev: () => void;
 }) {
+  const { getIdToken } = useAuth();
   const ranked: RankedLead[] = useMemo(() => {
     return leads
       .filter((l) => audits[l.id])
       .map((l) => scoreLead(l, audits[l.id]))
       .sort((a, b) => b.score - a.score);
   }, [leads, audits]);
+
+  useEffect(() => {
+    if (!sessionId || ranked.length === 0) return;
+    
+    async function saveRankings() {
+      try {
+        const token = await getIdToken();
+        const rankingsObj: Record<string, any> = {};
+        ranked.forEach((item, index) => {
+          rankingsObj[item.id] = {
+            score: item.score,
+            scoreBreakdown: item.scoreBreakdown,
+            rank: index + 1
+          };
+        });
+        
+        await fetch(`/api/sessions/${sessionId}/rankings`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ rankings: rankingsObj })
+        });
+      } catch (err) {
+        console.error("Failed to save rankings:", err);
+      }
+    }
+    
+    saveRankings();
+  }, [sessionId, ranked, getIdToken]);
 
   if (ranked.length === 0) {
     return (

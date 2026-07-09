@@ -12,8 +12,10 @@ import { Phase4Build } from "@/components/Phase4Build";
 import { Phase5Outreach } from "@/components/Phase5Outreach";
 import { scoreLead } from "@/lib/scoring";
 import type { Lead, AuditResult } from "@/lib/types";
-import { Loader2, LogOut, Sparkles } from "lucide-react";
+import { Loader2, LogOut, Sparkles, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SessionHistory } from "@/components/SessionHistory";
+import { toast } from "sonner";
 
 export default function Page() {
   return (
@@ -29,6 +31,8 @@ function LeadLaunchApp() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [audits, setAudits] = useState<Record<string, AuditResult>>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -55,6 +59,28 @@ function LeadLaunchApp() {
       cancelled = true;
     };
   }, [getIdToken, user]);
+
+  const handleLoadSession = (
+    loadedSessionId: string,
+    loadedLeads: Lead[],
+    loadedAudits: Record<string, AuditResult>,
+    pipeline?: any
+  ) => {
+    setSessionId(loadedSessionId);
+    setLeads(loadedLeads || []);
+    setAudits(loadedAudits || {});
+    setSelectedId(null);
+    setPhase(1); // Jump to first phase to inspect
+  };
+
+  const handleDuplicateSession = (niche: string, city: string, count: number) => {
+    setLeads([]);
+    setAudits({});
+    setSelectedId(null);
+    setSessionId(null);
+    setPhase(1);
+    toast.success(`Filters reset for: ${niche} in ${city}. You can now start a new scrape.`);
+  };
 
   const completed = useMemo(() => {
     const s = new Set<number>();
@@ -118,6 +144,10 @@ function LeadLaunchApp() {
                 </div>
               </div>
             )}
+            <Button variant="outline" size="sm" onClick={() => setShowHistory(true)} aria-label="View Scraped History">
+              <History className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+              History
+            </Button>
             <Button variant="outline" size="sm" onClick={signOutUser} aria-label="Sign out">
               <LogOut className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
               Sign out
@@ -133,6 +163,8 @@ function LeadLaunchApp() {
               key="p1"
               leads={leads}
               setLeads={setLeads}
+              sessionId={sessionId}
+              setSessionId={setSessionId}
               onNext={() => setPhase(2)}
             />
           )}
@@ -142,6 +174,7 @@ function LeadLaunchApp() {
               leads={leads}
               audits={audits}
               setAudits={setAudits}
+              sessionId={sessionId}
               onNext={() => setPhase(3)}
               onPrev={() => setPhase(1)}
             />
@@ -153,6 +186,7 @@ function LeadLaunchApp() {
               audits={audits}
               selectedId={selectedId}
               setSelectedId={setSelectedId}
+              sessionId={sessionId}
               onNext={() => setPhase(4)}
               onPrev={() => setPhase(2)}
             />
@@ -161,6 +195,7 @@ function LeadLaunchApp() {
             <Phase4Build
               key="p4"
               selected={selectedRanked}
+              sessionId={sessionId}
               onNext={() => setPhase(5)}
               onPrev={() => setPhase(3)}
             />
@@ -169,11 +204,23 @@ function LeadLaunchApp() {
             <Phase5Outreach
               key="p5"
               selected={selectedRanked}
+              sessionId={sessionId}
               onPrev={() => setPhase(4)}
             />
           )}
         </AnimatePresence>
       </main>
+
+      <AnimatePresence>
+        {showHistory && (
+          <SessionHistory
+            onClose={() => setShowHistory(false)}
+            onLoadSession={handleLoadSession}
+            currentSessionId={sessionId}
+            onDuplicateSession={handleDuplicateSession}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

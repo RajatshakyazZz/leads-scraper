@@ -161,50 +161,431 @@ function escapeCsv(value: unknown) {
   return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 }
 
-export function leadsToCsv(leads: Lead[]) {
-  const headers: Array<keyof Lead | "mapsUrl"> = [
-    "name",
-    "category",
-    "address",
-    "city",
-    "phone",
-    "whatsapp",
-    "email",
-    "website",
-    "rating",
-    "reviewsCount",
-    "lat",
-    "lng",
-    "photosCount",
-    "createdAt",
-    "mapsUrl",
+export function leadsToCsv(leads: Lead[], audits?: Record<string, any>, rankings?: Record<string, any>, builds?: Record<string, any>, outreach?: Record<string, any>, metadata?: Record<string, any>) {
+  const headers = [
+    "Session ID",
+    "Search Niche",
+    "Search City",
+    "Business Name",
+    "Category",
+    "Address",
+    "City",
+    "Phone",
+    "WhatsApp",
+    "Email",
+    "Website",
+    "Rating",
+    "Reviews Count",
+    "Latitude",
+    "Longitude",
+    "Google Maps URL",
+    "Source",
+    "Scraped At",
+    "PageSpeed Score",
+    "Mobile Friendly",
+    "HTTPS",
+    "Load Time (ms)",
+    "Gaps Analysis",
+    "Est. Lost Revenue/Month",
+    "Rank Score",
+    "Rank Position",
+    "Build Platform",
+    "Build Prompt",
+    "Outreach Channel",
+    "Outreach Language",
+    "Outreach Status",
+    "Outreach Subject",
+    "Outreach Body"
   ];
 
   const rows = leads.map((lead) => {
-    const record: Record<string, unknown> = {};
-    for (const field of LEAD_FIELDS) record[field] = lead[field];
-    record.createdAt = lead.createdAt;
-    record.mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lead.name} ${lead.address}`)}`;
-    return headers.map((header) => escapeCsv(record[header])).join(",");
+    const leadId = lead.id;
+    const audit = audits?.[leadId] || {};
+    const rank = rankings?.[leadId] || {};
+    const build = builds?.[leadId] || {};
+    const outr = outreach?.[leadId] || {};
+
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lead.name} ${lead.address}`)}`;
+
+    const fields = [
+      metadata?.sessionId || (lead as any).sessionId || "",
+      metadata?.niche || "",
+      metadata?.city || "",
+      lead.name,
+      lead.category,
+      lead.address,
+      lead.city,
+      lead.phone || "",
+      lead.whatsapp || "",
+      lead.email || "",
+      lead.website || "",
+      lead.rating !== undefined ? lead.rating : "",
+      lead.reviewsCount !== undefined ? lead.reviewsCount : "",
+      lead.lat,
+      lead.lng,
+      mapsUrl,
+      (lead as any).source || "seed",
+      lead.createdAt || "",
+      audit.pageSpeedScore !== undefined ? audit.pageSpeedScore : "",
+      audit.mobileFriendly !== undefined ? (audit.mobileFriendly ? "Yes" : "No") : "",
+      audit.https !== undefined ? (audit.https ? "Yes" : "No") : "",
+      audit.loadTimeMs !== undefined ? audit.loadTimeMs : "",
+      audit.gaps ? audit.gaps.join(" | ") : "",
+      audit.estLostRevenuePerMonth !== undefined ? audit.estLostRevenuePerMonth : "",
+      rank.score !== undefined ? rank.score : "",
+      rank.rank !== undefined ? rank.rank : "",
+      build.platform || "",
+      build.prompt || "",
+      outr.channel || "",
+      outr.language || "",
+      outr.status || "",
+      outr.subject || "",
+      outr.body || ""
+    ];
+
+    return fields.map((f) => escapeCsv(f)).join(",");
   });
 
   return `${headers.join(",")}\n${rows.join("\n")}\n`;
 }
 
 export async function uploadCsvExport(uid: string, csv: string) {
-  const bucketName = process.env.FIREBASE_STORAGE_BUCKET ?? process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
-  if (!bucketName) return null;
+  try {
+    const bucketName = process.env.FIREBASE_STORAGE_BUCKET ?? process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+    if (!bucketName) return null;
 
-  const date = new Date().toISOString().replace(/[:.]/g, "-");
-  const file = getAdminStorageBucket(bucketName).file(`users/${uid}/exports/leads-${date}.csv`);
+    const date = new Date().toISOString().replace(/[:.]/g, "-");
+    const file = getAdminStorageBucket(bucketName).file(`users/${uid}/exports/leads-${date}.csv`);
 
-  await file.save(csv, {
-    contentType: "text/csv; charset=utf-8",
-    resumable: false,
-    metadata: {
-      cacheControl: "private, max-age=0, no-transform",
-    },
-  });
+    await file.save(csv, {
+      contentType: "text/csv; charset=utf-8",
+      resumable: false,
+      metadata: {
+        cacheControl: "private, max-age=0, no-transform",
+      },
+    });
 
-  return file.name;
+    return file.name;
+  } catch (error) {
+    console.error("Storage upload failed (non-blocking):", error);
+    return null;
+  }
 }
+
+// === Session CRUD & Pipeline Functions ===
+
+import type { ScrapeSession } from "@/lib/types";
+
+function serializeSession(id: string, data: DocumentData): ScrapeSession {
+  return {
+    id,
+    createdAt: timestampToIso(data.createdAt) ?? new Date().toISOString(),
+    updatedAt: timestampToIso(data.updatedAt) ?? new Date().toISOString(),
+    niche: String(data.niche ?? ""),
+    city: String(data.city ?? ""),
+    countRequested: Number(data.countRequested ?? 0),
+    countReceived: Number(data.countReceived ?? 0),
+    source: (data.source as any) ?? "seed",
+    status: (data.status as any) ?? "completed",
+    creditsUsed: Number(data.creditsUsed ?? 0),
+    durationMs: Number(data.durationMs ?? 0),
+    error: data.error,
+    pipeline: {
+      scrapeComplete: !!data.pipeline?.scrapeComplete,
+      auditComplete: !!data.pipeline?.auditComplete,
+      rankComplete: !!data.pipeline?.rankComplete,
+      buildComplete: !!data.pipeline?.buildComplete,
+      outreachComplete: !!data.pipeline?.outreachComplete,
+    }
+  };
+}
+
+export async function createSession(uid: string, session: {
+  niche: string;
+  city: string;
+  countRequested: number;
+  countReceived: number;
+  source: string;
+  status: string;
+  creditsUsed: number;
+  durationMs: number;
+  error?: string;
+  pipeline: {
+    scrapeComplete: boolean;
+    auditComplete: boolean;
+    rankComplete: boolean;
+    buildComplete: boolean;
+    outreachComplete: boolean;
+  };
+}) {
+  const db = getAdminDb();
+  const ref = db.collection("users").doc(uid).collection("sessions").doc();
+  
+  const data = {
+    ...session,
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
+  };
+  
+  await ref.set(data);
+  return {
+    id: ref.id,
+    ...session,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+export async function updateSessionPipeline(uid: string, sessionId: string, stage: "scrapeComplete" | "auditComplete" | "rankComplete" | "buildComplete" | "outreachComplete", value = true) {
+  const db = getAdminDb();
+  const ref = db.collection("users").doc(uid).collection("sessions").doc(sessionId);
+  await ref.update({
+    [`pipeline.${stage}`]: value,
+    updatedAt: FieldValue.serverTimestamp()
+  });
+}
+
+export async function saveSessionLeads(uid: string, sessionId: string, leads: Lead[]) {
+  if (leads.length === 0) return;
+  const db = getAdminDb();
+  const batch = db.batch();
+  
+  for (const lead of leads) {
+    const ref = db.collection("users").doc(uid).collection("sessions").doc(sessionId).collection("leads").doc(lead.id);
+    const data = cleanObject({
+      ...lead,
+      sessionId,
+      createdAt: lead.createdAt ? Timestamp.fromDate(new Date(lead.createdAt)) : FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp()
+    });
+    batch.set(ref, data);
+  }
+  
+  await batch.commit();
+}
+
+export async function saveSessionAudits(uid: string, sessionId: string, audits: Record<string, any>) {
+  const db = getAdminDb();
+  const batch = db.batch();
+  let count = 0;
+  
+  for (const [leadId, audit] of Object.entries(audits)) {
+    if (!audit) continue;
+    const ref = db.collection("users").doc(uid).collection("sessions").doc(sessionId).collection("audits").doc(leadId);
+    batch.set(ref, {
+      ...audit,
+      sessionId,
+      createdAt: FieldValue.serverTimestamp()
+    });
+    count++;
+  }
+  
+  if (count > 0) {
+    await batch.commit();
+    await updateSessionPipeline(uid, sessionId, "auditComplete", true);
+  }
+}
+
+export async function saveSessionRankings(uid: string, sessionId: string, rankings: Record<string, any>) {
+  const db = getAdminDb();
+  const batch = db.batch();
+  let count = 0;
+  
+  for (const [leadId, rank] of Object.entries(rankings)) {
+    if (!rank) continue;
+    const ref = db.collection("users").doc(uid).collection("sessions").doc(sessionId).collection("rankings").doc(leadId);
+    batch.set(ref, {
+      ...rank,
+      sessionId,
+      createdAt: FieldValue.serverTimestamp()
+    });
+    count++;
+  }
+  
+  if (count > 0) {
+    await batch.commit();
+    await updateSessionPipeline(uid, sessionId, "rankComplete", true);
+  }
+}
+
+export async function saveSessionBuild(uid: string, sessionId: string, build: {
+  leadId: string;
+  leadName: string;
+  platform: string;
+  prompt: string;
+  version: number;
+}) {
+  const db = getAdminDb();
+  const ref = db.collection("users").doc(uid).collection("sessions").doc(sessionId).collection("builds").doc(`${build.leadId}-${build.platform}`);
+  
+  const data = {
+    ...build,
+    sessionId,
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp()
+  };
+  
+  await ref.set(data);
+  await updateSessionPipeline(uid, sessionId, "buildComplete", true);
+  return data;
+}
+
+export async function saveSessionOutreach(uid: string, sessionId: string, outreach: {
+  leadId: string;
+  leadName: string;
+  channel: string;
+  language: string;
+  subject?: string;
+  body: string;
+  followUp?: string;
+  status: string;
+}) {
+  const db = getAdminDb();
+  const ref = db.collection("users").doc(uid).collection("sessions").doc(sessionId).collection("outreach").doc(`${outreach.leadId}-${outreach.channel}`);
+  
+  const data = {
+    ...outreach,
+    sessionId,
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp()
+  };
+  
+  await ref.set(data);
+  await updateSessionPipeline(uid, sessionId, "outreachComplete", true);
+  return data;
+}
+
+export async function getUserSessions(uid: string, options: { limit?: number; cursor?: string; search?: string; sort?: string }) {
+  const db = getAdminDb();
+  const limit = options.limit || 20;
+  
+  let query = db.collection("users").doc(uid).collection("sessions") as FirebaseFirestore.Query;
+  
+  // Sort
+  if (options.sort === "oldest") {
+    query = query.orderBy("createdAt", "asc");
+  } else {
+    query = query.orderBy("createdAt", "desc");
+  }
+  
+  if (options.cursor) {
+    const cursorDoc = await db.collection("users").doc(uid).collection("sessions").doc(options.cursor).get();
+    if (cursorDoc.exists) {
+      query = query.startAfter(cursorDoc);
+    }
+  }
+  
+  const snap = await query.get();
+  let sessions = snap.docs.map((doc) => serializeSession(doc.id, doc.data()));
+  
+  // Filter by search string in memory since firestore prefix search is complex
+  if (options.search) {
+    const term = options.search.toLowerCase();
+    sessions = sessions.filter(
+      (s) => s.niche.toLowerCase().includes(term) || s.city.toLowerCase().includes(term)
+    );
+  }
+  
+  const paginated = sessions.slice(0, limit);
+  const nextCursor = sessions.length > limit ? paginated[paginated.length - 1].id : null;
+  
+  return { sessions: paginated, nextCursor };
+}
+
+export async function getSessionDetail(uid: string, sessionId: string) {
+  const db = getAdminDb();
+  const sessionRef = db.collection("users").doc(uid).collection("sessions").doc(sessionId);
+  const doc = await sessionRef.get();
+  
+  if (!doc.exists) return null;
+  const session = serializeSession(doc.id, doc.data()!);
+  
+  // Fetch subcollections
+  const [leadsSnap, auditsSnap, rankingsSnap, buildsSnap, outreachSnap] = await Promise.all([
+    sessionRef.collection("leads").get(),
+    sessionRef.collection("audits").get(),
+    sessionRef.collection("rankings").get(),
+    sessionRef.collection("builds").get(),
+    sessionRef.collection("outreach").get()
+  ]);
+  
+  const leads = leadsSnap.docs.map((d) => serializeLead(d.id, d.data()));
+  
+  const audits: Record<string, any> = {};
+  auditsSnap.docs.forEach((d) => {
+    audits[d.id] = d.data();
+  });
+  
+  const rankings: Record<string, any> = {};
+  rankingsSnap.docs.forEach((d) => {
+    rankings[d.id] = d.data();
+  });
+  
+  const builds: Record<string, any> = {};
+  buildsSnap.docs.forEach((d) => {
+    builds[d.id] = d.data();
+  });
+  
+  const outreach: Record<string, any> = {};
+  outreachSnap.docs.forEach((d) => {
+    outreach[d.id] = d.data();
+  });
+  
+  return {
+    session,
+    leads,
+    audits,
+    rankings,
+    builds,
+    outreach
+  };
+}
+
+async function deleteCollectionDocs(ref: FirebaseFirestore.CollectionReference) {
+  const snap = await ref.get();
+  if (snap.empty) return;
+  
+  const chunks: FirebaseFirestore.DocumentReference[][] = [];
+  let chunk: FirebaseFirestore.DocumentReference[] = [];
+  
+  snap.docs.forEach((doc) => {
+    chunk.push(doc.ref);
+    if (chunk.length >= 400) {
+      chunks.push(chunk);
+      chunk = [];
+    }
+  });
+  if (chunk.length > 0) chunks.push(chunk);
+  
+  const db = getAdminDb();
+  for (const group of chunks) {
+    const batch = db.batch();
+    group.forEach((r) => batch.delete(r));
+    await batch.commit();
+  }
+}
+
+export async function deleteSession(uid: string, sessionId: string) {
+  const db = getAdminDb();
+  const sessionRef = db.collection("users").doc(uid).collection("sessions").doc(sessionId);
+  
+  // Delete all subcollections first
+  await Promise.all([
+    deleteCollectionDocs(sessionRef.collection("leads")),
+    deleteCollectionDocs(sessionRef.collection("audits")),
+    deleteCollectionDocs(sessionRef.collection("rankings")),
+    deleteCollectionDocs(sessionRef.collection("builds")),
+    deleteCollectionDocs(sessionRef.collection("outreach"))
+  ]);
+  
+  await sessionRef.delete();
+  return true;
+}
+
+export async function bulkDeleteSessions(uid: string, sessionIds: string[]) {
+  for (const id of sessionIds) {
+    await deleteSession(uid, id);
+  }
+  return true;
+}
+

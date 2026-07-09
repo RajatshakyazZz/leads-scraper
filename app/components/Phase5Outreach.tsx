@@ -12,13 +12,18 @@ import { MessageCircle, Mail, Camera, Copy, ExternalLink, Sparkles } from "lucid
 import type { RankedLead, OutreachChannel, OutreachLanguage } from "@/lib/types";
 import { toast } from "sonner";
 
+import { useAuth } from "@/components/AuthProvider";
+
 export function Phase5Outreach({
   selected,
+  sessionId,
   onPrev,
 }: {
   selected: RankedLead | null;
+  sessionId?: string | null;
   onPrev: () => void;
 }) {
+  const { getIdToken } = useAuth();
   const [channel, setChannel] = useState<OutreachChannel>("whatsapp");
   const [lang, setLang] = useState<OutreachLanguage>("hinglish");
   const [message, setMessage] = useState("");
@@ -31,6 +36,37 @@ export function Phase5Outreach({
     setMessage(m.first);
     setFollowUp(m.followUp);
   }, [selected, channel, lang]);
+
+  useEffect(() => {
+    if (!selected || !sessionId || !message) return;
+    
+    const timer = setTimeout(async () => {
+      try {
+        const token = await getIdToken();
+        await fetch(`/api/sessions/${sessionId}/outreach`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            leadId: selected.id,
+            leadName: selected.name,
+            channel,
+            language: lang,
+            subject: channel === "email" ? (lang === "hinglish" ? "Aapke business ke liye ek website demo banayi hai" : "Built a website demo for your business") : undefined,
+            body: message,
+            followUp: followUp,
+            status: "draft"
+          })
+        });
+      } catch (err) {
+        console.error("Failed to save outreach draft:", err);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [sessionId, selected, channel, lang, message, followUp, getIdToken]);
 
   function copy(text: string) {
     navigator.clipboard.writeText(text);

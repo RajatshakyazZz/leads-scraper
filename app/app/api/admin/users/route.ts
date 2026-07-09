@@ -32,11 +32,16 @@ export async function GET(req: Request) {
         photoURL: data.photoURL || null,
         plan: data.plan || "free",
         banned: !!data.banned,
+        status: data.status || (data.banned ? "Blocked" : "Active"),
+        adminNotes: data.adminNotes || "",
         leadLimit: data.leadLimit || 15,
         leadsUsed: data.leadsUsed || 0,
+        monthlyQuota: data.monthlyQuota || 0,
+        dailyQuota: data.dailyQuota || 0,
+        customCredits: data.customCredits || 0,
         createdAt: timestampToIso(data.createdAt),
         updatedAt: timestampToIso(data.updatedAt),
-        lastLoginAt: timestampToIso(data.lastLoginAt)
+        lastLoginAt: timestampToIso(data.lastLoginAt) || timestampToIso(data.updatedAt) || timestampToIso(data.createdAt)
       };
     });
 

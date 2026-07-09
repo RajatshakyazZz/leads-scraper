@@ -30,8 +30,21 @@ function readServiceAccountFromJson() {
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT_KEY?.trim();
   if (!raw) return null;
 
-  const json = raw.startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf-8");
-  const parsed = JSON.parse(json) as ServiceAccountShape;
+  let json = "";
+  try {
+    json = raw.startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf-8");
+  } catch (err) {
+    console.error("FIREBASE_SERVICE_ACCOUNT_KEY Base64 decode failed:", err);
+    throw new Error(`Failed to decode base64 service account key: ${(err as Error).message}`);
+  }
+
+  let parsed: ServiceAccountShape;
+  try {
+    parsed = JSON.parse(json) as ServiceAccountShape;
+  } catch (err) {
+    console.error("FIREBASE_SERVICE_ACCOUNT_KEY JSON parse failed. Raw string:", json);
+    throw new Error(`Failed to parse service account JSON: ${(err as Error).message}. Ensure there are no unescaped control characters.`);
+  }
 
   const email = parsed.client_email ?? parsed.clientEmail;
   const correctedEmail = (email && email.startsWith("-adminsdk")) ? `firebase${email}` : email;

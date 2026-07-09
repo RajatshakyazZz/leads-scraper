@@ -12,29 +12,27 @@ import { IncompleteState } from "./IncompleteState";
 import { Loader2, AlertTriangle, IndianRupee, Gauge, Star, Phone, MessageCircle, Globe } from "lucide-react";
 import type { Lead, AuditResult } from "@/lib/types";
 import { toast } from "sonner";
+import { useAuth } from "@/components/AuthProvider";
 
 export function Phase2Audit({
   leads,
   audits,
   setAudits,
+  sessionId,
   onNext,
   onPrev,
 }: {
   leads: Lead[];
   audits: Record<string, AuditResult>;
   setAudits: (a: Record<string, AuditResult>) => void;
+  sessionId?: string | null;
   onNext: () => void;
   onPrev: () => void;
 }) {
+  const { getIdToken } = useAuth();
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-
-  // Default-select all leads on mount or when leads change
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSelectedIds(new Set(leads.map((l) => l.id)));
-  }, [leads]);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(leads.map((l) => l.id)));
 
   const allSelected = leads.length > 0 && selectedIds.size === leads.length;
   const someSelected = selectedIds.size > 0 && !allSelected;
@@ -88,6 +86,22 @@ export function Phase2Audit({
 
         setAudits({ ...all });
         setProgress(Math.round((completed / targets.length) * 100));
+      }
+
+      if (sessionId) {
+        try {
+          const token = await getIdToken();
+          await fetch(`/api/sessions/${sessionId}/audits`, {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ audits: all })
+          });
+        } catch (err) {
+          console.error("Failed to save audits to session:", err);
+        }
       }
 
       toast.success(`Audited ${targets.length} lead${targets.length === 1 ? "" : "s"}`);

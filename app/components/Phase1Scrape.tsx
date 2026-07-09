@@ -22,11 +22,15 @@ const WHATSAPP_LIMIT_URL = `https://wa.me/917895317940?text=${encodeURIComponent
 export function Phase1Scrape({
   leads,
   setLeads,
+  sessionId,
+  setSessionId,
   onNext,
   onPrev,
 }: {
   leads: Lead[];
   setLeads: (l: Lead[]) => void;
+  sessionId?: string | null;
+  setSessionId?: (id: string | null) => void;
   onNext: () => void;
   onPrev?: () => void;
 }) {
@@ -69,6 +73,10 @@ export function Phase1Scrape({
         throw new Error(data.error ?? "Scrape failed");
       }
 
+      if (setSessionId && data.sessionId) {
+        setSessionId(data.sessionId);
+      }
+
       setLeads([]);
       // Stagger in for visual drama
       for (let i = 0; i < data.leads.length; i++) {
@@ -87,7 +95,11 @@ export function Phase1Scrape({
     setExporting(true);
     try {
       const token = await getIdToken();
-      const res = await fetch("/api/export/leads", {
+      let url = "/api/export/leads";
+      if (sessionId) {
+        url += `?sessionId=${sessionId}`;
+      }
+      const res = await fetch(url, {
         headers: { authorization: `Bearer ${token}` },
       });
 
@@ -97,12 +109,12 @@ export function Phase1Scrape({
       }
 
       const csv = await res.blob();
-      const url = URL.createObjectURL(csv);
+      const urlBlob = URL.createObjectURL(csv);
       const link = document.createElement("a");
-      link.href = url;
-      link.download = "lead-to-launch-leads.csv";
+      link.href = urlBlob;
+      link.download = sessionId ? `leads-session-${sessionId}.csv` : "lead-to-launch-leads.csv";
       link.click();
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(urlBlob);
       toast.success("CSV exported");
     } catch (e) {
       toast.error((e as Error).message);

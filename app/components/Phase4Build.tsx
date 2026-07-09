@@ -20,10 +20,12 @@ const PLATFORMS = [
 
 export function Phase4Build({
   selected,
+  sessionId,
   onNext,
   onPrev,
 }: {
   selected: RankedLead | null;
+  sessionId?: string | null;
   onNext: () => void;
   onPrev: () => void;
 }) {
@@ -52,6 +54,25 @@ export function Phase4Build({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Unable to save prompt.");
+
+      if (sessionId) {
+        try {
+          await fetch(`/api/sessions/${sessionId}/builds`, {
+            method: "POST",
+            headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+            body: JSON.stringify({
+              leadId: selected.id,
+              leadName: selected.name,
+              platform,
+              prompt,
+              version: 1
+            }),
+          });
+        } catch (err) {
+          console.error("Failed to save build to session:", err);
+        }
+      }
+
       setSavedKey(`${selected.id}:${platform}`);
       toast.success("Prompt saved to this lead");
     } catch (e) {
