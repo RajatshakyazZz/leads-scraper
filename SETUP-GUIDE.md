@@ -63,7 +63,7 @@ cp .env.local.example .env.local
    ```
    APIFY_TOKEN=apify_api_xxxxxxxxxxxx
    ```
-5. Leave `APIFY_ACTOR` as is — it uses the **Google Maps Scraper** (`compass/crawler-google-places`), no install needed.
+5. Leave `APIFY_ACTOR` as is — it uses the **Google Maps Scraper** (`/crawler-google-placcompasses`), no install needed.
 
 Free tier gives $5/month platform credit. Google Maps scraping costs ~$0.007/lead, so ~500–700 leads/month free. Scraping 12–25 leads per run costs a few cents of credit.
 

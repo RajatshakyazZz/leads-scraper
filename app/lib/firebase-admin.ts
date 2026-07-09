@@ -101,20 +101,37 @@ export async function verifyRequestUser(req: Request) {
   } catch (error) {
     console.error("verifyIdToken failed:", error);
 
+    let tokenAudience = "unknown";
+    try {
+      const parts = token.split(".");
+      if (parts.length === 3) {
+        const payload = JSON.parse(Buffer.from(parts[1], "base64").toString("utf-8"));
+        tokenAudience = payload.aud || "unknown";
+      }
+    } catch {}
+
+    const sa = readServiceAccountFromJson() ?? readServiceAccountFromParts();
+    const clientProj = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "not set";
+    const serverProj = process.env.FIREBASE_PROJECT_ID || "not set";
+    const saProj = sa?.projectId || "not set";
+
+    const detailMsg = `Your login session expired. Sign in again. (Details: Client Project ID = "${clientProj}", Token Audience = "${tokenAudience}", Server Project ID = "${serverProj}", Service Account Project ID = "${saProj}", Error = ${(error as Error).message})`;
+
     throw new AuthRequestError(
       "INVALID_AUTH_TOKEN",
-      "Your login session expired. Sign in again.",
+      detailMsg,
       401,
     );
   }
+}
 
-  export class AuthRequestError extends Error {
-    constructor(
-      public code: "AUTH_REQUIRED" | "INVALID_AUTH_TOKEN" | "FIREBASE_NOT_CONFIGURED",
-      message: string,
-      public status: number,
-    ) {
-      super(message);
-      this.name = "AuthRequestError";
-    }
+export class AuthRequestError extends Error {
+  constructor(
+    public code: "AUTH_REQUIRED" | "INVALID_AUTH_TOKEN" | "FIREBASE_NOT_CONFIGURED",
+    message: string,
+    public status: number,
+  ) {
+    super(message);
+    this.name = "AuthRequestError";
   }
+}
