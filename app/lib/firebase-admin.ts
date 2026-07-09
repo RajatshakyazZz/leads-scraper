@@ -47,8 +47,8 @@ function readServiceAccountFromParts() {
 export function hasFirebaseAdminConfig() {
   return Boolean(
     process.env.FIREBASE_SERVICE_ACCOUNT_KEY ||
-      (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) ||
-      process.env.GOOGLE_APPLICATION_CREDENTIALS,
+    (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) ||
+    process.env.GOOGLE_APPLICATION_CREDENTIALS,
   );
 }
 
@@ -97,22 +97,24 @@ export async function verifyRequestUser(req: Request) {
   }
 
   try {
-  return await getAdminAuth().verifyIdToken(token);
-} catch {
-  throw new AuthRequestError(
-    "INVALID_AUTH_TOKEN",
-    "Your login session expired. Sign in again.",
-    401,
-  );
-}
+    return await getAdminAuth().verifyIdToken(token);
+  } catch (error) {
+    console.error("verifyIdToken failed:", error);
 
-export class AuthRequestError extends Error {
-  constructor(
-    public code: "AUTH_REQUIRED" | "INVALID_AUTH_TOKEN" | "FIREBASE_NOT_CONFIGURED",
-    message: string,
-    public status: number,
-  ) {
-    super(message);
-    this.name = "AuthRequestError";
+    throw new AuthRequestError(
+      "INVALID_AUTH_TOKEN",
+      "Your login session expired. Sign in again.",
+      401,
+    );
   }
-}
+
+  export class AuthRequestError extends Error {
+    constructor(
+      public code: "AUTH_REQUIRED" | "INVALID_AUTH_TOKEN" | "FIREBASE_NOT_CONFIGURED",
+      message: string,
+      public status: number,
+    ) {
+      super(message);
+      this.name = "AuthRequestError";
+    }
+  }
