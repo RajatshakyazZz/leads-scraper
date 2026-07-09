@@ -68,7 +68,8 @@ export async function POST(req: Request) {
     reservation = await reserveLeadsForScrape(decoded, input.count);
   } catch (e) {
     if (e instanceof ScrapeAccessError) return accessErrorResponse(e);
-    return NextResponse.json({ code: "QUOTA_ERROR", error: "Unable to reserve lead quota." }, { status: 500 });
+    console.error("Error in /api/scrape:", e);
+    return NextResponse.json({ code: "QUOTA_ERROR", error: `Unable to reserve lead quota: ${(e as Error).message}` }, { status: 500 });
   }
 
   const allowedInput = { ...input, count: reservation.reserved };

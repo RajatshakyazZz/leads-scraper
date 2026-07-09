@@ -14,6 +14,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ code: e.code, error: e.message }, { status: e.status });
     }
 
-    return NextResponse.json({ code: "LEADS_ERROR", error: "Unable to load saved leads." }, { status: 500 });
+    console.error("Error in /api/leads:", e);
+    return NextResponse.json({ code: "LEADS_ERROR", error: `Unable to load saved leads: ${(e as Error).message}` }, { status: 500 });
   }
 }

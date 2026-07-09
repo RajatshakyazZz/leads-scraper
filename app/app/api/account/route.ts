@@ -14,6 +14,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ code: e.code, error: e.message }, { status: e.status });
     }
 
-    return NextResponse.json({ code: "ACCOUNT_ERROR", error: "Unable to load account quota." }, { status: 500 });
+    console.error("Error in /api/account:", e);
+    return NextResponse.json({ code: "ACCOUNT_ERROR", error: `Unable to load account quota: ${(e as Error).message}` }, { status: 500 });
   }
 }
