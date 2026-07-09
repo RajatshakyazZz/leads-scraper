@@ -25,9 +25,12 @@ function readServiceAccountFromJson() {
   const json = raw.startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf-8");
   const parsed = JSON.parse(json) as ServiceAccountShape;
 
+  const email = parsed.client_email ?? parsed.clientEmail;
+  const correctedEmail = (email && email.startsWith("-adminsdk")) ? `firebase${email}` : email;
+
   return {
     projectId: parsed.project_id ?? parsed.projectId,
-    clientEmail: parsed.client_email ?? parsed.clientEmail,
+    clientEmail: correctedEmail,
     privateKey: normalizePrivateKey(parsed.private_key ?? parsed.privateKey),
   };
 }
@@ -37,9 +40,12 @@ function readServiceAccountFromParts() {
     return null;
   }
 
+  const email = process.env.FIREBASE_CLIENT_EMAIL;
+  const correctedEmail = (email && email.startsWith("-adminsdk")) ? `firebase${email}` : email;
+
   return {
     projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    clientEmail: correctedEmail,
     privateKey: normalizePrivateKey(process.env.FIREBASE_PRIVATE_KEY),
   };
 }
