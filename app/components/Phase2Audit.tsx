@@ -62,19 +62,34 @@ export function Phase2Audit({
     setProgress(0);
     try {
       const all: Record<string, AuditResult> = { ...audits };
-      for (let i = 0; i < targets.length; i++) {
-        const lead = targets[i];
-        const res = await fetch("/api/audit", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ lead }),
-        });
-        const data = await res.json();
-        all[lead.id] = data.audit;
+      const BATCH_SIZE = 5;
+      let completed = 0;
+
+      for (let batchStart = 0; batchStart < targets.length; batchStart += BATCH_SIZE) {
+        const batch = targets.slice(batchStart, batchStart + BATCH_SIZE);
+        const results = await Promise.allSettled(
+          batch.map(async (lead) => {
+            const res = await fetch("/api/audit", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ lead }),
+            });
+            const data = await res.json();
+            return { id: lead.id, audit: data.audit };
+          }),
+        );
+
+        for (const result of results) {
+          if (result.status === "fulfilled") {
+            all[result.value.id] = result.value.audit;
+          }
+          completed++;
+        }
+
         setAudits({ ...all });
-        setProgress(Math.round(((i + 1) / targets.length) * 100));
-        await new Promise((r) => setTimeout(r, 150));
+        setProgress(Math.round((completed / targets.length) * 100));
       }
+
       toast.success(`Audited ${targets.length} lead${targets.length === 1 ? "" : "s"}`);
     } catch (e) {
       toast.error((e as Error).message);
