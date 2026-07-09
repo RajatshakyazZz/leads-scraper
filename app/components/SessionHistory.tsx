@@ -254,7 +254,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-background/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[9999] flex justify-end bg-background/40 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
