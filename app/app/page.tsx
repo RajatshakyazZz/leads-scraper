@@ -63,8 +63,7 @@ function LeadLaunchApp() {
   const handleLoadSession = (
     loadedSessionId: string,
     loadedLeads: Lead[],
-    loadedAudits: Record<string, AuditResult>,
-    pipeline?: any
+    loadedAudits: Record<string, AuditResult>
   ) => {
     setSessionId(loadedSessionId);
     setLeads(loadedLeads || []);
@@ -73,7 +72,7 @@ function LeadLaunchApp() {
     setPhase(1); // Jump to first phase to inspect
   };
 
-  const handleDuplicateSession = (niche: string, city: string, count: number) => {
+  const handleDuplicateSession = (niche: string, city: string) => {
     setLeads([]);
     setAudits({});
     setSelectedId(null);
@@ -124,39 +123,43 @@ function LeadLaunchApp() {
       >
         Skip to content
       </a>
-      <header className="border-b border-border bg-background/80 backdrop-blur sticky top-0 z-30">
+      <header className="border-b border-border/80 bg-background/85 backdrop-blur-md sticky top-0 z-30 shadow-[0_2px_20px_rgba(44,38,32,0.02)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-md bg-primary flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-primary-foreground" strokeWidth={1.5} aria-hidden="true" />
+            <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shadow-accent transition-transform duration-300 hover:rotate-6">
+              <Sparkles className="h-5 w-5 text-primary-foreground" strokeWidth={1.5} aria-hidden="true" />
             </div>
             <div>
-              <div className="font-display text-xl leading-none">Lead <span className="text-muted-foreground">→</span> Launch</div>
-              <div className="text-[11px] text-muted-foreground leading-tight tracking-wide uppercase mt-1">Scrape · Audit · Rank · Build · Outreach</div>
+              <div className="font-display text-2xl tracking-tight leading-none text-foreground font-medium">
+                Lead <span className="text-muted-foreground/60 font-light">→</span> Launch
+              </div>
+              <div className="text-[10px] text-muted-foreground/80 leading-tight tracking-[0.12em] uppercase mt-1.5 font-sans font-medium">
+                Scrape · Audit · Rank · Build · Outreach
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             {quota && (
-              <div className="hidden sm:block rounded-md border border-border bg-card px-3 py-1.5 text-right">
-                <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Leads left</div>
-                <div className="font-mono text-sm tabular-nums">
+              <div className="hidden sm:block rounded-xl border border-border bg-card px-3.5 py-1.5 text-right shadow-premium">
+                <div className="text-[9px] uppercase tracking-[0.16em] text-muted-foreground font-medium">Leads left</div>
+                <div className="font-mono text-sm tabular-nums font-semibold text-foreground mt-0.5">
                   {quota.remaining}/{quota.leadLimit}
                 </div>
               </div>
             )}
             <Button variant="outline" size="sm" onClick={() => setShowHistory(true)} aria-label="View Scraped History">
-              <History className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+              <History className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" aria-hidden="true" />
               History
             </Button>
             <Button variant="outline" size="sm" onClick={signOutUser} aria-label="Sign out">
-              <LogOut className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
+              <LogOut className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" aria-hidden="true" />
               Sign out
             </Button>
           </div>
         </div>
         <Stepper current={phase} completed={completed} onJump={(n) => setPhase(n)} />
       </header>
-      <main id="main" className="pt-6" tabIndex={-1}>
+      <main id="main" className="pt-8" tabIndex={-1}>
         <AnimatePresence mode="wait">
           {phase === 1 && (
             <Phase1Scrape

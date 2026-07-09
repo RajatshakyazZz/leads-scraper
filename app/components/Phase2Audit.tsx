@@ -1,6 +1,5 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -145,48 +144,49 @@ export function Phase2Audit({
       nextDisabled={auditedCount === 0}
       nextLabel="Rank prospects"
     >
-      <div className="grid md:grid-cols-4 gap-3 mb-6">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">Audited</div>
-            <div className="font-display text-3xl tabular-nums mt-2">{auditedCount}<span className="text-muted-foreground/50 text-2xl"> / {leads.length}</span></div>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Card className="rounded-2xl border-border/80 bg-card/85 backdrop-blur-md shadow-premium">
+          <CardContent className="pt-6 pb-6">
+            <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-bold">Audited Prospect Ratio</div>
+            <div className="font-display text-3xl font-medium tabular-nums text-foreground mt-2">{auditedCount}<span className="text-muted-foreground/40 text-xl font-sans"> / {leads.length}</span></div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">No site at all</div>
-            <div className="font-display text-3xl tabular-nums text-[color:var(--destructive)] mt-2">
+        <Card className="rounded-2xl border-border/80 bg-card/85 backdrop-blur-md shadow-premium">
+          <CardContent className="pt-6 pb-6">
+            <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-bold">Offline Businesses</div>
+            <div className="font-display text-3xl font-medium tabular-nums text-rose-500 mt-2">
               {Object.values(audits).filter((a) => !a.hasWebsite).length}
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">Avg PageSpeed</div>
-            <div className="font-display text-3xl tabular-nums mt-2">
+        <Card className="rounded-2xl border-border/80 bg-card/85 backdrop-blur-md shadow-premium">
+          <CardContent className="pt-6 pb-6">
+            <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-bold">Average PageSpeed</div>
+            <div className="font-display text-3xl font-medium tabular-nums text-foreground mt-2">
               {auditedCount ? Math.round(Object.values(audits).reduce((s, a) => s + a.pageSpeedScore, 0) / auditedCount) : 0}
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">Est. ₹ lost / month</div>
-            <div className="font-display text-3xl tabular-nums flex items-center mt-2">
-              <IndianRupee className="h-6 w-6" strokeWidth={1.5} />{totalLost.toLocaleString("en-IN")}
+        <Card className="rounded-2xl border-border/80 bg-card/85 backdrop-blur-md shadow-premium">
+          <CardContent className="pt-6 pb-6">
+            <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-bold">Est. monthly lost revenue</div>
+            <div className="font-display text-3xl font-medium tabular-nums text-foreground flex items-center mt-2">
+              <IndianRupee className="h-6 w-6 text-muted-foreground/60 mr-0.5" strokeWidth={1.5} />{totalLost.toLocaleString("en-IN")}
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 cursor-pointer select-none">
+          <label className="flex items-center gap-2.5 cursor-pointer select-none font-sans text-sm text-foreground">
             <Checkbox
               checked={allSelected}
               onCheckedChange={toggleAll}
               aria-label={allSelected ? "Deselect all leads" : "Select all leads"}
+              className="rounded-lg"
             />
-            <span className="text-sm">
+            <span className="font-medium">
               {selectedIds.size === 0
                 ? "Select leads to audit"
                 : someSelected
@@ -195,12 +195,12 @@ export function Phase2Audit({
             </span>
           </label>
         </div>
-        <div className="flex items-center gap-3">
-          {running && <div className="w-48"><Progress value={progress} /></div>}
+        <div className="flex items-center gap-4">
+          {running && <div className="w-48"><Progress value={progress} className="h-1.5" /></div>}
           <Button
             onClick={runAudit}
             disabled={running || selectedIds.size === 0}
-            className="h-10 px-4"
+            className="h-10 px-4 rounded-xl cursor-pointer"
           >
             {running ? (
               <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Auditing...</>
@@ -211,57 +211,56 @@ export function Phase2Audit({
         </div>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {leads.map((lead, i) => {
           const a = audits[lead.id];
           const isSelected = selectedIds.has(lead.id);
           return (
             <motion.div
               key={lead.id}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.03 }}
+              transition={{ delay: i * 0.02, duration: 0.3 }}
             >
-              <Card className={`h-full transition-colors duration-200 ${isSelected ? "border-primary/30" : "hover:border-primary/20"}`}>
-                <CardHeader className="pb-3">
+              <Card className={`h-full rounded-2xl border-border/80 bg-card/85 backdrop-blur-md shadow-premium transition-all duration-300 ${isSelected ? "ring-1 ring-primary/45 border-primary/20" : "hover:shadow-premium-hover hover:border-primary/25"}`}>
+                <CardHeader className="pb-3 pt-5 px-5">
                   <div className="flex items-start gap-3">
                     <Checkbox
                       checked={isSelected}
                       onCheckedChange={() => toggleOne(lead.id)}
                       aria-label={`Select ${lead.name} for audit`}
-                      className="mt-1"
+                      className="mt-1 rounded-lg"
                     />
                     <div className="flex-1 min-w-0">
-                      <CardTitle className="text-base font-medium leading-snug">{lead.name}</CardTitle>
-                      <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground mt-0.5">{lead.category}</p>
+                      <CardTitle className="text-sm sm:text-base font-medium leading-snug text-foreground truncate">{lead.name}</CardTitle>
+                      <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/80 mt-1 font-semibold">{lead.category}</p>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  {/* Lead summary — always shown */}
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
+                <CardContent className="space-y-4 px-5 pb-5 pt-0">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted-foreground font-sans">
                     <span className="flex items-center gap-1">
-                      <Star className="h-3 w-3 fill-[color:var(--chart-4)] text-[color:var(--chart-4)]" strokeWidth={1.5} />
-                      <span className="font-mono tabular-nums">{lead.rating?.toFixed(1) ?? "—"}</span>
-                      <span className="text-muted-foreground/70">({lead.reviewsCount ?? 0})</span>
+                      <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" strokeWidth={1.5} />
+                      <span className="font-semibold text-foreground">{lead.rating?.toFixed(1) ?? "—"}</span>
+                      <span className="text-muted-foreground/60">({lead.reviewsCount ?? 0})</span>
                     </span>
                     {lead.phone && (
                       <span className="flex items-center gap-1">
-                        <Phone className="h-3 w-3" strokeWidth={1.5} />
-                        <span className="font-mono text-[11px]">{lead.phone.replace(/^\+91 /, "")}</span>
+                        <Phone className="h-3 w-3 text-muted-foreground/50" strokeWidth={1.5} />
+                        <span className="font-mono text-[11px] text-foreground">{lead.phone.replace(/^\+91 /, "")}</span>
                       </span>
                     )}
                     {lead.whatsapp && (
-                      <span className="flex items-center gap-1 text-[color:var(--accent-foreground)]">
-                        <MessageCircle className="h-3 w-3" strokeWidth={1.5} /> WA
+                      <span className="flex items-center gap-1 text-primary font-medium">
+                        <MessageCircle className="h-3.5 w-3.5" strokeWidth={1.5} /> WA
                       </span>
                     )}
                     {lead.website ? (
-                      <Badge variant="secondary" className="text-[10px] font-normal h-5">
-                        <Globe className="h-2.5 w-2.5 mr-1" strokeWidth={1.5} /> Has site
+                      <Badge variant="secondary" className="text-[10px] font-medium h-5.5 px-2 bg-emerald-500/5 text-emerald-600 border border-emerald-500/20">
+                        <Globe className="h-2.5 w-2.5 mr-1 text-emerald-500" strokeWidth={1.5} /> Has site
                       </Badge>
                     ) : (
-                      <Badge variant="outline" className="text-[10px] font-normal h-5 text-[color:var(--destructive)] border-[color:var(--destructive)]/40 bg-[color:var(--destructive)]/5">
+                      <Badge variant="outline" className="text-[10px] font-medium h-5.5 px-2 text-rose-500 border-rose-500/30 bg-rose-500/5">
                         No site
                       </Badge>
                     )}
@@ -269,30 +268,30 @@ export function Phase2Audit({
 
                   {a ? (
                     <>
-                      <div className="flex items-center gap-3 pt-1 border-t border-border/60">
+                      <div className="flex items-center gap-4 pt-3.5 border-t border-border/50">
                         <PageSpeedGauge score={a.pageSpeedScore} />
                         <div className="flex-1 min-w-0">
-                          <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Est. lost / mo</div>
-                          <div className="font-display text-lg tabular-nums flex items-center mt-0.5">
-                            <IndianRupee className="h-3.5 w-3.5" strokeWidth={1.5} />{a.estLostRevenuePerMonth.toLocaleString("en-IN")}
+                          <div className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground font-bold">Est. monthly lost revenue</div>
+                          <div className="font-display text-lg font-medium tabular-nums text-foreground flex items-center mt-1">
+                            <IndianRupee className="h-4 w-4 text-muted-foreground/60 mr-0.5" strokeWidth={1.5} />{a.estLostRevenuePerMonth.toLocaleString("en-IN")}
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1.5 pt-1">
                         {a.gaps.slice(0, 3).map((g) => (
-                          <Badge key={g} variant="outline" className="text-[10px] font-normal text-[color:var(--destructive)] border-[color:var(--destructive)]/30 bg-[color:var(--destructive)]/5">{g}</Badge>
+                          <Badge key={g} variant="outline" className="text-[10px] font-medium h-5.5 px-2 text-rose-500 border-rose-500/25 bg-rose-500/[0.02]">{g}</Badge>
                         ))}
                       </div>
-                      <div className="rounded-md bg-muted/60 p-2.5 text-xs border border-border">
-                        <div className="flex items-start gap-1.5">
-                          <AlertTriangle className="h-3.5 w-3.5 text-[color:var(--chart-4)] mt-0.5 shrink-0" strokeWidth={1.75} />
-                          <span className="text-muted-foreground italic leading-relaxed">{a.biggestGap}</span>
+                      <div className="rounded-xl bg-muted/30 p-3 text-xs border border-border/50">
+                        <div className="flex items-start gap-2">
+                          <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" strokeWidth={1.75} />
+                          <span className="text-muted-foreground leading-relaxed italic">&ldquo;{a.biggestGap}&rdquo;</span>
                         </div>
                       </div>
                     </>
                   ) : (
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground py-3 justify-center border-t border-border/60 pt-3">
-                      <Gauge className="h-3.5 w-3.5" strokeWidth={1.5} /> Awaiting audit
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground py-4 justify-center border-t border-border/50 pt-3">
+                      <Gauge className="h-4 w-4 text-muted-foreground/60" strokeWidth={1.5} /> Awaiting performance audit
                     </div>
                   )}
                 </CardContent>
@@ -306,29 +305,46 @@ export function Phase2Audit({
 }
 
 function PageSpeedGauge({ score }: { score: number }) {
-  const color = score === 0 ? "text-[color:var(--destructive)]" : score < 50 ? "text-[color:var(--destructive)]" : score < 70 ? "text-[color:var(--chart-4)]" : "text-[color:var(--accent-foreground)]";
-  const ring = score === 0 ? "stroke-[color:var(--destructive)]" : score < 50 ? "stroke-[color:var(--destructive)]" : score < 70 ? "stroke-[color:var(--chart-4)]" : "stroke-[color:var(--accent-foreground)]";
+  const isGood = score >= 70;
+  const isMed = score >= 50 && score < 70;
+  
+  const colorClass = score === 0 
+    ? "text-rose-500" 
+    : isGood 
+      ? "text-emerald-500" 
+      : isMed 
+        ? "text-amber-500" 
+        : "text-rose-500";
+        
+  const ringClass = score === 0 
+    ? "stroke-rose-500" 
+    : isGood 
+      ? "stroke-emerald-500" 
+      : isMed 
+        ? "stroke-amber-500" 
+        : "stroke-rose-500";
+
   const circumference = 2 * Math.PI * 22;
   const offset = circumference - (score / 100) * circumference;
   return (
     <div className="relative h-14 w-14 shrink-0">
       <svg viewBox="0 0 56 56" className="h-full w-full -rotate-90">
-        <circle cx="28" cy="28" r="22" className="stroke-muted fill-none" strokeWidth="5" />
+        <circle cx="28" cy="28" r="22" className="stroke-border/70 fill-none" strokeWidth="4.5" />
         <motion.circle
           cx="28"
           cy="28"
           r="22"
           fill="none"
-          strokeWidth="5"
+          strokeWidth="4.5"
           strokeLinecap="round"
-          className={ring}
+          className={ringClass}
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         />
       </svg>
-      <div className={`absolute inset-0 flex items-center justify-center text-sm font-bold tabular-nums ${color}`}>
+      <div className={`absolute inset-0 flex items-center justify-center text-sm font-bold font-mono tabular-nums ${colorClass}`}>
         {score || "—"}
       </div>
     </div>

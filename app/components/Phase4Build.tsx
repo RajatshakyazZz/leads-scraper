@@ -123,55 +123,64 @@ export function Phase4Build({
       onNext={onNext}
       nextLabel="Draft outreach"
     >
-      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
+      <div className="flex items-center justify-between mb-8 gap-6 flex-wrap bg-card/65 backdrop-blur-sm border border-border/60 rounded-2xl p-5 shadow-sm">
         <div>
-          <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Selected lead</div>
-          <div className="font-display text-2xl mt-1">{selected.name}</div>
-          <div className="text-xs text-muted-foreground mt-0.5">{selected.address}</div>
+          <div className="text-[9px] uppercase tracking-[0.16em] text-muted-foreground font-bold">Selected Prospect</div>
+          <div className="font-display text-2xl text-foreground font-medium mt-1">{selected.name}</div>
+          <div className="text-xs text-muted-foreground mt-1 font-sans">{selected.address}</div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <Select value={platform} onValueChange={(v) => v && setPlatform(v)}>
-            <SelectTrigger className="w-[160px]"><SelectValue /></SelectTrigger>
-            <SelectContent>
+            <SelectTrigger className="w-[150px] rounded-xl border-border bg-card/50 text-xs h-9"><SelectValue /></SelectTrigger>
+            <SelectContent className="rounded-xl border-border shadow-premium">
               {PLATFORMS.map((p) => (
-                <SelectItem key={p.id} value={p.id}>{p.label}</SelectItem>
+                <SelectItem key={p.id} value={p.id} className="text-xs rounded-lg">{p.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={openPlatform}><ExternalLink className="h-4 w-4 mr-2" /> Open</Button>
-          <Button variant="outline" onClick={savePrompt} disabled={saving || savedKey === `${selected.id}:${platform}`}>
-            {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : savedKey === `${selected.id}:${platform}` ? <Check className="h-4 w-4 mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+          <Button variant="outline" size="sm" onClick={openPlatform} className="rounded-xl h-9 text-xs"><ExternalLink className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" /> Open</Button>
+          <Button variant="outline" size="sm" onClick={savePrompt} disabled={saving || savedKey === `${selected.id}:${platform}`} className="rounded-xl h-9 text-xs">
+            {saving ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : savedKey === `${selected.id}:${platform}` ? <Check className="h-3.5 w-3.5 mr-1.5 text-emerald-500" /> : <Save className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />}
             {savedKey === `${selected.id}:${platform}` ? "Saved" : "Save"}
           </Button>
-          <Button onClick={copyPrompt}><Copy className="h-4 w-4 mr-2" /> Copy prompt</Button>
+          <Button size="sm" onClick={copyPrompt} className="rounded-xl h-9 text-xs cursor-pointer"><Copy className="h-3.5 w-3.5 mr-1.5" /> Copy Prompt</Button>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Generated prompt</CardTitle>
+      <div className="grid lg:grid-cols-2 gap-6">
+        <Card className="rounded-2xl border-border/80 bg-card/85 backdrop-blur-md shadow-premium">
+          <CardHeader className="pb-4 pt-5 px-5">
+            <CardTitle className="text-lg tracking-tight font-medium text-foreground">Generated Prompt</CardTitle>
           </CardHeader>
-          <CardContent>
-            <pre className="text-xs leading-relaxed whitespace-pre-wrap font-mono bg-muted/30 rounded-md p-4 max-h-[520px] overflow-y-auto border border-border">
+          <CardContent className="px-5 pb-5 pt-0">
+            <pre className="text-xs leading-relaxed whitespace-pre-wrap font-mono bg-muted/40 rounded-xl p-4.5 max-h-[520px] overflow-y-auto border border-border/50 text-foreground/90 scrollbar-thin">
               {prompt}
             </pre>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Live preview</CardTitle>
-            <Button size="sm" variant="outline" onClick={simulateBuild} disabled={building}>
-              {building ? <><Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" /> Building</> : <><Sparkles className="h-3.5 w-3.5 mr-2" /> Build site</>}
+        <Card className="rounded-2xl border-border/80 bg-card/85 backdrop-blur-md shadow-premium overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between pb-4 pt-5 px-5 gap-3">
+            <CardTitle className="text-lg tracking-tight font-medium text-foreground">Live Preview</CardTitle>
+            <Button size="sm" variant="outline" onClick={simulateBuild} disabled={building} className="rounded-xl h-8 text-xs cursor-pointer">
+              {building ? <><Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> Building</> : <><Sparkles className="h-3.5 w-3.5 mr-1.5 text-primary" /> Build Site</>}
             </Button>
           </CardHeader>
-          <CardContent>
-            <div className="rounded-lg overflow-hidden border border-border h-[520px]">
+          <CardContent className="px-5 pb-5 pt-0">
+            <div className="rounded-xl overflow-hidden border border-border/70 h-[520px] shadow-inner bg-stone-100 flex flex-col">
+              {/* Browser control header mockup */}
+              <div className="bg-[#ede7df] border-b border-[#e1d9cc] px-4 py-2.5 flex items-center gap-1.5 shrink-0">
+                <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
+                <div className="flex-1 bg-card/50 text-center text-[10px] text-muted-foreground py-0.5 rounded font-mono select-none truncate max-w-[280px] mx-auto">
+                  {selected.name.toLowerCase().replace(/\s+/g, "")}.dev
+                </div>
+              </div>
               <iframe
                 title="Preview"
                 srcDoc={demoSiteHtml(selected)}
-                className="w-full h-full bg-[#f5efe6]"
+                className="w-full flex-1 bg-[#f5efe6] border-none"
               />
             </div>
           </CardContent>

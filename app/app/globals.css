@@ -50,41 +50,65 @@
 }
 
 :root {
-  --background: #fafafa;
-  --foreground: #0f172a;
+  --background: #FAF9F6;
+  --foreground: #1E1B18;
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #1E1B18;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
+  --popover-foreground: #1E1B18;
   --primary: #0052ff;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
+  --secondary: #F3ECE1;
+  --secondary-foreground: #1E1B18;
+  --muted: #F5F4F0;
+  --muted-foreground: #7E7265;
   --accent: #0052ff;
   --accent-foreground: #ffffff;
   --destructive: #dc2626;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
+  --border: #E6E1D8;
+  --input: #E6E1D8;
   --ring: #0052ff;
   --chart-1: #0052ff;
   --chart-2: #4d7cff;
-  --chart-3: #0f172a;
+  --chart-3: #1E1B18;
   --chart-4: #22c55e;
   --chart-5: #f59e0b;
   --radius: 0.875rem;
   --accent-secondary: #4d7cff;
-  --shadow-accent: 0 12px 30px rgba(0, 82, 255, 0.22);
-  --shadow-accent-lg: 0 20px 48px rgba(0, 82, 255, 0.28);
+  --shadow-accent: 0 12px 30px rgba(0, 82, 255, 0.15);
+  --shadow-accent-lg: 0 20px 48px rgba(0, 82, 255, 0.22);
+  --shadow-premium: 0 10px 40px -10px rgba(44, 38, 32, 0.05), 0 1px 3px rgba(44, 38, 32, 0.02);
+  --shadow-premium-hover: 0 20px 50px -12px rgba(44, 38, 32, 0.08), 0 2px 8px rgba(44, 38, 32, 0.04);
   --sidebar: #ffffff;
-  --sidebar-foreground: #0f172a;
+  --sidebar-foreground: #1E1B18;
   --sidebar-primary: #0052ff;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f1f5f9;
-  --sidebar-accent-foreground: #0f172a;
-  --sidebar-border: #e2e8f0;
+  --sidebar-accent: #F5F4F0;
+  --sidebar-accent-foreground: #1E1B18;
+  --sidebar-border: #E6E1D8;
   --sidebar-ring: #0052ff;
+}
+
+/* Lenis smooth scrolling rules */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
 .dark {
@@ -128,9 +152,9 @@
   body {
     @apply bg-background text-foreground;
     background-image:
-      radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.04) 1px, transparent 0),
-      radial-gradient(circle at 15% 0%, rgba(0, 82, 255, 0.08), transparent 30rem),
-      radial-gradient(circle at 85% 10%, rgba(77, 124, 255, 0.06), transparent 34rem);
+      radial-gradient(circle at 1px 1px, rgba(30, 27, 24, 0.03) 1px, transparent 0),
+      radial-gradient(circle at 15% 0%, rgba(0, 82, 255, 0.04), transparent 36rem),
+      radial-gradient(circle at 85% 10%, rgba(0, 82, 255, 0.03), transparent 40rem);
     background-attachment: fixed;
     background-size: 28px 28px, auto, auto;
     font-feature-settings: "ss01", "cv11";
@@ -140,7 +164,7 @@
   }
   .font-display {
     font-family: var(--font-display), ui-serif, Georgia, serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
   .font-mono {
     font-family: var(--font-mono), ui-monospace, monospace;
@@ -212,6 +236,14 @@
   .gradient-border {
     background: linear-gradient(135deg, #0052ff, #4d7cff);
     padding: 1px;
+  }
+
+  .shadow-premium {
+    box-shadow: var(--shadow-premium);
+  }
+
+  .shadow-premium-hover {
+    box-shadow: var(--shadow-premium-hover);
   }
 }
 

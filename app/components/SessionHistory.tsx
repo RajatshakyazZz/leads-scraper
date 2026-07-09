@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Search,
   Trash2,
@@ -13,7 +13,6 @@ import {
   FolderOpen,
   Calendar,
   Layers,
-  Sparkles,
   ChevronDown,
   ChevronUp,
   X,
@@ -23,12 +22,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import type { ScrapeSession } from "@/lib/types";
+import type { ScrapeSession, Lead, AuditResult } from "@/lib/types";
 import { SessionDetail } from "./SessionDetail";
 
 type SessionHistoryProps = {
   onClose: () => void;
-  onLoadSession: (sessionId: string, leads: any[], audits: any, pipelineState?: any) => void;
+  onLoadSession: (sessionId: string, leads: Lead[], audits: Record<string, AuditResult>, pipelineState?: unknown) => void;
   currentSessionId: string | null;
   onDuplicateSession: (niche: string, city: string, count: number) => void;
 };
@@ -46,11 +45,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => {
-    fetchSessions(true);
-  }, [sort]);
-
-  const fetchSessions = async (reset = false) => {
+  const fetchSessions = useCallback(async (reset = false) => {
     if (reset) {
       setLoading(true);
     } else {
@@ -86,7 +81,14 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
       setLoading(false);
       setLoadingMore(false);
     }
-  };
+  }, [getIdToken, nextCursor, search, sort]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchSessions(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [sort, fetchSessions]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -207,7 +209,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
       a.remove();
       toast.success("CSV exported successfully", { id: exportToast });
     } catch (e) {
-      toast.error("Export failed. Please check backend config.", { id: exportToast });
+      toast.error(`Export failed: ${(e as Error).message || "Please check backend config."}`, { id: exportToast });
     }
   };
 
@@ -229,7 +231,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
       a.remove();
       toast.success("All data exported successfully", { id: exportToast });
     } catch (e) {
-      toast.error("Export failed.", { id: exportToast });
+      toast.error(`Export failed: ${(e as Error).message}`, { id: exportToast });
     }
   };
 
@@ -254,7 +256,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex justify-end bg-background/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[9999] flex justify-end bg-stone-950/20 backdrop-blur-xs">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -267,58 +269,58 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
-        transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="relative z-10 flex h-full w-full max-w-4xl flex-col border-l border-border bg-card shadow-2xl"
+        transition={{ type: "spring", damping: 28, stiffness: 220 }}
+        className="relative z-10 flex h-full w-full max-w-4xl flex-col border-l border-border/70 bg-card shadow-2xl rounded-l-3xl"
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-border p-4">
+        <div className="flex items-center justify-between border-b border-border/85 p-5">
           <div>
-            <h2 className="font-display text-lg flex items-center gap-2">
+            <h2 className="font-display text-xl flex items-center gap-2 text-foreground">
               <Clock className="h-5 w-5 text-primary" />
               Scraped Leads History
             </h2>
-            <p className="text-xs text-muted-foreground mt-0.5">Manage and review all your previous lead generation sessions</p>
+            <p className="text-xs text-muted-foreground mt-1 font-sans">Manage and review all your previous lead generation sessions</p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleExportAll} className="h-8 text-xs">
+            <Button variant="outline" size="sm" onClick={handleExportAll} className="h-8.5 rounded-xl text-xs">
               <Download className="h-3.5 w-3.5 mr-1" />
               Export Account
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full h-8 w-8">
-              <X className="h-4 w-4" />
+            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full h-8.5 w-8.5 hover:bg-muted transition-colors">
+              <X className="h-4.5 w-4.5 text-muted-foreground" />
             </Button>
           </div>
         </div>
 
         {/* Filters and search */}
-        <div className="border-b border-border bg-muted/30 p-4">
+        <div className="border-b border-border/80 bg-muted/20 p-5">
           <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground/60" />
               <Input
                 type="text"
                 placeholder="Search by niche or city..."
                 value={search}
                 onChange={handleSearchChange}
-                className="pl-9 h-9 text-sm"
+                className="pl-9.5 h-10 rounded-xl border-border/80 text-sm focus-visible:ring-offset-1 bg-card/50"
               />
             </div>
             <div className="flex gap-2">
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="h-9 rounded-md border border-input bg-background px-3 text-xs focus-visible:outline-none"
+                className="h-10 rounded-xl border border-border/85 bg-card/75 px-3.5 text-xs focus-visible:outline-none cursor-pointer"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
               </select>
-              <Button type="submit" size="sm" className="h-9 px-4">Search</Button>
+              <Button type="submit" size="sm" className="h-10 px-4 rounded-xl cursor-pointer">Search</Button>
             </div>
           </form>
           
           {selectedIds.size > 0 && (
-            <div className="mt-3 flex items-center justify-between bg-primary/5 border border-primary/20 rounded-md p-2 animate-in fade-in slide-in-from-top-1">
-              <span className="text-xs font-medium text-primary">
+            <div className="mt-3.5 flex items-center justify-between bg-primary/5 border border-primary/15 rounded-xl p-2.5 animate-in fade-in slide-in-from-top-1">
+              <span className="text-xs font-semibold text-primary pl-1.5">
                 {selectedIds.size} session{selectedIds.size > 1 ? "s" : ""} selected
               </span>
               <Button
@@ -326,7 +328,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                 size="sm"
                 onClick={handleBulkDelete}
                 disabled={deleting}
-                className="h-7 text-[11px] px-2.5"
+                className="h-8 text-[11px] px-3 rounded-xl cursor-pointer"
               >
                 <Trash2 className="h-3.5 w-3.5 mr-1" />
                 Delete Selected
@@ -371,15 +373,17 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                 return (
                   <Card
                     key={session.id}
-                    className={`border overflow-hidden transition-all duration-200 ${
-                      isActive ? "border-primary bg-primary/5 accent-shadow" : "hover:border-border"
-                    } ${isSelected ? "border-primary/50 bg-primary/[0.02]" : ""}`}
+                    className={`rounded-2xl border-border/70 overflow-hidden transition-all duration-300 ${
+                      isActive 
+                        ? "ring-1 ring-primary/40 border-primary/25 bg-primary/[0.01] shadow-premium" 
+                        : "hover:border-primary/25 hover:shadow-premium"
+                    } ${isSelected ? "border-primary/40 bg-primary/[0.01]" : ""}`}
                   >
                     <div
                       onClick={() => toggleExpand(session.id)}
-                      className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer select-none"
+                      className="p-4.5 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer select-none"
                     >
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-start gap-3.5">
                         <div
                           onClick={(e) => toggleSelect(session.id, e)}
                           className="mt-1 flex items-center"
@@ -388,37 +392,37 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                             type="checkbox"
                             checked={isSelected}
                             readOnly
-                            className="rounded border-border text-primary focus:ring-primary"
+                            className="rounded-lg border-border/80 text-primary focus:ring-primary h-4 w-4 cursor-pointer"
                           />
                         </div>
                         <div>
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-semibold text-sm capitalize">
+                          <div className="flex items-center gap-2 flex-wrap font-sans">
+                            <span className="font-semibold text-sm capitalize text-foreground">
                               {session.niche}
                             </span>
-                            <span className="text-muted-foreground text-xs">in</span>
-                            <span className="font-medium text-sm capitalize">
+                            <span className="text-muted-foreground/70 text-xs">in</span>
+                            <span className="font-semibold text-sm capitalize text-foreground">
                               {session.city}
                             </span>
                             {isActive && (
-                              <span className="bg-primary/20 text-primary text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                              <span className="bg-primary/10 text-primary text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
                                 Active
                               </span>
                             )}
                           </div>
                           
-                          <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-3.5 w-3.5" />
+                          <div className="flex items-center gap-4 mt-2.5 text-xs text-muted-foreground/80 flex-wrap font-sans">
+                            <span className="flex items-center gap-1.5">
+                              <Calendar className="h-3.5 w-3.5 text-muted-foreground/50" />
                               {formatDate(session.createdAt)}
                             </span>
-                            <span className="flex items-center gap-1">
-                              <Layers className="h-3.5 w-3.5" />
+                            <span className="flex items-center gap-1.5">
+                              <Layers className="h-3.5 w-3.5 text-muted-foreground/50" />
                               {session.countReceived} leads
                             </span>
-                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${
-                              session.status === "completed" ? "bg-green-100 text-green-800" :
-                              session.status === "failed" ? "bg-red-100 text-red-800" : "bg-blue-100 text-blue-800"
+                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${
+                              session.status === "completed" ? "bg-emerald-500/10 text-emerald-600" :
+                              session.status === "failed" ? "bg-rose-500/10 text-rose-600" : "bg-primary/10 text-primary"
                             }`}>
                               {session.status}
                             </span>
@@ -469,7 +473,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                         >
                           <div className="p-4 border-b border-border bg-muted/20 flex flex-wrap items-center justify-between gap-3">
                             <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
-                              <span>ID: {session.id}</span>
+                              <span>ID: {session.id.substring(0, 8)}</span>
                               <span>•</span>
                               <span>Duration: {((session.durationMs || 0) / 1000).toFixed(1)}s</span>
                               <span>•</span>
@@ -480,7 +484,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                                 variant="outline"
                                 size="xs"
                                 onClick={(e) => handleDuplicate(session, e)}
-                                className="text-xs h-7"
+                                className="text-xs h-7 rounded-lg px-2.5"
                               >
                                 <Copy className="h-3 w-3 mr-1" />
                                 Re-run Scrape
@@ -489,7 +493,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                                 variant="outline"
                                 size="xs"
                                 onClick={(e) => handleExport(session.id, e)}
-                                className="text-xs h-7"
+                                className="text-xs h-7 rounded-lg px-2.5"
                               >
                                 <Download className="h-3 w-3 mr-1" />
                                 Export CSV
@@ -498,7 +502,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                                 variant="default"
                                 size="xs"
                                 onClick={() => handleLoad(session.id)}
-                                className="text-xs h-7"
+                                className="text-xs h-7 rounded-lg px-2.5 cursor-pointer"
                               >
                                 <FolderOpen className="h-3 w-3 mr-1" />
                                 Open Session
