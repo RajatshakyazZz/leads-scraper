@@ -15,7 +15,15 @@ type ServiceAccountShape = {
 };
 
 function normalizePrivateKey(value?: string) {
-  return value?.replace(/\\n/g, "\n");
+  if (!value) return undefined;
+  let key = value.trim();
+  if (key.startsWith('"') && key.endsWith('"')) {
+    key = key.slice(1, -1);
+  }
+  if (key.startsWith("'") && key.endsWith("'")) {
+    key = key.slice(1, -1);
+  }
+  return key.replace(/\\n/g, "\n");
 }
 
 function readServiceAccountFromJson() {
