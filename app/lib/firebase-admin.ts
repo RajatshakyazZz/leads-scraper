@@ -44,6 +44,23 @@ function readServiceAccountFromParts() {
   };
 }
 
+export function getServiceAccountDiagnostics() {
+  try {
+    const sa = readServiceAccountFromJson() ?? readServiceAccountFromParts();
+    return {
+      hasConfig: hasFirebaseAdminConfig(),
+      hasServiceAccount: !!sa,
+      projectId: sa?.projectId || "not set",
+      clientEmail: sa?.clientEmail || "not set",
+      hasPrivateKey: !!sa?.privateKey,
+      privateKeyLength: sa?.privateKey?.length || 0,
+      privateKeyStartsWith: sa?.privateKey ? sa.privateKey.substring(0, 35) : "not set",
+    };
+  } catch (e) {
+    return { error: (e as Error).message };
+  }
+}
+
 export function hasFirebaseAdminConfig() {
   return Boolean(
     process.env.FIREBASE_SERVICE_ACCOUNT_KEY ||

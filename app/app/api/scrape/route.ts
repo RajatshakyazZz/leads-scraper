@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { Lead, ScrapeInput } from "@/lib/types";
-import { AuthRequestError, verifyRequestUser } from "@/lib/firebase-admin";
+import { AuthRequestError, verifyRequestUser, getServiceAccountDiagnostics } from "@/lib/firebase-admin";
 import { refundUnusedLeads, reserveLeadsForScrape, ScrapeAccessError } from "@/lib/quota";
 import { saveScrapedLeads } from "@/lib/user-data";
 
@@ -69,7 +69,8 @@ export async function POST(req: Request) {
   } catch (e) {
     if (e instanceof ScrapeAccessError) return accessErrorResponse(e);
     console.error("Error in /api/scrape:", e);
-    return NextResponse.json({ code: "QUOTA_ERROR", error: `Unable to reserve lead quota: ${(e as Error).message}` }, { status: 500 });
+    const diag = getServiceAccountDiagnostics();
+    return NextResponse.json({ code: "QUOTA_ERROR", error: `Unable to reserve lead quota: ${(e as Error).message}. Diagnostics: ${JSON.stringify(diag)}` }, { status: 500 });
   }
 
   const allowedInput = { ...input, count: reservation.reserved };

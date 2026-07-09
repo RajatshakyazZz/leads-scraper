@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { AuthRequestError, verifyRequestUser } from "@/lib/firebase-admin";
+import { AuthRequestError, verifyRequestUser, getServiceAccountDiagnostics } from "@/lib/firebase-admin";
 import { getSavedLeads } from "@/lib/user-data";
 
 export const runtime = "nodejs";
@@ -15,6 +15,7 @@ export async function GET(req: Request) {
     }
 
     console.error("Error in /api/leads:", e);
-    return NextResponse.json({ code: "LEADS_ERROR", error: `Unable to load saved leads: ${(e as Error).message}` }, { status: 500 });
+    const diag = getServiceAccountDiagnostics();
+    return NextResponse.json({ code: "LEADS_ERROR", error: `Unable to load saved leads: ${(e as Error).message}. Diagnostics: ${JSON.stringify(diag)}` }, { status: 500 });
   }
 }
