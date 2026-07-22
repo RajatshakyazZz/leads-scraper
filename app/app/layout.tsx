@@ -10,11 +10,20 @@ const jetbrainsMono = JetBrains_Mono({ variable: "--font-mono", subsets: ["latin
 export const metadata: Metadata = {
   title: "Lead → Launch",
   description: "Scrape → Audit → Rank → Build → Outreach. One Claude skill.",
+
+  verification: {
+    google: "_-O8F8uSo1wVkjLruF-TtHK3NVcXCIVQAqiV7GMY5Ac",
+  },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${calistoga.variable} ${jetbrainsMono.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${calistoga.variable} ${jetbrainsMono.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         {children}
         <Toaster position="bottom-right" />
