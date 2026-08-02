@@ -1,45 +1,60 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import { PhaseShell } from "./PhaseShell";
 import { IncompleteState } from "./IncompleteState";
-import { MessageCircle, Mail, Camera, Copy, ExternalLink, Sparkles } from "lucide-react";
-import type { RankedLead, OutreachChannel, OutreachLanguage } from "@/lib/types";
+import { MessageCircle, Mail, Share2, Copy, Check, ExternalLink, Sparkles, RefreshCw, Send } from "lucide-react";
+import type { RankedLead } from "@/lib/types";
 import { toast } from "sonner";
-
 import { useAuth } from "@/components/AuthProvider";
+
+const CHANNELS = [
+  { id: "whatsapp", label: "WhatsApp", icon: MessageCircle },
+  { id: "email", label: "Email", icon: Mail },
+  { id: "instagram", label: "Instagram DM", icon: Share2 },
+];
+
 
 export function Phase5Outreach({
   selected,
   sessionId,
   onPrev,
+  onReset,
 }: {
   selected: RankedLead | null;
   sessionId?: string | null;
   onPrev: () => void;
+  onReset: () => void;
 }) {
   const { getIdToken } = useAuth();
-  const [channel, setChannel] = useState<OutreachChannel>("whatsapp");
-  const [lang, setLang] = useState<OutreachLanguage>("hinglish");
-  const [message, setMessage] = useState("");
-  const [followUp, setFollowUp] = useState("");
+  const [channel, setChannel] = useState("whatsapp");
+  const [lang, setLang] = useState<"hinglish" | "english">("hinglish");
+  const [copied, setCopied] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  useEffect(() => {
-    if (!selected) return;
-    const m = buildOutreach(selected, channel, lang);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMessage(m.first);
-    setFollowUp(m.followUp);
+  const initialDraft = useMemo(() => {
+    if (!selected) return "";
+    return generatePitch(selected, channel, lang);
   }, [selected, channel, lang]);
 
-  useEffect(() => {
-    if (!selected || !sessionId || !message) return;
-    
-    const timer = setTimeout(async () => {
+  const [message, setMessage] = useState(initialDraft);
+
+  function copyText(text: string) {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    toast.success("Outreach pitch copied!");
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function openChannel() {
+    if (!selected) return;
+    setSending(true);
+
+    if (sessionId) {
       try {
         const token = await getIdToken();
         await fetch(`/api/sessions/${sessionId}/outreach`, {
@@ -53,91 +68,92 @@ export function Phase5Outreach({
             leadName: selected.name,
             channel,
             language: lang,
-            subject: channel === "email" ? (lang === "hinglish" ? "Aapke business ke liye ek website demo banayi hai" : "Built a website demo for your business") : undefined,
-            body: message,
-            followUp: followUp,
-            status: "draft"
+            status: "sent",
+            body: message
           })
         });
       } catch (err) {
-        console.error("Failed to save outreach draft:", err);
+        console.error("Failed to save outreach status:", err);
+      } finally {
+        setSending(false);
       }
-    }, 1000);
+    }
 
-    return () => clearTimeout(timer);
-  }, [sessionId, selected, channel, lang, message, followUp, getIdToken]);
-
-  function copy(text: string) {
-    navigator.clipboard.writeText(text);
-    toast.success("Copied to clipboard");
-  }
-
-  function openChannel() {
-    if (!selected) return;
-    if (channel === "whatsapp" && selected.whatsapp) {
-      const num = selected.whatsapp.replace(/\D/g, "");
-      window.open(`https://wa.me/${num}?text=${encodeURIComponent(message)}`, "_blank");
+    if (channel === "whatsapp" && selected.phone) {
+      const num = selected.phone.replace(/\D/g, "");
+      const full = num.length === 10 ? `91${num}` : num;
+      window.open(`https://wa.me/${full}?text=${encodeURIComponent(message)}`, "_blank");
     } else if (channel === "email" && selected.email) {
-      const subject = lang === "hinglish" ? "Aapke business ke liye ek website demo banayi hai" : "Built a website demo for your business";
-      window.open(`mailto:${selected.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`, "_blank");
-    } else if (channel === "instagram") {
-      window.open(`https://instagram.com/`, "_blank");
+      window.open(`mailto:${selected.email}?subject=${encodeURIComponent(`Website design for ${selected.name}`)}&body=${encodeURIComponent(message)}`, "_blank");
     } else {
-      toast.error("No contact for this channel");
+      copyText(message);
+      toast.info("Opened copy. Paste into " + channel);
     }
   }
 
   if (!selected) {
     return (
       <PhaseShell
-        title="Phase 5 — Outreach"
-        subtitle="Hinglish-first by default — converts 3x better in India. Built-in 5-day follow-up."
+        title="Phase 5 — Multi-channel outreach"
+        subtitle="Hinglish or English pitches crafted specifically for WhatsApp, Email, and Instagram."
         onPrev={onPrev}
+        nextDisabled
+        nextLabel="Finish"
       >
         <IncompleteState
-          title="No lead selected yet"
-          description="Outreach drafts are tailored to a specific lead — picking up name, biggest gap, review count, and reachable channels. Run earlier phases and select a prospect to see WhatsApp, email, and Instagram drafts here."
-          prevPhaseLabel="Rank"
-          onPrev={onPrev}
+          title="No prospect selected"
+          description="Pick a top prospect in Phase 3 to generate custom outreach pitches."
+          actionLabel="Go to Rank"
+          onAction={onPrev}
         />
       </PhaseShell>
     );
   }
 
-  const channels: { id: OutreachChannel; label: string; icon: typeof MessageCircle; enabled: boolean }[] = [
-    { id: "whatsapp", label: "WhatsApp", icon: MessageCircle, enabled: !!selected.whatsapp },
-    { id: "email", label: "Email", icon: Mail, enabled: !!selected.email },
-    { id: "instagram", label: "Instagram", icon: Camera, enabled: true },
-  ];
-
   return (
-    <PhaseShell title="Phase 5 — Outreach" subtitle="Hinglish-first by default — converts 3x better in India. Built-in 5-day follow-up." onPrev={onPrev}>
-      <div className="flex flex-wrap items-center justify-between gap-6 mb-6 bg-white border border-border rounded-xl p-5 shadow-premium">
+    <PhaseShell
+      title="Phase 5 — Multi-channel outreach"
+      subtitle="Hinglish or English pitches crafted specifically for WhatsApp, Email, and Instagram."
+      onPrev={onPrev}
+      onNext={onReset}
+      nextLabel="Start new search"
+    >
+      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap bg-white border border-sky-100 rounded-2xl p-5 shadow-lg shadow-sky-500/5">
         <div>
-          <div className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground font-semibold">Sending To</div>
-          <div className="font-sans font-bold text-xl text-foreground mt-0.5">{selected.name}</div>
-          <div className="text-xs text-muted-foreground mt-0.5 font-sans font-mono tabular-nums">{selected.phone}{selected.email ? ` · ${selected.email}` : ""}</div>
+          <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-bold">Target Prospect</div>
+          <div className="font-sans font-bold text-xl text-slate-900 mt-0.5">{selected.name}</div>
+          <div className="text-xs text-slate-500 mt-0.5 font-mono tabular-nums">{selected.phone || selected.email || "No direct phone"}</div>
         </div>
+
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2.5 bg-secondary/50 border border-border px-3 py-1.5 rounded-lg text-xs">
-            <span className="text-muted-foreground font-medium">English</span>
-            <Switch id="lang" checked={lang === "hinglish"} onCheckedChange={(c) => setLang(c ? "hinglish" : "english")} />
-            <span className="text-foreground font-bold">Hinglish</span>
+          <div className="flex rounded-xl bg-sky-50 border border-sky-200 p-1">
+            <button
+              onClick={() => { setLang("hinglish"); setMessage(generatePitch(selected, channel, "hinglish")); }}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${lang === "hinglish" ? "bg-sky-600 text-white shadow-xs" : "text-slate-600 hover:text-slate-900"}`}
+            >
+              Hinglish
+            </button>
+            <button
+              onClick={() => { setLang("english"); setMessage(generatePitch(selected, channel, "english")); }}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${lang === "english" ? "bg-sky-600 text-white shadow-xs" : "text-slate-600 hover:text-slate-900"}`}
+            >
+              English
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="flex gap-2 mb-5">
-        {channels.map(({ id, label, icon: Icon, enabled }) => (
+      <div className="flex gap-2 mb-6">
+        {CHANNELS.map(({ id, label, icon: Icon }) => (
           <Button
             key={id}
             variant={channel === id ? "default" : "outline"}
             size="sm"
-            disabled={!enabled}
-            onClick={() => setChannel(id)}
-            className={`rounded-lg h-8 px-3.5 text-xs font-medium cursor-pointer ${
-              channel === id ? "bg-primary text-primary-foreground shadow-xs" : "border-border hover:bg-secondary/60"
-            }`}
+            onClick={() => {
+              setChannel(id);
+              setMessage(generatePitch(selected, id, lang));
+            }}
+            className={`rounded-xl h-9 px-4 text-xs font-semibold cursor-pointer ${channel === id ? "bg-sky-600 hover:bg-sky-700 text-white shadow-md shadow-sky-600/20" : "border-sky-200 text-slate-700 hover:bg-sky-50"}`}
           >
             <Icon className="h-3.5 w-3.5 mr-1.5" /> {label}
           </Button>
@@ -145,192 +161,109 @@ export function Phase5Outreach({
       </div>
 
       <div className="grid lg:grid-cols-2 gap-5">
-        <Card className="rounded-xl border border-border bg-white shadow-premium">
+        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5">
           <CardHeader className="flex flex-row items-center justify-between pb-3 pt-5 px-5 gap-3">
-            <CardTitle className="text-base tracking-tight font-bold text-foreground">First Message</CardTitle>
+            <CardTitle className="text-base tracking-tight font-bold text-slate-900">First Message</CardTitle>
             <div className="flex gap-2">
-              <Button size="sm" variant="outline" onClick={() => copy(message)} className="rounded-lg h-8 text-xs font-medium"><Copy className="h-3.5 w-3.5 mr-1" /> Copy</Button>
-              <Button size="sm" onClick={openChannel} className="rounded-lg h-8 px-3.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-medium shadow-xs cursor-pointer"><ExternalLink className="h-3.5 w-3.5 mr-1" /> Send</Button>
+              <Button size="sm" variant="outline" onClick={() => copyText(message)} className="rounded-xl h-8.5 px-3 border-sky-200 text-slate-700 text-xs font-semibold hover:bg-sky-50"><Copy className="h-3.5 w-3.5 mr-1" /> Copy</Button>
+              <Button size="sm" onClick={openChannel} disabled={sending} className="rounded-xl h-8.5 px-3.5 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold shadow-md shadow-sky-600/20 cursor-pointer"><Send className="h-3.5 w-3.5 mr-1" /> Send</Button>
             </div>
           </CardHeader>
           <CardContent className="px-5 pb-5 pt-0">
             <Textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="font-mono text-xs leading-relaxed min-h-[300px] rounded-lg border-border focus-visible:ring-1 focus-visible:ring-ring p-3.5 bg-secondary/30 text-foreground"
+              className="font-mono text-xs leading-relaxed min-h-[300px] rounded-xl border-sky-100 focus-visible:ring-1 focus-visible:ring-sky-500 p-4 bg-sky-50/20 text-slate-800"
             />
-            <div className="mt-3 text-xs text-muted-foreground flex items-center gap-1.5 font-sans">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
-              <span>Hook: personal · Pain: their biggest gap · Demo: live link · CTA: low-friction yes/no</span>
+            <div className="mt-3 text-xs text-slate-500 flex items-center gap-1.5 font-sans">
+              <Sparkles className="h-3.5 w-3.5 text-sky-600" />
+              <span>Personalized with ratings, review volume, and lost revenue metrics</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-xl border border-border bg-white shadow-premium">
-          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-5 px-5">
-            <CardTitle className="text-base tracking-tight font-bold text-foreground">Day-3 Follow-Up (Auto-Draft)</CardTitle>
-            <Button size="sm" variant="outline" onClick={() => copy(followUp)} className="rounded-lg h-8 text-xs font-medium"><Copy className="h-3.5 w-3.5 mr-1" /> Copy Follow-Up</Button>
-          </CardHeader>
-          <CardContent className="px-5 pb-5 pt-0">
-            <Textarea
-              value={followUp}
-              onChange={(e) => setFollowUp(e.target.value)}
-              className="font-mono text-xs leading-relaxed min-h-[300px] rounded-lg border-border focus-visible:ring-1 focus-visible:ring-ring p-3.5 bg-secondary/30 text-foreground"
-            />
-          </CardContent>
+        <Card className="rounded-2xl border border-sky-200 bg-gradient-to-br from-sky-50/80 via-white to-white p-6 shadow-lg shadow-sky-500/5 flex flex-col items-center justify-center text-center">
+          <div className="h-12 w-12 rounded-2xl bg-sky-100 flex items-center justify-center text-sky-600 mb-3 shadow-xs">
+            <Sparkles className="h-6 w-6" />
+          </div>
+          <Badge className="bg-sky-100 text-sky-700 border-sky-300 font-mono text-xs px-3 py-1 font-bold">
+            PIPELINE COMPLETE
+          </Badge>
+          <h3 className="text-xl font-bold text-slate-900 pt-3">Ready to Convert!</h3>
+          <p className="text-xs text-slate-500 max-w-sm mt-1.5 leading-relaxed font-sans">
+            You scraped, audited, ranked, and generated a tailored website prompt + outreach message for {selected.name}. Send the message now to close the deal!
+          </p>
         </Card>
       </div>
-
-      <Card className="mt-6 bg-emerald-50/70 border border-emerald-200 rounded-xl shadow-xs">
-        <CardContent className="pt-4 pb-4 px-5">
-          <div className="flex items-center gap-3.5">
-            <div className="h-8 w-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-xs">✓</div>
-            <div>
-              <div className="font-bold text-foreground text-sm tracking-tight">Pipeline complete</div>
-              <div className="text-xs text-muted-foreground mt-0.5 font-sans">Lead successfully generated, audited, ranked, structured, and outreach drafted. Repeat for next prospect in Phase 3.</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </PhaseShell>
   );
 }
 
-function buildOutreach(l: RankedLead, channel: OutreachChannel, lang: OutreachLanguage): { first: string; followUp: string } {
-  const ownerName = l.name.includes("Dr.") ? l.name.split(",")[0].replace(/['s].*/, "").trim() : "there";
-  const niche = l.category.toLowerCase();
+function generatePitch(l: RankedLead, ch: string, lang: "hinglish" | "english"): string {
+  const name = l.name;
+  const city = l.city.split(",")[0];
   const reviews = l.reviewsCount ?? 0;
   const rating = l.rating ?? 4.5;
-  const demoUrl = `[your-demo-link]`;
+  const lost = l.audit.estLostRevenuePerMonth.toLocaleString("en-IN");
+  const gap = l.audit.biggestGap;
 
   if (lang === "hinglish") {
-    if (channel === "whatsapp") {
-      return {
-        first: `Hi ${ownerName} 👋
+    if (ch === "whatsapp") {
+      return `Namaste ${name} team! 👋
 
-${l.city} mein ${niche} options dekh raha tha aur aapki ${l.name} sabse top ratings mein aayi — ${rating}★ aur ${reviews}+ reviews 🔥
+Mera naam Rajat hai. Aapka Google profile dekha (${city} me ${rating}★ rating with ${reviews} reviews) — kaafi accha kaam kar rahe ho aap!
 
-Ek baat noticed ki: ${l.audit.biggestGap}
+Main local businesses ke liye high-converting websites banata hu. Aapke profile ko audit karne par dekha ki:
+• ${gap}
+• Iski wajah se est. ₹${lost}/month ki new patient/customer leads miss ho rahi hain.
 
-Iska ek solution banaya hai — aapke business ke liye ek FREE website demo bana di hai. WhatsApp booking, Google reviews, services, sab ready.
+Maine aapke business ke liye ek sample demo site structure sketch kiya hai. Kya main 2 min me WhatsApp par link share karu?
 
-Live demo dekhiye (30 seconds):
-${demoUrl}
-
-Pasand aaye toh launch karwa denge. Nahi toh no problem — demo aapke paas free hi rahega.
-
-Reply karein "YES" agar interested?`,
-        followUp: `Hi ${ownerName}, kal jo demo bheja tha — dekha aapne?
-
-Quick recap: ${l.audit.biggestGap.split(".")[0]}.
-
-Iska monthly impact roughly ₹${l.audit.estLostRevenuePerMonth.toLocaleString("en-IN")} hai (Google search volume ke basis pe).
-
-Demo abhi bhi live hai:
-${demoUrl}
-
-5 minute call kar sakte hain to walk through? Bas batao kab free ho.`,
-      };
+Zero obligation, bilkul free demo. Real leads gain karne me help karega!`;
     }
-    if (channel === "email") {
-      return {
-        first: `Subject: Aapki ${l.name} ke liye ek website demo (free, 30 sec dekhiye)
+    return `Subject: ${name} ke liye new website design + ₹${lost}/mo extra leads
 
-Hi ${ownerName},
+Hi ${name} team,
 
-${l.city} mein ${niche} services research kar raha tha. ${l.name} top results mein aayi — ${rating}★, ${reviews}+ reviews.
+Aapka Google business listing check kar raha tha. ${rating}★ with ${reviews} reviews super impressive hai!
 
-Lekin ek gap noticed kiya: ${l.audit.biggestGap}
+Magar ek choti problem noticeable hai: ${gap}.
 
-Aapke business ke liye ek live website demo banayi hai. Saari information already filled in — services, location, WhatsApp booking, Google reviews integration.
+Aaj kal 80%+ customers pehle website check karke call karte hain. Maine aapke liye ek modern, fast mobile demo design banaya hai.
 
-Demo: ${demoUrl}
+Agar interested ho to bas "YES" reply kijiye, main link attach karke bhej dunga.
 
-30 seconds lagega dekhne mein. Pasand aaye toh launch karwa denge — full price ₹15,000 (one-time), zero monthly fees.
+Best regards,
+Rajat`;
+  } else {
+    if (ch === "whatsapp") {
+      return `Hi ${name} team! 👋
 
-Reply with "YES" agar interested ho, ya "NO" agar relevant nahi — dono works.
+I noticed your Google listing in ${city} (${rating}★ with ${reviews}+ reviews) — impressive reputation!
 
-Best,
-[Your Name]`,
-        followUp: `Subject: Re: ${l.name} website demo
+I ran a quick audit on your online presence and spotted a key growth bottleneck:
+• ${gap}
+• Estimated revenue leakage: ~₹${lost}/month in missed bookings.
 
-Hi ${ownerName},
+I've built a free interactive preview website tailored for ${name}. Would you be open to seeing a 2-min demo link?
 
-Pichli email pe quick check-in. Demo abhi bhi live hai: ${demoUrl}
-
-Conservative estimate: ${l.audit.biggestGap.split(".")[0].toLowerCase()} costs around ₹${l.audit.estLostRevenuePerMonth.toLocaleString("en-IN")}/month in missed bookings.
-
-Worth a 5-min call?
-
-Best,
-[Your Name]`,
-      };
+No pitch, totally free preview!`;
     }
-    return {
-      first: `Hi! 🙏 ${l.name} ke liye ek website demo banayi hai — ${l.audit.biggestGap} solve karne ke liye. ${demoUrl} pe live preview. Pasand aaye toh DM!`,
-      followUp: `Hey, kal jo website demo bheja tha — koi feedback? Demo: ${demoUrl} | 5 min call set kar sakte hain?`,
-    };
+    return `Subject: Digital growth proposal for ${name}
+
+Hello ${name} team,
+
+Congratulations on maintaining a strong ${rating}★ reputation on Google in ${city}!
+
+While auditing top local businesses in your category, I noticed:
+• ${gap}
+• Estimated missed revenue: ₹${lost}/month.
+
+I have already created a high-converting website concept designed to capture these missed leads.
+
+Would you be open to reviewing the demo preview this week?
+
+Best regards,
+Rajat`;
   }
-
-  // English
-  if (channel === "whatsapp") {
-    return {
-      first: `Hi ${ownerName} 👋
-
-Was researching ${niche} businesses in ${l.city} and ${l.name} stood out — ${rating}★ with ${reviews}+ Google reviews.
-
-Spotted one gap though: ${l.audit.biggestGap}
-
-So I built you a free website demo with WhatsApp booking, Google reviews integration, and services. All pre-filled with your info.
-
-30-second preview: ${demoUrl}
-
-If you like it, we launch it. If not, the demo is yours to keep — free.
-
-Reply "YES" if interested?`,
-      followUp: `Hi ${ownerName}, following up on the demo from a couple of days ago: ${demoUrl}
-
-The biggest gap I shared (${l.audit.biggestGap.split(".")[0]}) is costing roughly ₹${l.audit.estLostRevenuePerMonth.toLocaleString("en-IN")}/month in missed bookings.
-
-Worth a quick 5-min call to walk through?`,
-    };
-  }
-  if (channel === "email") {
-    return {
-      first: `Subject: Built ${l.name} a website demo — 30 sec preview
-
-Hi ${ownerName},
-
-I was researching ${niche} businesses in ${l.city}. ${l.name} stood out (${rating}★, ${reviews}+ reviews).
-
-But I noticed: ${l.audit.biggestGap}
-
-So I built a free demo website for your business, pre-filled with services, location, WhatsApp booking, and Google reviews.
-
-Demo: ${demoUrl}
-
-If you like it, launch is ₹15,000 one-time, zero monthly. If not, demo is yours.
-
-Reply "YES" or "NO" — both work.
-
-Best,
-[Your Name]`,
-      followUp: `Subject: Re: ${l.name} website demo
-
-Hi ${ownerName},
-
-Quick check-in. Demo still live: ${demoUrl}
-
-Conservative estimate: the gap above costs around ₹${l.audit.estLostRevenuePerMonth.toLocaleString("en-IN")}/month.
-
-5-min call?
-
-Best,
-[Your Name]`,
-    };
-  }
-  return {
-    first: `Hey! Built a website demo for ${l.name} to fix one gap (${l.audit.biggestGap.split(".")[0]}). Preview: ${demoUrl}. DM if interested!`,
-    followUp: `Hi! Following up on the demo: ${demoUrl}. 5-min call?`,
-  };
 }

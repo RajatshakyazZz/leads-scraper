@@ -26,24 +26,24 @@ export function Stepper({
   return (
     <div className="max-w-4xl mx-auto px-4 pb-4 pt-2" role="navigation" aria-label="Pipeline progress">
       {/* Top micro progress bar */}
-      <div className="w-full h-1 bg-border/40 rounded-full overflow-hidden mb-3">
+      <div className="w-full h-1.5 bg-sky-100 rounded-full overflow-hidden mb-3.5 shadow-inner">
         <motion.div
-          className="h-full bg-primary"
+          className="h-full bg-gradient-to-r from-sky-500 via-sky-400 to-sky-600 rounded-full"
           initial={{ width: "0%" }}
           animate={{ width: `${Math.min(100, Math.max(10, percent))}%` }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
         />
       </div>
 
-      <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground mb-3">
+      <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 mb-3">
         <div className="flex items-center gap-1.5 font-medium">
-          <span className="text-foreground font-bold tabular-nums">0{current}</span>
-          <span className="text-muted-foreground/40">/</span>
+          <span className="text-sky-600 font-bold tabular-nums">0{current}</span>
+          <span className="text-slate-300">/</span>
           <span>05</span>
-          <span className="mx-1.5 text-muted-foreground/30">•</span>
-          <span className="text-foreground font-sans font-semibold tracking-tight">{STEPS[current - 1]?.label} Phase</span>
+          <span className="mx-1.5 text-slate-300">•</span>
+          <span className="text-slate-800 font-sans font-semibold tracking-tight">{STEPS[current - 1]?.label} Phase</span>
         </div>
-        <div className="tabular-nums font-medium text-[10px] uppercase tracking-wider text-muted-foreground/80">
+        <div className="tabular-nums font-medium text-[10px] uppercase tracking-wider text-slate-400">
           {completed.size} of 5 Completed
         </div>
       </div>
@@ -60,39 +60,51 @@ export function Stepper({
                 aria-label={`Phase ${step.id} of ${STEPS.length}: ${step.label}${isCurrent ? " (current)" : isDone ? " (completed)" : " (preview)"}`}
                 aria-current={isCurrent ? "step" : undefined}
                 className={cn(
-                  "flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1 px-2 cursor-pointer transition-all duration-150",
-                  !isCurrent && !isDone && "opacity-50 hover:opacity-100",
+                  "flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-xl py-1 px-2 cursor-pointer transition-all duration-200",
+                  !isCurrent && !isDone && "opacity-60 hover:opacity-100",
                 )}
               >
-                <div
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  animate={isCurrent ? { scale: [1, 1.05, 1] } : { scale: 1 }}
+                  transition={isCurrent ? { repeat: Infinity, duration: 2.5, ease: "easeInOut" } : { duration: 0.2 }}
                   className={cn(
-                    "h-6 w-6 rounded-md flex items-center justify-center text-xs font-mono transition-colors duration-200",
+                    "h-7 w-7 rounded-lg flex items-center justify-center text-xs font-mono transition-all duration-300 relative",
                     isCurrent
-                      ? "bg-primary text-primary-foreground font-bold shadow-xs"
+                      ? "bg-sky-500 text-white font-bold shadow-md shadow-sky-500/30 ring-2 ring-sky-300"
                       : isDone
-                        ? "bg-primary/10 text-primary font-medium"
-                        : "bg-secondary text-muted-foreground font-medium border border-border/60",
+                        ? "bg-sky-100 text-sky-700 font-semibold border border-sky-200"
+                        : "bg-slate-100 text-slate-500 font-medium border border-slate-200",
                   )}
                 >
+                  {isCurrent && (
+                    <motion.span
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: [0.4, 0.9, 0.4], scale: [1, 1.3, 1] }}
+                      transition={{ repeat: Infinity, duration: 2 }}
+                      className="absolute inset-0 rounded-lg bg-sky-400/40 -z-10 blur-xs"
+                    />
+                  )}
                   {isDone && !isCurrent ? <Check className="h-3.5 w-3.5 stroke-[2.5]" /> : step.id}
-                </div>
+                </motion.div>
                 <span
                   className={cn(
                     "text-[12px] font-sans transition-colors duration-200 hidden sm:inline-block",
-                    isCurrent ? "text-foreground font-semibold" : "text-muted-foreground font-medium",
+                    isCurrent ? "text-sky-900 font-bold" : "text-slate-600 font-medium group-hover:text-slate-900",
                   )}
                 >
                   {step.label}
                 </span>
               </button>
               {i < STEPS.length - 1 && (
-                <div className="flex-1 h-[1px] mx-2 bg-border/60 relative overflow-hidden">
+                <div className="flex-1 h-[2px] mx-2 bg-slate-200 relative overflow-hidden rounded-full">
                   <motion.div
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: isDone ? 1 : 0 }}
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
                     style={{ originX: 0 }}
-                    className="absolute inset-0 bg-primary/40"
+                    className="absolute inset-0 bg-sky-500"
                   />
                 </div>
               )}
@@ -103,4 +115,5 @@ export function Stepper({
     </div>
   );
 }
+
 

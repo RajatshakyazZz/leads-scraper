@@ -38,22 +38,22 @@ export function PhaseShell({
         </p>
       </header>
       <div>{children}</div>
-      <div className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-white/95 backdrop-blur-xs shadow-[0_-4px_16px_rgba(0,0,0,0.03)]">
+      <div className="fixed bottom-0 inset-x-0 z-40 border-t border-sky-100 bg-white/95 backdrop-blur-md shadow-[0_-4px_16px_rgba(0,0,0,0.03)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3">
           <Button
             variant="outline"
             onClick={onPrev}
             disabled={prevDisabled || !onPrev}
             aria-label="Go to previous phase"
-            className="h-9 px-4 rounded-lg border-border bg-white text-foreground hover:bg-secondary/60 transition-colors"
+            className="h-9 px-4 rounded-lg border-sky-200 text-foreground hover:bg-sky-50 transition-colors"
           >
-            <ChevronLeft className="h-4 w-4 mr-1 text-muted-foreground" strokeWidth={2} /> Back
+            <ChevronLeft className="h-4 w-4 mr-1 text-sky-600" strokeWidth={2} /> Back
           </Button>
           <Button
             onClick={onNext}
             disabled={nextDisabled || !onNext}
             aria-label={nextLabel}
-            className="h-9 px-5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-xs transition-colors"
+            className="h-9 px-5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-medium shadow-xs transition-colors"
           >
             {nextLabel} <ChevronRight className="h-4 w-4 ml-1" strokeWidth={2} />
           </Button>
@@ -62,4 +62,3 @@ export function PhaseShell({
     </motion.div>
   );
 }
-

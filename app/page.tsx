@@ -123,36 +123,42 @@ function LeadLaunchApp() {
       >
         Skip to content
       </a>
-      <header className="border-b border-border bg-white/95 backdrop-blur-xs sticky top-0 z-30 shadow-xs">
+      <header className="border-b border-sky-100 bg-white/95 backdrop-blur-md sticky top-0 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center shadow-xs">
-              <Sparkles className="h-4.5 w-4.5 text-primary-foreground" strokeWidth={2} aria-hidden="true" />
+            {/* Realistic 3D-styled gradient logo badge */}
+            <div className="relative group cursor-pointer">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-sky-600 via-sky-500 to-sky-400 p-[1.5px] shadow-md shadow-sky-500/25 transition-transform duration-300 group-hover:scale-105">
+                <div className="h-full w-full rounded-[10.5px] bg-gradient-to-b from-sky-500 to-sky-600 flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/25 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                  <Sparkles className="h-5 w-5 text-white drop-shadow-sm" strokeWidth={2} aria-hidden="true" />
+                </div>
+              </div>
             </div>
             <div>
-              <div className="font-sans font-bold text-xl tracking-tight leading-none text-foreground">
-                Lead <span className="text-muted-foreground/60 font-normal">→</span> Launch
+              <div className="font-sans font-bold text-xl tracking-tight leading-none text-slate-900">
+                Lead <span className="text-sky-500 font-normal">→</span> Launch
               </div>
-              <div className="text-[10px] text-muted-foreground leading-tight tracking-[0.1em] uppercase mt-1 font-sans font-medium">
+              <div className="text-[10px] text-sky-700/80 leading-tight tracking-[0.12em] uppercase mt-1 font-sans font-semibold">
                 Scrape · Audit · Rank · Build · Outreach
               </div>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {quota && (
-              <div className="hidden sm:block rounded-lg border border-border bg-white px-3 py-1 text-right">
-                <div className="text-[9px] uppercase tracking-[0.14em] text-muted-foreground font-medium">Leads left</div>
-                <div className="font-mono text-xs tabular-nums font-bold text-foreground">
+              <div className="hidden sm:block rounded-xl border border-sky-100 bg-sky-50/50 px-3 py-1 text-right shadow-2xs">
+                <div className="text-[9px] uppercase tracking-[0.14em] text-slate-500 font-semibold">Leads left</div>
+                <div className="font-mono text-xs tabular-nums font-bold text-sky-700">
                   {quota.remaining}/{quota.leadLimit}
                 </div>
               </div>
             )}
-            <Button variant="outline" size="sm" onClick={() => setShowHistory(true)} aria-label="View Scraped History" className="h-8 rounded-lg text-xs font-medium">
-              <History className="h-3.5 w-3.5 mr-1 text-muted-foreground" aria-hidden="true" />
+            <Button variant="outline" size="sm" onClick={() => setShowHistory(true)} aria-label="View Scraped History" className="h-8.5 rounded-xl border-sky-200 text-xs font-medium hover:bg-sky-50 text-slate-700">
+              <History className="h-3.5 w-3.5 mr-1 text-sky-600" aria-hidden="true" />
               History
             </Button>
-            <Button variant="outline" size="sm" onClick={signOutUser} aria-label="Sign out" className="h-8 rounded-lg text-xs font-medium">
-              <LogOut className="h-3.5 w-3.5 mr-1 text-muted-foreground" aria-hidden="true" />
+            <Button variant="outline" size="sm" onClick={signOutUser} aria-label="Sign out" className="h-8.5 rounded-xl border-slate-200 text-xs font-medium hover:bg-slate-50 text-slate-700">
+              <LogOut className="h-3.5 w-3.5 mr-1 text-slate-500" aria-hidden="true" />
               Sign out
             </Button>
           </div>
@@ -209,8 +215,10 @@ function LeadLaunchApp() {
               selected={selectedRanked}
               sessionId={sessionId}
               onPrev={() => setPhase(4)}
+              onReset={() => setPhase(1)}
             />
           )}
+
         </AnimatePresence>
       </main>
 

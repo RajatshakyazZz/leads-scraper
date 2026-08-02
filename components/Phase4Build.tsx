@@ -108,9 +108,10 @@ export function Phase4Build({
         <IncompleteState
           title="No lead selected yet"
           description="Run scrape and audit, then pick the highest-scoring prospect in Phase 3. We'll generate a complete website prompt (Lovable / Bolt / Claude Code / Codex) plus a live preview here."
-          prevPhaseLabel="Rank"
-          onPrev={onPrev}
+          actionLabel="Go to Rank"
+          onAction={onPrev}
         />
+
       </PhaseShell>
     );
   }
@@ -148,40 +149,48 @@ export function Phase4Build({
       </div>
 
       <div className="grid lg:grid-cols-2 gap-5">
-        <Card className="rounded-xl border border-border bg-white shadow-premium">
+        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5">
           <CardHeader className="pb-3 pt-5 px-5">
-            <CardTitle className="text-base tracking-tight font-bold text-foreground">Generated Prompt</CardTitle>
+            <CardTitle className="text-base tracking-tight font-bold text-slate-900">Generated Prompt</CardTitle>
           </CardHeader>
-          <CardContent className="px-5 pb-5 pt-0">
-            <pre className="text-xs leading-relaxed whitespace-pre-wrap font-mono bg-secondary/40 rounded-lg p-4 max-h-[520px] overflow-y-auto border border-border/80 text-foreground/90 scrollbar-thin">
+          <CardContent className="px-5 pb-5">
+            <pre className="text-xs leading-relaxed whitespace-pre-wrap font-mono bg-slate-900 text-slate-100 rounded-xl p-4 max-h-[520px] overflow-y-auto border border-slate-800 shadow-inner scrollbar-thin">
               {prompt}
             </pre>
           </CardContent>
         </Card>
 
-        <Card className="rounded-xl border border-border bg-white shadow-premium overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-5 px-5 gap-3">
-            <CardTitle className="text-base tracking-tight font-bold text-foreground">Live Preview</CardTitle>
-            <Button size="sm" variant="outline" onClick={simulateBuild} disabled={building} className="rounded-lg h-8 text-xs font-medium cursor-pointer">
-              {building ? <><Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> Building</> : <><Sparkles className="h-3.5 w-3.5 mr-1 text-primary" /> Build Site</>}
+        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-5 px-5 gap-3 border-b border-sky-100">
+            <CardTitle className="text-base tracking-tight font-bold text-slate-900">Live Preview</CardTitle>
+            <Button size="sm" variant="outline" onClick={simulateBuild} disabled={building} className="rounded-xl h-8.5 px-3.5 border-sky-200 text-sky-700 text-xs font-semibold hover:bg-sky-50 cursor-pointer">
+              {building ? <><Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> Building</> : <><Sparkles className="h-3.5 w-3.5 mr-1 text-sky-600" /> Build Site</>}
             </Button>
           </CardHeader>
-          <CardContent className="px-5 pb-5 pt-0">
-            <div className="rounded-lg overflow-hidden border border-border h-[520px] shadow-inner bg-secondary/30 flex flex-col">
-              {/* Browser control header mockup */}
-              <div className="bg-secondary/60 border-b border-border px-3.5 py-2 flex items-center gap-1.5 shrink-0">
-                <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                <div className="flex-1 bg-white text-center text-[10px] text-muted-foreground py-0.5 rounded font-mono select-none truncate max-w-[260px] mx-auto border border-border/60">
-                  {selected.name.toLowerCase().replace(/\s+/g, "")}.dev
-                </div>
+          <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center gap-2">
+            <div className="flex gap-1.5">
+              <div className="h-3 w-3 rounded-full bg-rose-400" />
+              <div className="h-3 w-3 rounded-full bg-amber-400" />
+              <div className="h-3 w-3 rounded-full bg-emerald-400" />
+            </div>
+            <div className="flex-1 max-w-md mx-auto bg-white rounded-lg px-3 py-1 text-[11px] font-mono text-slate-500 text-center border border-slate-200 truncate">
+              https://preview.{selected.name.toLowerCase().replace(/[^a-z0-9]/g, "")}.com
+            </div>
+          </div>
+          <CardContent className="p-8 text-center bg-slate-50/50">
+            <div className="max-w-md mx-auto space-y-4">
+              <h3 className="text-xl font-bold text-slate-900">{selected.name}</h3>
+              <p className="text-xs text-slate-500 leading-relaxed font-sans">
+                Premium landing page architecture designed for high conversion. Custom appointment booking flow, patient testimonials, and localized SEO schema included.
+              </p>
+              <div className="pt-2 flex justify-center gap-3">
+                <Button className="h-9 px-5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-md shadow-sky-600/20">
+                  Book Appointment
+                </Button>
+                <Button variant="outline" className="h-9 px-5 rounded-xl border-sky-200 text-sky-700 text-xs font-semibold hover:bg-sky-50">
+                  View Services
+                </Button>
               </div>
-              <iframe
-                title="Preview"
-                srcDoc={demoSiteHtml(selected)}
-                className="w-full flex-1 bg-white border-none"
-              />
             </div>
           </CardContent>
         </Card>
@@ -189,6 +198,7 @@ export function Phase4Build({
     </PhaseShell>
   );
 }
+
 
 function buildPrompt(l: RankedLead, platform: string): string {
   const name = l.name;
@@ -199,6 +209,7 @@ function buildPrompt(l: RankedLead, platform: string): string {
   const rating = l.rating ?? 4.5;
   const reviews = l.reviewsCount ?? 0;
   const gap = l.audit.biggestGap;
+
   return `You are building a high-converting local-business website for an Indian ${niche}.
 
 # BUSINESS

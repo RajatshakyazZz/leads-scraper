@@ -48,43 +48,43 @@
 }
 
 :root {
-  --background: #F7F7F6;
-  --foreground: #14171A;
+  --background: #F4F8FC;
+  --foreground: #0F172A;
   --card: #FFFFFF;
-  --card-foreground: #14171A;
+  --card-foreground: #0F172A;
   --popover: #FFFFFF;
-  --popover-foreground: #14171A;
-  --primary: #0F6B4C;
+  --popover-foreground: #0F172A;
+  --primary: #0284C7;
   --primary-foreground: #FFFFFF;
-  --secondary: #F0F0EE;
-  --secondary-foreground: #14171A;
-  --muted: #F2F2F0;
-  --muted-foreground: #6B6F76;
-  --accent: #0F6B4C;
+  --secondary: #E0F2FE;
+  --secondary-foreground: #0369A1;
+  --muted: #F0F7FF;
+  --muted-foreground: #64748B;
+  --accent: #0EA5E9;
   --accent-foreground: #FFFFFF;
   --destructive: #C13B2E;
-  --border: #E9E9E6;
-  --input: #E9E9E6;
-  --ring: #0F6B4C;
-  --chart-1: #0F6B4C;
-  --chart-2: #148A62;
-  --chart-3: #14171A;
-  --chart-4: #16a34a;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #0284C7;
+  --chart-1: #0284C7;
+  --chart-2: #38BDF8;
+  --chart-3: #0F172A;
+  --chart-4: #0EA5E9;
   --chart-5: #d97706;
   --radius: 0.625rem;
-  --accent-secondary: #148A62;
-  --shadow-accent: 0 4px 14px rgba(15, 107, 76, 0.15);
-  --shadow-accent-lg: 0 8px 24px rgba(15, 107, 76, 0.2);
-  --shadow-premium: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05);
-  --shadow-premium-hover: 0 2px 4px rgba(0, 0, 0, 0.04), 0 8px 20px rgba(0, 0, 0, 0.08);
+  --accent-secondary: #38BDF8;
+  --shadow-accent: 0 4px 14px rgba(2, 132, 199, 0.2);
+  --shadow-accent-lg: 0 8px 24px rgba(2, 132, 199, 0.25);
+  --shadow-premium: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(2, 132, 199, 0.05);
+  --shadow-premium-hover: 0 4px 12px rgba(2, 132, 199, 0.08), 0 8px 24px rgba(2, 132, 199, 0.12);
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #14171A;
-  --sidebar-primary: #0F6B4C;
+  --sidebar-foreground: #0F172A;
+  --sidebar-primary: #0284C7;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F2F2F0;
-  --sidebar-accent-foreground: #14171A;
-  --sidebar-border: #E9E9E6;
-  --sidebar-ring: #0F6B4C;
+  --sidebar-accent: #F0F7FF;
+  --sidebar-accent-foreground: #0F172A;
+  --sidebar-border: #E2E8F0;
+  --sidebar-ring: #0284C7;
 }
 
 /* Lenis smooth scrolling rules */
@@ -115,7 +115,13 @@ html.lenis body {
   }
   body {
     @apply bg-background text-foreground;
-    background-color: #F7F7F6;
+    background-color: #F4F8FC;
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(2, 132, 199, 0.07) 1px, transparent 0),
+      radial-gradient(circle at 20% 0%, rgba(56, 189, 248, 0.08), transparent 30rem),
+      radial-gradient(circle at 80% 10%, rgba(2, 132, 199, 0.06), transparent 35rem);
+    background-size: 24px 24px, 100% 100%, 100% 100%;
+    background-attachment: fixed;
     font-feature-settings: "ss01", "cv11";
   }
   html {
@@ -157,14 +163,14 @@ html.lenis body {
 @layer utilities {
   .section-label {
     @apply inline-flex items-center gap-2.5 rounded-full border px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.12em];
-    border-color: rgba(15, 107, 76, 0.2);
-    background: rgba(15, 107, 76, 0.06);
-    color: #0F6B4C;
+    border-color: rgba(2, 132, 199, 0.25);
+    background: rgba(2, 132, 199, 0.08);
+    color: #0284C7;
   }
 
   .section-label-dot {
     @apply h-2 w-2 rounded-full;
-    background: #0F6B4C;
+    background: #0284C7;
   }
 
   .shadow-premium {
@@ -174,5 +180,11 @@ html.lenis body {
   .shadow-premium-hover {
     box-shadow: var(--shadow-premium-hover);
   }
+
+  .bg-texture-grid {
+    background-image: radial-gradient(circle at 1px 1px, rgba(2, 132, 199, 0.09) 1px, transparent 0);
+    background-size: 16px 16px;
+  }
 }
+
 

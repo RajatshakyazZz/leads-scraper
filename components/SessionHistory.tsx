@@ -256,7 +256,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex justify-end bg-black/30 backdrop-blur-xs">
+    <div className="fixed inset-0 z-[9999] flex justify-end bg-slate-900/40 backdrop-blur-xs">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -270,57 +270,57 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", damping: 28, stiffness: 220 }}
-        className="relative z-10 flex h-full w-full max-w-4xl flex-col border-l border-border bg-white shadow-2xl rounded-l-2xl"
+        className="relative z-10 flex h-full w-full max-w-4xl flex-col border-l border-sky-100 bg-white shadow-2xl rounded-l-3xl overflow-hidden"
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-border p-5">
+        <div className="flex items-center justify-between border-b border-sky-100 p-5 bg-gradient-to-r from-sky-50/50 via-white to-white">
           <div>
-            <h2 className="font-sans font-bold text-lg flex items-center gap-2 text-foreground">
-              <Clock className="h-4.5 w-4.5 text-primary" />
+            <h2 className="font-sans font-bold text-lg flex items-center gap-2 text-slate-900">
+              <Clock className="h-4.5 w-4.5 text-sky-500" />
               Scraped Leads History
             </h2>
-            <p className="text-xs text-muted-foreground mt-0.5 font-sans">Manage and review all your previous lead generation sessions</p>
+            <p className="text-xs text-slate-500 mt-0.5 font-sans">Manage and review all your previous lead generation sessions</p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleExportAll} className="h-8 rounded-lg text-xs font-medium border-border">
-              <Download className="h-3.5 w-3.5 mr-1 text-muted-foreground" />
+            <Button variant="outline" size="sm" onClick={handleExportAll} className="h-8 rounded-lg text-xs font-medium border-sky-200 text-sky-700 hover:bg-sky-50">
+              <Download className="h-3.5 w-3.5 mr-1 text-sky-600" />
               Export Account
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-lg h-8 w-8 hover:bg-secondary/60 transition-colors">
-              <X className="h-4 w-4 text-muted-foreground" />
+            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-lg h-8 w-8 hover:bg-slate-100 transition-colors">
+              <X className="h-4 w-4 text-slate-500" />
             </Button>
           </div>
         </div>
 
         {/* Filters and search */}
-        <div className="border-b border-border bg-secondary/30 p-4">
+        <div className="border-b border-sky-100 bg-sky-50/30 p-4">
           <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-2.5">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
               <Input
                 type="text"
                 placeholder="Search by niche or city..."
                 value={search}
                 onChange={handleSearchChange}
-                className="pl-9 h-9 rounded-lg border-border text-xs focus-visible:ring-1 focus-visible:ring-ring bg-white"
+                className="pl-9 h-9 rounded-lg border-sky-200 text-xs focus-visible:ring-1 focus-visible:ring-sky-500 bg-white"
               />
             </div>
             <div className="flex gap-2">
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="h-9 rounded-lg border border-border bg-white px-3 text-xs focus-visible:outline-none cursor-pointer"
+                className="h-9 rounded-lg border border-sky-200 bg-white px-3 text-xs focus-visible:outline-none cursor-pointer text-slate-700"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
               </select>
-              <Button type="submit" size="sm" className="h-9 px-4 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-xs shadow-xs cursor-pointer">Search</Button>
+              <Button type="submit" size="sm" className="h-9 px-4 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-medium text-xs shadow-xs cursor-pointer">Search</Button>
             </div>
           </form>
           
           {selectedIds.size > 0 && (
-            <div className="mt-3 flex items-center justify-between bg-primary/10 border border-primary/20 rounded-lg p-2.5">
-              <span className="text-xs font-semibold text-primary pl-1 font-mono">
+            <div className="mt-3 flex items-center justify-between bg-sky-100/60 border border-sky-200 rounded-lg p-2.5">
+              <span className="text-xs font-semibold text-sky-700 pl-1 font-mono">
                 {selectedIds.size} session{selectedIds.size > 1 ? "s" : ""} selected
               </span>
               <Button
@@ -337,8 +337,9 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
           )}
         </div>
 
-        {/* Sessions list */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        {/* Sessions list (data-lenis-prevent and overscroll-contain added to isolate scroll) */}
+        <div data-lenis-prevent className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-3">
+
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-3">
               <Loader2 className="h-7 w-7 text-primary animate-spin" />

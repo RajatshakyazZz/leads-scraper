@@ -86,8 +86,8 @@ export function Phase3Rank({
               ? "Phases 1 and 2 haven't been run. After scraping leads and auditing them, this page ranks each by conversion potential and lets you pick one to build for."
               : "Run an audit in Phase 2 first. Once leads have audits, we score them on site quality, review volume, rating, reachability, and industry fit — then sort for highest conversion potential."
           }
-          prevPhaseLabel={leads.length === 0 ? "Scrape" : "Audit"}
-          onPrev={onPrev}
+          actionLabel={leads.length === 0 ? "Go to Scrape" : "Go to Audit"}
+          onAction={onPrev}
         />
       </PhaseShell>
     );
@@ -116,39 +116,33 @@ export function Phase3Rank({
               aria-pressed={selectedId === lead.id}
               aria-label={`Select rank ${i + 1}: ${lead.name}`}
               onClick={() => setSelectedId(lead.id)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setSelectedId(lead.id);
-                }
-              }}
-              className={`cursor-pointer transition-all duration-200 rounded-xl border bg-white shadow-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring hover:-translate-y-0.5 ${
+              className={`cursor-pointer transition-all duration-200 rounded-2xl border bg-white shadow-lg shadow-sky-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 hover:-translate-y-0.5 ${
                 selectedId === lead.id
-                  ? "ring-1 ring-primary border-primary/40 bg-primary/[0.03]"
-                  : "border-border hover:border-primary/30 hover:shadow-premium-hover"
+                  ? "ring-2 ring-sky-500 border-sky-400 bg-sky-50/20"
+                  : "border-sky-100 hover:border-sky-300"
               }`}
             >
               <CardHeader className="pb-2.5 pt-5 px-5">
                 <div className="flex items-start justify-between">
-                  <CardTitle className="text-[10px] flex items-center gap-1.5 font-bold tracking-[0.12em] uppercase text-primary">
+                  <CardTitle className="text-[10px] flex items-center gap-1.5 font-bold tracking-[0.12em] uppercase text-sky-700">
                     <Crown className="h-3.5 w-3.5 text-amber-500" strokeWidth={1.75} />
                     Rank · {String(i + 1).padStart(2, "0")}
                   </CardTitle>
-                  <div className="font-mono text-3xl font-bold tabular-nums leading-none text-foreground">{lead.score}</div>
+                  <div className="font-mono text-3xl font-bold tabular-nums leading-none text-sky-700">{lead.score}</div>
                 </div>
               </CardHeader>
               <CardContent className="px-5 pb-5 pt-0">
-                <div className="font-bold text-sm leading-snug text-foreground truncate">{lead.name}</div>
-                <div className="text-xs text-muted-foreground mt-0.5 font-sans truncate">{lead.address}</div>
-                <div className="mt-3.5 flex items-center gap-2.5 text-xs font-sans text-muted-foreground font-mono tabular-nums">
-                  <span className="flex items-center gap-1"><IndianRupee className="h-3.5 w-3.5 text-muted-foreground" />{lead.audit.estLostRevenuePerMonth.toLocaleString("en-IN")}/mo</span>
-                  <span className="text-border">•</span>
+                <div className="font-bold text-sm leading-snug text-slate-900 truncate">{lead.name}</div>
+                <div className="text-xs text-slate-500 mt-0.5 font-sans truncate">{lead.address}</div>
+                <div className="mt-3.5 flex items-center gap-2.5 text-xs font-sans text-slate-600 font-mono tabular-nums">
+                  <span className="flex items-center gap-1"><IndianRupee className="h-3.5 w-3.5 text-slate-400" />{lead.audit.estLostRevenuePerMonth.toLocaleString("en-IN")}/mo</span>
+                  <span className="text-slate-300">•</span>
                   <span>{lead.reviewsCount} reviews</span>
                 </div>
-                <div className="mt-3 flex gap-2 border-t border-border/80 pt-3">
-                  {lead.phone && <Phone className="h-3.5 w-3.5 text-muted-foreground/70" strokeWidth={1.5} />}
-                  {lead.whatsapp && <MessageCircle className="h-3.5 w-3.5 text-primary" strokeWidth={1.5} />}
-                  {lead.email && <Mail className="h-3.5 w-3.5 text-muted-foreground/70" strokeWidth={1.5} />}
+                <div className="mt-3 flex gap-2 border-t border-sky-100 pt-3">
+                  {lead.phone && <Phone className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.5} />}
+                  {lead.whatsapp && <MessageCircle className="h-3.5 w-3.5 text-sky-600" strokeWidth={1.5} />}
+                  {lead.email && <Mail className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.5} />}
                 </div>
               </CardContent>
             </Card>
@@ -156,58 +150,50 @@ export function Phase3Rank({
         ))}
       </div>
 
-      <Card className="rounded-xl border border-border bg-white shadow-premium">
+      <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5">
         <CardHeader className="pb-3 pt-5 px-5">
-          <CardTitle className="text-base tracking-tight font-bold text-foreground">All Prospects Ranked</CardTitle>
+          <CardTitle className="text-base tracking-tight font-bold text-slate-900">All Prospects Ranked</CardTitle>
         </CardHeader>
         <CardContent className="pb-5 px-5">
-          <div className="overflow-x-auto rounded-lg border border-border/80 bg-white">
+          <div className="overflow-x-auto rounded-xl border border-sky-100 bg-white">
             <Table>
-              <TableHeader className="bg-secondary/50">
-                <TableRow className="border-b border-border hover:bg-transparent">
-                  <TableHead className="w-12 text-center text-xs font-semibold text-muted-foreground py-2.5">#</TableHead>
-                  <TableHead className="text-xs font-semibold text-muted-foreground py-2.5">Business</TableHead>
-                  <TableHead className="w-[280px] text-xs font-semibold text-muted-foreground py-2.5">Score Breakdown</TableHead>
-                  <TableHead className="text-xs font-semibold text-muted-foreground py-2.5">₹ Lost / mo</TableHead>
-                  <TableHead className="text-xs font-semibold text-muted-foreground py-2.5">Audit Details</TableHead>
-                  <TableHead className="text-right text-xs font-semibold text-muted-foreground py-2.5 pr-4">Action</TableHead>
+              <TableHeader className="bg-sky-50/60">
+                <TableRow className="border-b border-sky-100 hover:bg-transparent">
+                  <TableHead className="w-12 text-center text-xs font-bold text-slate-500 py-2.5">#</TableHead>
+                  <TableHead className="text-xs font-bold text-slate-500 py-2.5">Business</TableHead>
+                  <TableHead className="w-[240px] text-xs font-bold text-slate-500 py-2.5">Score</TableHead>
+                  <TableHead className="text-xs font-bold text-slate-500 py-2.5">₹ Lost / mo</TableHead>
+                  <TableHead className="text-xs font-bold text-slate-500 py-2.5">Audit</TableHead>
+                  <TableHead className="text-right text-xs font-bold text-slate-500 py-2.5 pr-4">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {ranked.map((lead, i) => (
-                  <motion.tr
+                  <TableRow
                     key={lead.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: i * 0.02, duration: 0.2 }}
                     aria-selected={selectedId === lead.id}
-                    className={`border-b border-border/60 cursor-pointer transition-colors duration-150 hover:bg-secondary/30 ${selectedId === lead.id ? "bg-primary/[0.04]" : ""}`}
+                    className={`border-b border-sky-100/60 cursor-pointer transition-colors duration-150 ${selectedId === lead.id ? "bg-sky-50/80" : "hover:bg-sky-50/30"}`}
                     onClick={() => setSelectedId(lead.id)}
                   >
-                    <TableCell className="text-center font-mono text-xs text-muted-foreground py-3 tabular-nums">{i + 1}</TableCell>
+                    <TableCell className="text-center font-mono text-xs text-slate-400 py-3 tabular-nums">{i + 1}</TableCell>
                     <TableCell className="py-3">
-                      <div className="font-semibold text-sm text-foreground">{lead.name}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5 font-mono tabular-nums">{lead.reviewsCount} reviews · {lead.rating}★</div>
+                      <div className="font-bold text-sm text-slate-900">{lead.name}</div>
+                      <div className="text-xs text-slate-500 mt-0.5 font-mono tabular-nums">{lead.reviewsCount} reviews · {lead.rating}★</div>
                     </TableCell>
                     <TableCell className="py-3">
                       <div className="flex items-center gap-3">
-                        <div className="relative h-1.5 flex-1 rounded-full bg-secondary overflow-hidden">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${lead.score}%` }}
-                            transition={{ duration: 0.6, delay: i * 0.02, ease: "easeOut" }}
-                            className="h-full bg-primary"
-                          />
+                        <div className="relative h-1.5 flex-1 rounded-full bg-sky-100 overflow-hidden">
+                          <div className="h-full bg-sky-600 rounded-full" style={{ width: `${lead.score}%` }} />
                         </div>
-                        <span className="font-mono text-xs font-bold text-foreground w-9 text-right tabular-nums">{lead.score}</span>
+                        <span className="font-mono text-xs font-bold text-sky-700 w-9 text-right tabular-nums">{lead.score}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="font-mono text-xs font-bold tabular-nums text-foreground py-3">₹{lead.audit.estLostRevenuePerMonth.toLocaleString("en-IN")}</TableCell>
+                    <TableCell className="font-mono text-xs font-bold tabular-nums text-slate-900 py-3">₹{lead.audit.estLostRevenuePerMonth.toLocaleString("en-IN")}</TableCell>
                     <TableCell className="py-3">
                       {lead.audit.hasWebsite ? (
-                        <Badge variant="secondary" className="text-[10px] font-medium h-5 px-2 bg-emerald-50 text-emerald-700 border border-emerald-200">{lead.audit.pageSpeedScore} PageSpeed</Badge>
+                        <Badge variant="secondary" className="text-[10px] font-semibold h-5 px-2 bg-sky-50 text-sky-700 border border-sky-200">{lead.audit.pageSpeedScore} PageSpeed</Badge>
                       ) : (
-                        <Badge variant="outline" className="text-[10px] font-medium h-5 px-2 text-rose-600 border-rose-200 bg-rose-50">No site</Badge>
+                        <Badge variant="outline" className="text-[10px] font-semibold h-5 px-2 text-rose-600 border-rose-200 bg-rose-50">No site</Badge>
                       )}
                     </TableCell>
                     <TableCell className="text-right py-3 pr-4">
@@ -218,22 +204,21 @@ export function Phase3Rank({
                           e.stopPropagation();
                           setSelectedId(lead.id);
                         }}
-                        className={`rounded-lg h-7 px-3 text-xs font-medium cursor-pointer ${
-                          selectedId === lead.id ? "bg-primary text-primary-foreground shadow-xs" : "border-border hover:bg-secondary/60"
+                        className={`rounded-xl h-7 px-3 text-xs font-semibold cursor-pointer ${
+                          selectedId === lead.id ? "bg-sky-600 text-white shadow-xs" : "border-sky-200 text-slate-700 hover:bg-sky-50"
                         }`}
                       >
                         {selectedId === lead.id ? "Selected" : "Select"}
                       </Button>
                     </TableCell>
-                  </motion.tr>
+                  </TableRow>
                 ))}
               </TableBody>
             </Table>
-            {ranked.length === 0 && <div className="text-center py-12 text-sm text-muted-foreground font-sans">Awaiting performance audits to rank prospects</div>}
+            {ranked.length === 0 && <div className="text-center py-12 text-sm text-slate-500 font-sans">Awaiting performance audits to rank prospects</div>}
           </div>
         </CardContent>
       </Card>
     </PhaseShell>
   );
 }
-

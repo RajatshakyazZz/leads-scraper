@@ -2,38 +2,35 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Lock } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 
 export function IncompleteState({
   title,
   description,
-  prevPhaseLabel,
-  onPrev,
+  actionLabel,
+  onAction,
 }: {
   title: string;
   description: string;
-  prevPhaseLabel: string;
-  onPrev?: () => void;
+  actionLabel: string;
+  onAction?: () => void;
 }) {
   return (
-    <Card className="border-dashed border-border bg-white rounded-xl shadow-xs">
-      <CardContent className="py-14 px-6 text-center max-w-xl mx-auto">
-        <div className="h-10 w-10 rounded-full bg-secondary mx-auto flex items-center justify-center mb-4 border border-border/60">
-          <Lock className="h-4 w-4 text-muted-foreground" strokeWidth={1.75} aria-hidden="true" />
+    <Card className="max-w-xl mx-auto rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 my-8">
+      <CardContent className="pt-8 pb-8 px-6 text-center space-y-4">
+        <div className="mx-auto h-12 w-12 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-600 shadow-xs">
+          <AlertCircle className="h-6 w-6" aria-hidden="true" />
         </div>
-        <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground font-semibold mb-1.5">
-          Preview · No data yet
+        <div className="space-y-1.5">
+          <h2 className="font-sans font-bold text-lg tracking-tight text-slate-900">{title}</h2>
+          <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed font-sans">{description}</p>
         </div>
-        <h2 className="font-sans font-bold text-xl text-foreground mb-2">{title}</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-6 font-sans">{description}</p>
-        {onPrev && (
-          <Button variant="outline" onClick={onPrev} className="h-9 px-4 rounded-lg border-border hover:bg-secondary/60 text-xs font-medium">
-            <ArrowLeft className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.75} />
-            Go to {prevPhaseLabel}
+        {onAction && (
+          <Button onClick={onAction} className="h-10 px-5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-md shadow-sky-600/20 cursor-pointer transition-all">
+            {actionLabel}
           </Button>
         )}
       </CardContent>
     </Card>
   );
 }
-
