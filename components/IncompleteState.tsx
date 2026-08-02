@@ -16,19 +16,19 @@ export function IncompleteState({
   onPrev?: () => void;
 }) {
   return (
-    <Card className="border-dashed">
-      <CardContent className="py-16 px-6 text-center max-w-xl mx-auto">
-        <div className="h-12 w-12 rounded-full bg-muted mx-auto flex items-center justify-center mb-5">
-          <Lock className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} aria-hidden="true" />
+    <Card className="border-dashed border-border bg-white rounded-xl shadow-xs">
+      <CardContent className="py-14 px-6 text-center max-w-xl mx-auto">
+        <div className="h-10 w-10 rounded-full bg-secondary mx-auto flex items-center justify-center mb-4 border border-border/60">
+          <Lock className="h-4 w-4 text-muted-foreground" strokeWidth={1.75} aria-hidden="true" />
         </div>
-        <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
+        <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground font-semibold mb-1.5">
           Preview · No data yet
         </div>
-        <h2 className="font-display text-2xl mb-3">{title}</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-6">{description}</p>
+        <h2 className="font-sans font-bold text-xl text-foreground mb-2">{title}</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-6 font-sans">{description}</p>
         {onPrev && (
-          <Button variant="outline" onClick={onPrev} className="h-10 px-4">
-            <ArrowLeft className="h-4 w-4 mr-2" strokeWidth={1.5} />
+          <Button variant="outline" onClick={onPrev} className="h-9 px-4 rounded-lg border-border hover:bg-secondary/60 text-xs font-medium">
+            <ArrowLeft className="h-3.5 w-3.5 mr-1.5" strokeWidth={1.75} />
             Go to {prevPhaseLabel}
           </Button>
         )}
@@ -36,3 +36,4 @@ export function IncompleteState({
     </Card>
   );
 }
+

@@ -256,7 +256,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex justify-end bg-stone-950/20 backdrop-blur-xs">
+    <div className="fixed inset-0 z-[9999] flex justify-end bg-black/30 backdrop-blur-xs">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -270,57 +270,57 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", damping: 28, stiffness: 220 }}
-        className="relative z-10 flex h-full w-full max-w-4xl flex-col border-l border-border/70 bg-card shadow-2xl rounded-l-3xl"
+        className="relative z-10 flex h-full w-full max-w-4xl flex-col border-l border-border bg-white shadow-2xl rounded-l-2xl"
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-border/85 p-5">
+        <div className="flex items-center justify-between border-b border-border p-5">
           <div>
-            <h2 className="font-display text-xl flex items-center gap-2 text-foreground">
-              <Clock className="h-5 w-5 text-primary" />
+            <h2 className="font-sans font-bold text-lg flex items-center gap-2 text-foreground">
+              <Clock className="h-4.5 w-4.5 text-primary" />
               Scraped Leads History
             </h2>
-            <p className="text-xs text-muted-foreground mt-1 font-sans">Manage and review all your previous lead generation sessions</p>
+            <p className="text-xs text-muted-foreground mt-0.5 font-sans">Manage and review all your previous lead generation sessions</p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleExportAll} className="h-8.5 rounded-xl text-xs">
-              <Download className="h-3.5 w-3.5 mr-1" />
+            <Button variant="outline" size="sm" onClick={handleExportAll} className="h-8 rounded-lg text-xs font-medium border-border">
+              <Download className="h-3.5 w-3.5 mr-1 text-muted-foreground" />
               Export Account
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full h-8.5 w-8.5 hover:bg-muted transition-colors">
-              <X className="h-4.5 w-4.5 text-muted-foreground" />
+            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-lg h-8 w-8 hover:bg-secondary/60 transition-colors">
+              <X className="h-4 w-4 text-muted-foreground" />
             </Button>
           </div>
         </div>
 
         {/* Filters and search */}
-        <div className="border-b border-border/80 bg-muted/20 p-5">
-          <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
+        <div className="border-b border-border bg-secondary/30 p-4">
+          <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-2.5">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground/60" />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="text"
                 placeholder="Search by niche or city..."
                 value={search}
                 onChange={handleSearchChange}
-                className="pl-9.5 h-10 rounded-xl border-border/80 text-sm focus-visible:ring-offset-1 bg-card/50"
+                className="pl-9 h-9 rounded-lg border-border text-xs focus-visible:ring-1 focus-visible:ring-ring bg-white"
               />
             </div>
             <div className="flex gap-2">
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="h-10 rounded-xl border border-border/85 bg-card/75 px-3.5 text-xs focus-visible:outline-none cursor-pointer"
+                className="h-9 rounded-lg border border-border bg-white px-3 text-xs focus-visible:outline-none cursor-pointer"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
               </select>
-              <Button type="submit" size="sm" className="h-10 px-4 rounded-xl cursor-pointer">Search</Button>
+              <Button type="submit" size="sm" className="h-9 px-4 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-xs shadow-xs cursor-pointer">Search</Button>
             </div>
           </form>
           
           {selectedIds.size > 0 && (
-            <div className="mt-3.5 flex items-center justify-between bg-primary/5 border border-primary/15 rounded-xl p-2.5 animate-in fade-in slide-in-from-top-1">
-              <span className="text-xs font-semibold text-primary pl-1.5">
+            <div className="mt-3 flex items-center justify-between bg-primary/10 border border-primary/20 rounded-lg p-2.5">
+              <span className="text-xs font-semibold text-primary pl-1 font-mono">
                 {selectedIds.size} session{selectedIds.size > 1 ? "s" : ""} selected
               </span>
               <Button
@@ -328,7 +328,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                 size="sm"
                 onClick={handleBulkDelete}
                 disabled={deleting}
-                className="h-8 text-[11px] px-3 rounded-xl cursor-pointer"
+                className="h-7 text-xs px-3 rounded-lg cursor-pointer"
               >
                 <Trash2 className="h-3.5 w-3.5 mr-1" />
                 Delete Selected
@@ -341,18 +341,18 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-3">
-              <Loader2 className="h-8 w-8 text-primary animate-spin" />
+              <Loader2 className="h-7 w-7 text-primary animate-spin" />
               <span className="text-xs text-muted-foreground">Loading session history...</span>
             </div>
           ) : sessions.length === 0 ? (
-            <div className="text-center py-20 border border-dashed border-border rounded-xl">
-              <FolderOpen className="h-10 w-10 text-muted-foreground/30 mx-auto" />
-              <h3 className="font-display text-sm mt-3">No sessions found</h3>
-              <p className="text-xs text-muted-foreground mt-1">Run a new scrape to start your first session history log.</p>
+            <div className="text-center py-16 border border-dashed border-border rounded-xl bg-white">
+              <FolderOpen className="h-9 w-9 text-muted-foreground/40 mx-auto" />
+              <h3 className="font-sans font-bold text-sm mt-3 text-foreground">No sessions found</h3>
+              <p className="text-xs text-muted-foreground mt-1 font-sans">Run a new scrape to start your first session history log.</p>
             </div>
           ) : (
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-[10px] text-muted-foreground uppercase tracking-wider px-2">
+              <div className="flex items-center justify-between text-[10px] text-muted-foreground uppercase tracking-wider px-1 font-semibold">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -373,56 +373,56 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                 return (
                   <Card
                     key={session.id}
-                    className={`rounded-2xl border-border/70 overflow-hidden transition-all duration-300 ${
+                    className={`rounded-xl border bg-white overflow-hidden transition-all duration-200 shadow-premium ${
                       isActive 
-                        ? "ring-1 ring-primary/40 border-primary/25 bg-primary/[0.01] shadow-premium" 
-                        : "hover:border-primary/25 hover:shadow-premium"
-                    } ${isSelected ? "border-primary/40 bg-primary/[0.01]" : ""}`}
+                        ? "ring-1 ring-primary border-primary/30 bg-primary/[0.02]" 
+                        : "border-border hover:border-primary/30"
+                    } ${isSelected ? "border-primary/40 bg-primary/[0.02]" : ""}`}
                   >
                     <div
                       onClick={() => toggleExpand(session.id)}
-                      className="p-4.5 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer select-none"
+                      className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer select-none"
                     >
-                      <div className="flex items-start gap-3.5">
+                      <div className="flex items-start gap-3">
                         <div
                           onClick={(e) => toggleSelect(session.id, e)}
-                          className="mt-1 flex items-center"
+                          className="mt-0.5 flex items-center"
                         >
                           <input
                             type="checkbox"
                             checked={isSelected}
                             readOnly
-                            className="rounded-lg border-border/80 text-primary focus:ring-primary h-4 w-4 cursor-pointer"
+                            className="rounded border-border text-primary focus:ring-primary h-4 w-4 cursor-pointer"
                           />
                         </div>
                         <div>
-                          <div className="flex items-center gap-2 flex-wrap font-sans">
-                            <span className="font-semibold text-sm capitalize text-foreground">
+                          <div className="flex items-center gap-1.5 flex-wrap font-sans">
+                            <span className="font-bold text-sm capitalize text-foreground">
                               {session.niche}
                             </span>
-                            <span className="text-muted-foreground/70 text-xs">in</span>
-                            <span className="font-semibold text-sm capitalize text-foreground">
+                            <span className="text-muted-foreground text-xs">in</span>
+                            <span className="font-bold text-sm capitalize text-foreground">
                               {session.city}
                             </span>
                             {isActive && (
-                              <span className="bg-primary/10 text-primary text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                              <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
                                 Active
                               </span>
                             )}
                           </div>
                           
-                          <div className="flex items-center gap-4 mt-2.5 text-xs text-muted-foreground/80 flex-wrap font-sans">
-                            <span className="flex items-center gap-1.5">
-                              <Calendar className="h-3.5 w-3.5 text-muted-foreground/50" />
+                          <div className="flex items-center gap-3.5 mt-2 text-xs text-muted-foreground flex-wrap font-sans">
+                            <span className="flex items-center gap-1">
+                              <Calendar className="h-3.5 w-3.5 text-muted-foreground/70" />
                               {formatDate(session.createdAt)}
                             </span>
-                            <span className="flex items-center gap-1.5">
-                              <Layers className="h-3.5 w-3.5 text-muted-foreground/50" />
+                            <span className="flex items-center gap-1 font-mono tabular-nums">
+                              <Layers className="h-3.5 w-3.5 text-muted-foreground/70" />
                               {session.countReceived} leads
                             </span>
-                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${
-                              session.status === "completed" ? "bg-emerald-500/10 text-emerald-600" :
-                              session.status === "failed" ? "bg-rose-500/10 text-rose-600" : "bg-primary/10 text-primary"
+                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${
+                              session.status === "completed" ? "bg-emerald-50 text-emerald-700 border-emerald-200" :
+                              session.status === "failed" ? "bg-rose-50 text-rose-700 border-rose-200" : "bg-primary/10 text-primary border-primary/20"
                             }`}>
                               {session.status}
                             </span>
@@ -431,21 +431,21 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                       </div>
                       
                       {/* Pipeline progress bar indicators */}
-                      <div className="flex items-center gap-6 justify-between md:justify-end">
+                      <div className="flex items-center gap-5 justify-between md:justify-end">
                         <div className="flex gap-1.5">
-                          <span className={`h-2.5 w-2.5 rounded-full title="Scraped" ${session.pipeline.scrapeComplete ? "bg-green-500" : "bg-muted"}`} />
-                          <span className={`h-2.5 w-2.5 rounded-full title="Audited" ${session.pipeline.auditComplete ? "bg-green-500" : "bg-muted"}`} />
-                          <span className={`h-2.5 w-2.5 rounded-full title="Ranked" ${session.pipeline.rankComplete ? "bg-green-500" : "bg-muted"}`} />
-                          <span className={`h-2.5 w-2.5 rounded-full title="Build Prompt Generated" ${session.pipeline.buildComplete ? "bg-green-500" : "bg-muted"}`} />
-                          <span className={`h-2.5 w-2.5 rounded-full title="Outreach Drafted" ${session.pipeline.outreachComplete ? "bg-green-500" : "bg-muted"}`} />
+                          <span className={`h-2.5 w-2.5 rounded-full ${session.pipeline.scrapeComplete ? "bg-emerald-600" : "bg-secondary"}`} title="Scraped" />
+                          <span className={`h-2.5 w-2.5 rounded-full ${session.pipeline.auditComplete ? "bg-emerald-600" : "bg-secondary"}`} title="Audited" />
+                          <span className={`h-2.5 w-2.5 rounded-full ${session.pipeline.rankComplete ? "bg-emerald-600" : "bg-secondary"}`} title="Ranked" />
+                          <span className={`h-2.5 w-2.5 rounded-full ${session.pipeline.buildComplete ? "bg-emerald-600" : "bg-secondary"}`} title="Build Prompt Generated" />
+                          <span className={`h-2.5 w-2.5 rounded-full ${session.pipeline.outreachComplete ? "bg-emerald-600" : "bg-secondary"}`} title="Outreach Drafted" />
                         </div>
                         
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={(e) => handleDelete(session.id, e)}
-                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                            className="h-7 w-7 text-muted-foreground hover:text-destructive"
                             aria-label="Delete session"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -454,7 +454,7 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                             variant="ghost"
                             size="icon"
                             onClick={() => toggleExpand(session.id)}
-                            className="h-8 w-8"
+                            className="h-7 w-7"
                           >
                             {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                           </Button>
@@ -469,10 +469,10 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                           initial={{ height: 0 }}
                           animate={{ height: "auto" }}
                           exit={{ height: 0 }}
-                          className="border-t border-border bg-muted/10 overflow-hidden"
+                          className="border-t border-border bg-secondary/30 overflow-hidden"
                         >
-                          <div className="p-4 border-b border-border bg-muted/20 flex flex-wrap items-center justify-between gap-3">
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
+                          <div className="p-3.5 border-b border-border flex flex-wrap items-center justify-between gap-3 bg-white">
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono tabular-nums">
                               <span>ID: {session.id.substring(0, 8)}</span>
                               <span>•</span>
                               <span>Duration: {((session.durationMs || 0) / 1000).toFixed(1)}s</span>
@@ -482,27 +482,26 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                             <div className="flex gap-2">
                               <Button
                                 variant="outline"
-                                size="xs"
+                                size="sm"
                                 onClick={(e) => handleDuplicate(session, e)}
-                                className="text-xs h-7 rounded-lg px-2.5"
+                                className="text-xs h-7 rounded-lg px-2.5 border-border"
                               >
                                 <Copy className="h-3 w-3 mr-1" />
                                 Re-run Scrape
                               </Button>
                               <Button
                                 variant="outline"
-                                size="xs"
+                                size="sm"
                                 onClick={(e) => handleExport(session.id, e)}
-                                className="text-xs h-7 rounded-lg px-2.5"
+                                className="text-xs h-7 rounded-lg px-2.5 border-border"
                               >
                                 <Download className="h-3 w-3 mr-1" />
                                 Export CSV
                               </Button>
                               <Button
-                                variant="default"
-                                size="xs"
+                                size="sm"
                                 onClick={() => handleLoad(session.id)}
-                                className="text-xs h-7 rounded-lg px-2.5 cursor-pointer"
+                                className="text-xs h-7 rounded-lg px-2.5 bg-primary text-primary-foreground shadow-xs cursor-pointer"
                               >
                                 <FolderOpen className="h-3 w-3 mr-1" />
                                 Open Session
@@ -526,8 +525,9 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
                 size="sm"
                 onClick={() => fetchSessions(false)}
                 disabled={loadingMore}
+                className="h-8 text-xs rounded-lg border-border"
               >
-                {loadingMore ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <RefreshCw className="h-3.5 w-3.5 mr-1" />}
+                {loadingMore ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" /> : <RefreshCw className="h-3.5 w-3.5 mr-1" />}
                 Load More Sessions
               </Button>
             </div>
@@ -537,3 +537,4 @@ export function SessionHistory({ onClose, onLoadSession, currentSessionId, onDup
     </div>
   );
 }
+

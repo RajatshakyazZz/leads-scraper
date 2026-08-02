@@ -112,22 +112,22 @@ export function Phase5Outreach({
 
   return (
     <PhaseShell title="Phase 5 — Outreach" subtitle="Hinglish-first by default — converts 3x better in India. Built-in 5-day follow-up." onPrev={onPrev}>
-      <div className="flex flex-wrap items-center justify-between gap-6 mb-8 bg-card/65 backdrop-blur-sm border border-border/60 rounded-2xl p-5 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-6 mb-6 bg-white border border-border rounded-xl p-5 shadow-premium">
         <div>
-          <div className="text-[9px] uppercase tracking-[0.16em] text-muted-foreground font-bold">Sending To</div>
-          <div className="font-display text-2xl text-foreground font-medium mt-1">{selected.name}</div>
-          <div className="text-xs text-muted-foreground mt-1 font-sans">{selected.phone}{selected.email ? ` · ${selected.email}` : ""}</div>
+          <div className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground font-semibold">Sending To</div>
+          <div className="font-sans font-bold text-xl text-foreground mt-0.5">{selected.name}</div>
+          <div className="text-xs text-muted-foreground mt-0.5 font-sans font-mono tabular-nums">{selected.phone}{selected.email ? ` · ${selected.email}` : ""}</div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2.5 bg-muted/50 border border-border/50 px-3.5 py-1.5 rounded-xl text-xs">
+          <div className="flex items-center gap-2.5 bg-secondary/50 border border-border px-3 py-1.5 rounded-lg text-xs">
             <span className="text-muted-foreground font-medium">English</span>
             <Switch id="lang" checked={lang === "hinglish"} onCheckedChange={(c) => setLang(c ? "hinglish" : "english")} />
-            <span className="text-foreground font-semibold">Hinglish</span>
+            <span className="text-foreground font-bold">Hinglish</span>
           </div>
         </div>
       </div>
 
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-5">
         {channels.map(({ id, label, icon: Icon, enabled }) => (
           <Button
             key={id}
@@ -135,56 +135,58 @@ export function Phase5Outreach({
             size="sm"
             disabled={!enabled}
             onClick={() => setChannel(id)}
-            className="rounded-xl h-9 px-4 text-xs cursor-pointer"
+            className={`rounded-lg h-8 px-3.5 text-xs font-medium cursor-pointer ${
+              channel === id ? "bg-primary text-primary-foreground shadow-xs" : "border-border hover:bg-secondary/60"
+            }`}
           >
             <Icon className="h-3.5 w-3.5 mr-1.5" /> {label}
           </Button>
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        <Card className="rounded-2xl border-border/80 bg-card/85 backdrop-blur-md shadow-premium">
-          <CardHeader className="flex flex-row items-center justify-between pb-4 pt-5 px-5 gap-3">
-            <CardTitle className="text-lg tracking-tight font-medium text-foreground">First Message</CardTitle>
+      <div className="grid lg:grid-cols-2 gap-5">
+        <Card className="rounded-xl border border-border bg-white shadow-premium">
+          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-5 px-5 gap-3">
+            <CardTitle className="text-base tracking-tight font-bold text-foreground">First Message</CardTitle>
             <div className="flex gap-2">
-              <Button size="sm" variant="outline" onClick={() => copy(message)} className="rounded-xl h-8 text-xs"><Copy className="h-3.5 w-3.5 mr-1" /> Copy</Button>
-              <Button size="sm" onClick={openChannel} className="rounded-xl h-8 text-xs cursor-pointer"><ExternalLink className="h-3.5 w-3.5 mr-1" /> Send</Button>
+              <Button size="sm" variant="outline" onClick={() => copy(message)} className="rounded-lg h-8 text-xs font-medium"><Copy className="h-3.5 w-3.5 mr-1" /> Copy</Button>
+              <Button size="sm" onClick={openChannel} className="rounded-lg h-8 px-3.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-medium shadow-xs cursor-pointer"><ExternalLink className="h-3.5 w-3.5 mr-1" /> Send</Button>
             </div>
           </CardHeader>
           <CardContent className="px-5 pb-5 pt-0">
             <Textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="font-mono text-xs leading-relaxed min-h-[300px] rounded-xl border-border/60 focus-visible:ring-offset-1 p-3.5 bg-background/30"
+              className="font-mono text-xs leading-relaxed min-h-[300px] rounded-lg border-border focus-visible:ring-1 focus-visible:ring-ring p-3.5 bg-secondary/30 text-foreground"
             />
-            <div className="mt-3.5 text-xs text-muted-foreground/80 flex items-center gap-1.5 font-sans">
+            <div className="mt-3 text-xs text-muted-foreground flex items-center gap-1.5 font-sans">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
               <span>Hook: personal · Pain: their biggest gap · Demo: live link · CTA: low-friction yes/no</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-border/80 bg-card/85 backdrop-blur-md shadow-premium">
-          <CardHeader className="flex flex-row items-center justify-between pb-4 pt-5 px-5">
-            <CardTitle className="text-lg tracking-tight font-medium text-foreground">Day-3 Follow-Up (Auto-Draft)</CardTitle>
-            <Button size="sm" variant="outline" onClick={() => copy(followUp)} className="rounded-xl h-8 text-xs"><Copy className="h-3.5 w-3.5 mr-1" /> Copy Follow-Up</Button>
+        <Card className="rounded-xl border border-border bg-white shadow-premium">
+          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-5 px-5">
+            <CardTitle className="text-base tracking-tight font-bold text-foreground">Day-3 Follow-Up (Auto-Draft)</CardTitle>
+            <Button size="sm" variant="outline" onClick={() => copy(followUp)} className="rounded-lg h-8 text-xs font-medium"><Copy className="h-3.5 w-3.5 mr-1" /> Copy Follow-Up</Button>
           </CardHeader>
           <CardContent className="px-5 pb-5 pt-0">
             <Textarea
               value={followUp}
               onChange={(e) => setFollowUp(e.target.value)}
-              className="font-mono text-xs leading-relaxed min-h-[300px] rounded-xl border-border/60 focus-visible:ring-offset-1 p-3.5 bg-background/30"
+              className="font-mono text-xs leading-relaxed min-h-[300px] rounded-lg border-border focus-visible:ring-1 focus-visible:ring-ring p-3.5 bg-secondary/30 text-foreground"
             />
           </CardContent>
         </Card>
       </div>
 
-      <Card className="mt-6 bg-emerald-500/5 border-emerald-500/20 rounded-2xl shadow-sm">
-        <CardContent className="pt-5 pb-5 px-6">
-          <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 text-base font-bold shadow-sm">✓</div>
+      <Card className="mt-6 bg-emerald-50/70 border border-emerald-200 rounded-xl shadow-xs">
+        <CardContent className="pt-4 pb-4 px-5">
+          <div className="flex items-center gap-3.5">
+            <div className="h-8 w-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-xs">✓</div>
             <div>
-              <div className="font-semibold text-foreground tracking-tight">Pipeline complete</div>
+              <div className="font-bold text-foreground text-sm tracking-tight">Pipeline complete</div>
               <div className="text-xs text-muted-foreground mt-0.5 font-sans">Lead successfully generated, audited, ranked, structured, and outreach drafted. Repeat for next prospect in Phase 3.</div>
             </div>
           </div>
