@@ -1,11 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Loader2, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useAdmin } from "./AdminProvider";
 
 export function AdminLogin() {
@@ -26,14 +28,22 @@ export function AdminLogin() {
     <div className="min-h-screen flex items-center justify-center bg-background bg-texture-grid p-4">
       <Card className="w-full max-w-sm rounded-2xl border border-sky-100 bg-white/95 shadow-xl shadow-sky-500/5">
         <CardHeader className="text-center space-y-3 pt-6">
-          <div className="mx-auto bg-sky-50 w-12 h-12 rounded-2xl border border-sky-200 flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-sky-600" />
-          </div>
+          <Image
+            src="/logo.png"
+            alt="DizoPulse"
+            width={120}
+            height={40}
+            priority
+            className="mx-auto h-auto w-[110px]"
+          />
           <div>
-            <CardTitle className="font-sans font-bold text-2xl text-slate-900">Admin Panel</CardTitle>
-            <CardDescription className="text-xs text-slate-500 font-sans mt-1">Enter the admin password to continue</CardDescription>
+            <CardTitle className="font-sans font-bold text-2xl text-slate-900 flex items-center justify-center gap-1">
+              Dizo<span className="text-sky-600 font-extrabold">Pulse</span>
+            </CardTitle>
+            <CardDescription className="text-xs text-sky-600/90 font-sans font-bold uppercase tracking-wider mt-1">Admin Panel</CardDescription>
           </div>
         </CardHeader>
+
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4 px-6">
             <div className="space-y-1.5">

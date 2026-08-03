@@ -1,6 +1,7 @@
 "use client";
 
-import { LayoutDashboard, Users, Settings, BarChart3, ScrollText, LogOut, Sparkles, Menu, X } from "lucide-react";
+import Image from "next/image";
+import { LayoutDashboard, Users, Settings, BarChart3, ScrollText, LogOut, Menu, X } from "lucide-react";
 import { useAdmin } from "./AdminProvider";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -25,14 +26,27 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
   ];
 
   const renderSidebarContent = () => (
-    <div className="flex flex-col h-full bg-card border-r border-border w-64 shrink-0">
-      <div className="p-6 flex items-center gap-2">
-        <div className="bg-primary/10 p-1.5 rounded-lg">
-          <Sparkles className="w-5 h-5 text-primary" />
+    <div className="flex flex-col h-full bg-white border-r border-sky-100 w-64 shrink-0">
+      <div className="p-5 flex items-center gap-2.5 border-b border-sky-100/60">
+        <Image
+          src="/logo.png"
+          alt="DizoPulse"
+          width={40}
+          height={40}
+          priority
+          className="h-9 w-9 object-contain rounded-xl"
+        />
+        <div>
+          <div className="font-sans font-bold text-base tracking-tight leading-none text-slate-900 flex items-center gap-1">
+            Dizo<span className="text-sky-600 font-extrabold">Pulse</span>
+          </div>
+          <div className="text-[9px] text-sky-600/90 leading-tight tracking-[0.14em] uppercase mt-0.5 font-sans font-bold">
+            Admin Panel
+          </div>
         </div>
-        <span className="font-display text-xl font-bold tracking-tight">Lead <span className="text-muted-foreground font-normal font-sans">→</span> Launch</span>
-        <Badge variant="secondary" className="ml-auto text-[10px] uppercase font-mono tracking-widest px-1.5 py-0">Admin</Badge>
+        <Badge variant="secondary" className="ml-auto text-[9px] uppercase font-mono tracking-wider px-1.5 py-0.5 bg-sky-50 text-sky-700 border border-sky-200">Admin</Badge>
       </div>
+
 
       <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
