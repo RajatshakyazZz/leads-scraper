@@ -1,4 +1,5 @@
-# Leads scraper
+# DizoPulse — Leads Scraper
+
 
 Local-first dashboard + Claude Code skill that runs a 5-phase freelance website pipeline:
 

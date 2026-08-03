@@ -8,9 +8,10 @@ const inter = Inter({ variable: "--font-sans", subsets: ["latin"], display: "swa
 const jetbrainsMono = JetBrains_Mono({ variable: "--font-mono", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Lead → Launch",
-  description: "Scrape → Audit → Rank → Build → Outreach. One Claude skill.",
+  title: "DizoPulse · Leads Scraper",
+  description: "DizoPulse — High-converting local business scraping, auditing, ranking, building, and outreach engine.",
 };
+
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

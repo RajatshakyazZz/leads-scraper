@@ -15,7 +15,9 @@ import type { Lead, AuditResult } from "@/lib/types";
 import { Loader2, LogOut, Sparkles, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SessionHistory } from "@/components/SessionHistory";
+import { DizoPulseLogo } from "@/components/DizoPulseLogo";
 import { toast } from "sonner";
+
 
 export default function Page() {
   return (
@@ -126,24 +128,17 @@ function LeadLaunchApp() {
       <header className="border-b border-sky-100 bg-white/95 backdrop-blur-md sticky top-0 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* Realistic 3D-styled gradient logo badge */}
-            <div className="relative group cursor-pointer">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-sky-600 via-sky-500 to-sky-400 p-[1.5px] shadow-md shadow-sky-500/25 transition-transform duration-300 group-hover:scale-105">
-                <div className="h-full w-full rounded-[10.5px] bg-gradient-to-b from-sky-500 to-sky-600 flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/25 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                  <Sparkles className="h-5 w-5 text-white drop-shadow-sm" strokeWidth={2} aria-hidden="true" />
-                </div>
-              </div>
-            </div>
+            <DizoPulseLogo className="h-10 w-10" />
             <div>
-              <div className="font-sans font-bold text-xl tracking-tight leading-none text-slate-900">
-                Lead <span className="text-sky-500 font-normal">→</span> Launch
+              <div className="font-sans font-bold text-xl tracking-tight leading-none text-slate-900 flex items-center gap-1">
+                Dizo<span className="text-sky-600 font-extrabold">Pulse</span>
               </div>
-              <div className="text-[10px] text-sky-700/80 leading-tight tracking-[0.12em] uppercase mt-1 font-sans font-semibold">
-                Scrape · Audit · Rank · Build · Outreach
+              <div className="text-[10px] text-sky-600/90 leading-tight tracking-[0.14em] uppercase mt-1 font-sans font-bold">
+                Leads Scraper
               </div>
             </div>
           </div>
+
           <div className="flex items-center gap-2">
             {quota && (
               <div className="hidden sm:block rounded-xl border border-sky-100 bg-sky-50/50 px-3 py-1 text-right shadow-2xs">

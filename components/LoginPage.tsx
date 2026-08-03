@@ -1,10 +1,11 @@
 "use client";
 
-import { LogIn, Sparkles } from "lucide-react";
+import { LogIn } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { DizoPulseLogo } from "@/components/DizoPulseLogo";
 import { motion } from "framer-motion";
 
 export function LoginPage() {
@@ -31,20 +32,16 @@ export function LoginPage() {
         className="w-full max-w-[400px] relative z-10"
       >
         <div className="mb-8 flex flex-col items-center text-center">
-          {/* Realistic 3D-styled logo badge */}
-          <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-sky-600 via-sky-500 to-sky-400 p-[2px] shadow-lg shadow-sky-500/30">
-            <div className="h-full w-full rounded-[14px] bg-gradient-to-b from-sky-500 to-sky-600 flex items-center justify-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent" />
-              <Sparkles className="h-6 w-6 text-white drop-shadow-sm" strokeWidth={2} aria-hidden="true" />
-            </div>
+          {/* Custom Coding-based DizoPulse Logo */}
+          <DizoPulseLogo className="h-14 w-14" />
+          <div className="font-sans font-bold text-3xl tracking-tight leading-none mt-5 text-slate-900 flex items-center gap-1">
+            Dizo<span className="text-sky-600 font-extrabold">Pulse</span>
           </div>
-          <div className="font-sans font-bold text-2.5xl leading-none mt-5 text-slate-900">
-            Lead <span className="text-sky-500 font-normal">→</span> Launch
-          </div>
-          <div className="text-[10px] text-sky-700/80 leading-tight tracking-[0.15em] uppercase mt-2 font-sans font-bold">
-            Client Acquisition Workspace
+          <div className="text-[11px] text-sky-600/90 leading-tight tracking-[0.16em] uppercase mt-2 font-sans font-bold">
+            Leads Scraper
           </div>
         </div>
+
 
         <Card className="w-full rounded-2xl border border-sky-100 bg-white/90 backdrop-blur-md shadow-xl shadow-sky-500/5">
           <CardHeader className="text-center px-6 pt-6 pb-2">
