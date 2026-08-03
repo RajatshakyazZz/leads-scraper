@@ -1,11 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { LogIn } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { DizoPulseLogo } from "@/components/DizoPulseLogo";
 import { motion } from "framer-motion";
 
 export function LoginPage() {
@@ -32,15 +32,16 @@ export function LoginPage() {
         className="w-full max-w-[400px] relative z-10"
       >
         <div className="mb-8 flex flex-col items-center text-center">
-          {/* Custom Coding-based DizoPulse Logo */}
-          <DizoPulseLogo className="h-14 w-14" />
-          <div className="font-sans font-bold text-3xl tracking-tight leading-none mt-5 text-slate-900 flex items-center gap-1">
-            Dizo<span className="text-sky-600 font-extrabold">Pulse</span>
-          </div>
-          <div className="text-[11px] text-sky-600/90 leading-tight tracking-[0.16em] uppercase mt-2 font-sans font-bold">
-            Leads Scraper
-          </div>
+          <Image
+            src="/logo.png"
+            alt="DizoPulse"
+            width={260}
+            height={80}
+            priority
+            className="mx-auto h-auto w-[200px] sm:w-[260px]"
+          />
         </div>
+
 
 
         <Card className="w-full rounded-2xl border border-sky-100 bg-white/90 backdrop-blur-md shadow-xl shadow-sky-500/5">
