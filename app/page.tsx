@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
@@ -15,8 +16,8 @@ import type { Lead, AuditResult } from "@/lib/types";
 import { Loader2, LogOut, Sparkles, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SessionHistory } from "@/components/SessionHistory";
-import { DizoPulseLogo } from "@/components/DizoPulseLogo";
 import { toast } from "sonner";
+
 
 
 export default function Page() {
@@ -128,16 +129,16 @@ function LeadLaunchApp() {
       <header className="border-b border-sky-100 bg-white/95 backdrop-blur-md sticky top-0 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <DizoPulseLogo className="h-10 w-10" />
-            <div>
-              <div className="font-sans font-bold text-xl tracking-tight leading-none text-slate-900 flex items-center gap-1">
-                Dizo<span className="text-sky-600 font-extrabold">Pulse</span>
-              </div>
-              <div className="text-[10px] text-sky-600/90 leading-tight tracking-[0.14em] uppercase mt-1 font-sans font-bold">
-                Leads Scraper
-              </div>
-            </div>
+            <Image
+              src="/logo.png"
+              alt="DizoPulse"
+              width={160}
+              height={50}
+              priority
+              className="h-8.5 w-auto object-contain"
+            />
           </div>
+
 
           <div className="flex items-center gap-2">
             {quota && (
