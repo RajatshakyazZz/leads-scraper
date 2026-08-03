@@ -23,21 +23,21 @@ export function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-      <Card className="w-full max-w-sm">
-        <CardHeader className="text-center space-y-4">
-          <div className="mx-auto bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-primary" />
+    <div className="min-h-screen flex items-center justify-center bg-background bg-texture-grid p-4">
+      <Card className="w-full max-w-sm rounded-2xl border border-sky-100 bg-white/95 shadow-xl shadow-sky-500/5">
+        <CardHeader className="text-center space-y-3 pt-6">
+          <div className="mx-auto bg-sky-50 w-12 h-12 rounded-2xl border border-sky-200 flex items-center justify-center">
+            <Sparkles className="w-6 h-6 text-sky-600" />
           </div>
           <div>
-            <CardTitle className="font-display text-2xl">Admin Panel</CardTitle>
-            <CardDescription>Enter the admin password to continue</CardDescription>
+            <CardTitle className="font-sans font-bold text-2xl text-slate-900">Admin Panel</CardTitle>
+            <CardDescription className="text-xs text-slate-500 font-sans mt-1">Enter the admin password to continue</CardDescription>
           </div>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+          <CardContent className="space-y-4 px-6">
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-xs font-bold text-slate-700">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -46,25 +46,30 @@ export function AdminLogin() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password..."
                   disabled={loading}
-                  className="pr-10"
+                  className="pr-10 h-10 rounded-xl border-sky-200 text-sm focus-visible:ring-1 focus-visible:ring-sky-500 bg-white"
                 />
                 <button
                   type="button"
                   onClick={() => setShow(!show)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 >
                   {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
           </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full" disabled={!password || loading}>
+          <CardFooter className="px-6 pb-6">
+            <Button
+              type="submit"
+              disabled={!password || loading}
+              className="w-full h-10.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold shadow-md shadow-sky-600/20 cursor-pointer transition-all"
+            >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In"}
             </Button>
           </CardFooter>
         </form>
       </Card>
     </div>
+
   );
 }

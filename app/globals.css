@@ -181,10 +181,15 @@ html.lenis body {
     box-shadow: var(--shadow-premium-hover);
   }
 
+  .accent-gradient {
+    background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%);
+  }
+
   .bg-texture-grid {
     background-image: radial-gradient(circle at 1px 1px, rgba(2, 132, 199, 0.09) 1px, transparent 0);
     background-size: 16px 16px;
   }
 }
+
 
 
