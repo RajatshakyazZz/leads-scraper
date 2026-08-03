@@ -10,7 +10,13 @@ const jetbrainsMono = JetBrains_Mono({ variable: "--font-mono", subsets: ["latin
 export const metadata: Metadata = {
   title: "DizoPulse · Leads Scraper",
   description: "DizoPulse — High-converting local business scraping, auditing, ranking, building, and outreach engine.",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/favicon.ico",
+    apple: "/icon.png",
+  },
 };
+
 
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

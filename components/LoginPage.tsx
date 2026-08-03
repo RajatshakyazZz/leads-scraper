@@ -31,16 +31,23 @@ export function LoginPage() {
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-[400px] relative z-10"
       >
-        <div className="mb-8 flex flex-col items-center text-center">
+        <div className="mb-6 flex flex-col items-center text-center">
           <Image
             src="/logo.png"
             alt="DizoPulse"
-            width={260}
-            height={80}
+            width={160}
+            height={50}
             priority
-            className="mx-auto h-auto w-[200px] sm:w-[260px]"
+            className="mx-auto h-auto w-[130px] sm:w-[160px]"
           />
+          <div className="font-sans font-bold text-2.5xl tracking-tight leading-none mt-4 text-slate-900 flex items-center gap-1">
+            Dizo<span className="text-sky-600 font-extrabold">Pulse</span>
+          </div>
+          <div className="text-[10px] text-sky-600/90 leading-tight tracking-[0.16em] uppercase mt-1.5 font-sans font-bold">
+            Leads Scraper
+          </div>
         </div>
+
 
 
 
