@@ -37,7 +37,7 @@ import {
   Award,
   Layers,
   Zap,
-  TrendingUp
+  Navigation
 } from "lucide-react";
 import type { RankedLead } from "@/lib/types";
 import { toast } from "sonner";
@@ -131,7 +131,7 @@ export function Phase4Build({
     setBuilding(true);
     setTimeout(() => {
       setBuilding(false);
-      toast.success(`Creative animated site ready for ${selected?.name}!`);
+      toast.success(`Niche theme site ready for ${selected?.name}!`);
     }, 1200);
   }
 
@@ -161,7 +161,7 @@ export function Phase4Build({
   return (
     <PhaseShell
       title="Phase 4 — Generate website"
-      subtitle="Pick a platform. We craft a battle-tested, niche-tailored prompt with business details, real images, and conversion sections."
+      subtitle="Pick a platform. We craft a battle-tested, niche-tailored prompt with business details, real images, and custom color themes."
       onPrev={onPrev}
       onNext={onNext}
       nextLabel="Draft outreach"
@@ -253,7 +253,7 @@ export function Phase4Build({
             <div className="flex items-center gap-2">
               <CardTitle className="text-base tracking-tight font-bold text-slate-900">Live Website Preview</CardTitle>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" /> Realtime Animated Loop
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" /> Custom Niche Theme
               </span>
             </div>
 
@@ -348,7 +348,7 @@ export function Phase4Build({
               onClick={() => setPreviewTab("contact")}
               className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "contact" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
             >
-              Location & Map
+              Live Map
             </button>
           </div>
 
@@ -467,7 +467,7 @@ export function Phase4Build({
                     {nichePreset?.icon ? <nichePreset.icon className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-white">{selected.name} — Full Creative Animated Preview</h3>
+                    <h3 className="font-bold text-sm text-white">{selected.name} — Full Creative Niche Theme Preview</h3>
                     <p className="text-[11px] text-sky-400 font-mono">https://preview.{selected.name.toLowerCase().replace(/[^a-z0-9]/g, "")}.com</p>
                   </div>
                 </div>
@@ -507,7 +507,7 @@ export function Phase4Build({
 }
 
 /* ============================================================================
-   LIVE WEBSITE FULL PAGE COMPONENT RENDERER WITH REALTIME ANIMATED LOOPS & IMAGES
+   LIVE WEBSITE FULL PAGE COMPONENT RENDERER WITH REALTIME MAPS & NICHE THEMES
    ============================================================================ */
 function LiveWebsiteRenderer({
   lead,
@@ -529,18 +529,19 @@ function LiveWebsiteRenderer({
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const showAll = tab === "all";
+  const theme = preset.theme;
 
   return (
-    <div className="font-sans text-slate-900 bg-white relative overflow-hidden">
+    <div className={`font-sans text-slate-900 ${theme.bodyBg} relative overflow-hidden`}>
       {/* 1. SITE HEADER BAR */}
-      <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md px-5 py-3 border-b border-slate-100 flex items-center justify-between shadow-2xs">
+      <header className={`sticky top-0 z-20 ${theme.headerBg} backdrop-blur-md px-5 py-3 border-b ${theme.headerBorder} flex items-center justify-between shadow-2xs`}>
         <div className="flex items-center gap-2.5">
-          <div className={`h-8.5 w-8.5 rounded-xl ${preset.colorTheme.iconBg} flex items-center justify-center ${preset.colorTheme.iconColor} font-bold shadow-2xs`}>
+          <div className={`h-8.5 w-8.5 rounded-xl ${theme.badgeBg} flex items-center justify-center ${theme.accentText} font-bold shadow-2xs`}>
             <IconComp className="h-4.5 w-4.5" />
           </div>
           <div>
             <div className="font-bold text-sm tracking-tight text-slate-900 leading-none">{lead.name}</div>
-            <div className="text-[9.5px] text-slate-500 font-semibold uppercase tracking-wider mt-0.5">{preset.nicheCategory} • {lead.city}</div>
+            <div className={`text-[9.5px] ${theme.accentText} font-bold uppercase tracking-wider mt-0.5`}>{preset.nicheCategory} • {lead.city}</div>
           </div>
         </div>
 
@@ -550,19 +551,19 @@ function LiveWebsiteRenderer({
           </span>
           <a
             href={`tel:${cleanPhone}`}
-            className="inline-flex items-center gap-1 rounded-xl bg-slate-900 text-white px-3 py-1.5 text-xs font-semibold hover:bg-slate-800 transition-colors shadow-xs"
+            className={`inline-flex items-center gap-1 rounded-xl ${theme.ctaBtn} px-3 py-1.5 text-xs font-semibold transition-colors shadow-xs`}
           >
-            <Phone className="h-3 w-3 text-sky-400" /> Call
+            <Phone className="h-3 w-3 text-white" /> Call
           </a>
         </div>
       </header>
 
       {/* CONTINUOUS REALTIME LOOP TICKER BAR */}
-      <div className="bg-slate-900 text-white py-1.5 px-4 overflow-hidden relative border-b border-slate-800">
+      <div className={`${theme.tickerBg} ${theme.tickerText} py-1.5 px-4 overflow-hidden relative border-b ${theme.headerBorder}`}>
         <motion.div
           animate={{ x: [0, -600] }}
           transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-          className="flex items-center gap-8 whitespace-nowrap text-[10px] font-mono text-sky-300 uppercase tracking-widest"
+          className="flex items-center gap-8 whitespace-nowrap text-[10px] font-mono uppercase tracking-widest"
         >
           <span>★ {lead.rating ?? 4.8} Google Rated ({lead.reviewsCount ?? 334}+ Reviews)</span>
           <span>• Verified {preset.nicheCategory} in {lead.city}</span>
@@ -570,7 +571,6 @@ function LiveWebsiteRenderer({
           <span>• {lead.yearsInBusiness ?? 8}+ Years Trust</span>
           <span>★ {lead.rating ?? 4.8} Google Rated ({lead.reviewsCount ?? 334}+ Reviews)</span>
           <span>• Verified {preset.nicheCategory} in {lead.city}</span>
-          <span>• 100% Instant WhatsApp Slots</span>
         </motion.div>
       </div>
 
@@ -578,7 +578,7 @@ function LiveWebsiteRenderer({
         {/* 2. HERO BANNER & CTAs SECTION WITH NICHE IMAGE COVER */}
         {(showAll || tab === "hero") && (
           <section className="space-y-4">
-            <div className="rounded-2xl border border-sky-100 overflow-hidden shadow-md relative text-left group">
+            <div className={`rounded-2xl border ${theme.cardBorder} overflow-hidden shadow-md relative text-left group`}>
               {/* Niche Hero Image Background */}
               <div className="relative h-56 sm:h-64 w-full overflow-hidden">
                 <img
@@ -618,7 +618,7 @@ function LiveWebsiteRenderer({
                     href={`tel:${cleanPhone}`}
                     className="inline-flex items-center gap-1.5 rounded-xl bg-white/90 backdrop-blur-md hover:bg-white text-slate-900 font-bold text-xs px-4 py-2.5 border border-white/50 shadow-2xs transition-all"
                   >
-                    <Phone className="h-3.5 w-3.5 text-sky-600" />
+                    <Phone className="h-3.5 w-3.5 text-slate-900" />
                     {preset.ctaSecondary}
                   </a>
                 </div>
@@ -628,8 +628,8 @@ function LiveWebsiteRenderer({
             {/* Trust Badges Strip */}
             <div className="grid grid-cols-3 gap-2.5 text-center">
               {preset.trustBadges.map((badge, idx) => (
-                <div key={idx} className="bg-white border border-sky-100 rounded-xl p-3 shadow-2xs flex flex-col items-center justify-center hover:border-sky-300 transition-colors">
-                  <CheckCircle2 className="h-4 w-4 text-sky-600 mb-1" />
+                <div key={idx} className={`bg-white border ${theme.cardBorder} rounded-xl p-3 shadow-2xs flex flex-col items-center justify-center transition-colors`}>
+                  <CheckCircle2 className={`h-4 w-4 ${theme.accentText} mb-1`} />
                   <span className="text-[11px] font-bold text-slate-800 leading-tight">{badge}</span>
                 </div>
               ))}
@@ -640,16 +640,16 @@ function LiveWebsiteRenderer({
         {/* 3. NICHE SPECIALTIES & SERVICES GRID WITH REALTIME IMAGES */}
         {(showAll || tab === "services") && (
           <section className="space-y-4 pt-2">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div className={`flex items-center justify-between border-b ${theme.headerBorder} pb-2`}>
               <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <Sparkle className="h-4 w-4 text-sky-600" /> Niche Services & Specialties
+                <Sparkle className={`h-4 w-4 ${theme.accentText}`} /> Niche Services & Specialties
               </h3>
-              <span className="text-[10px] text-slate-500 font-bold bg-sky-50 px-2 py-0.5 rounded-full border border-sky-100">{preset.services.length} Premium Offerings</span>
+              <span className={`text-[10px] font-bold ${theme.badgeBg} px-2.5 py-0.5 rounded-full border ${theme.cardBorder}`}>{preset.services.length} Premium Offerings</span>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-3.5">
               {preset.services.map((srv, idx) => (
-                <div key={idx} className="rounded-2xl border border-sky-100 bg-white hover:border-sky-400 transition-all duration-300 shadow-2xs hover:shadow-md overflow-hidden group">
+                <div key={idx} className={`rounded-2xl border ${theme.cardBorder} bg-white transition-all duration-300 shadow-2xs hover:shadow-md overflow-hidden group`}>
                   <div className="h-32 w-full overflow-hidden relative">
                     <img
                       src={srv.image}
@@ -657,7 +657,7 @@ function LiveWebsiteRenderer({
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-                    <div className="absolute top-2.5 left-2.5 h-6 w-6 rounded-lg bg-white/90 backdrop-blur-md text-sky-700 font-bold flex items-center justify-center text-xs shadow-2xs">
+                    <div className={`absolute top-2.5 left-2.5 h-6 w-6 rounded-lg ${theme.badgeBg} ${theme.accentText} font-bold flex items-center justify-center text-xs shadow-2xs`}>
                       {idx + 1}
                     </div>
                     <div className="absolute bottom-2 left-2.5 right-2.5 text-white font-bold text-xs truncate drop-shadow-sm">
@@ -668,7 +668,7 @@ function LiveWebsiteRenderer({
                     <p className="text-[11px] text-slate-500 leading-relaxed">{srv.desc}</p>
                     <button
                       onClick={onOpenBooking}
-                      className="mt-2.5 text-[11px] font-bold text-sky-700 hover:text-sky-800 flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                      className={`mt-2.5 text-[11px] font-bold ${theme.accentText} flex items-center gap-1 group-hover:translate-x-1 transition-transform`}
                     >
                       Book This Service →
                     </button>
@@ -681,14 +681,13 @@ function LiveWebsiteRenderer({
 
         {/* 4. ABOUT & CREDENTIALS CARD */}
         {showAll && (
-          <section className="bg-slate-900 text-white rounded-2xl p-5 space-y-3 relative overflow-hidden shadow-lg">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
+          <section className={`${theme.tickerBg} ${theme.tickerText} rounded-2xl p-5 space-y-3 relative overflow-hidden shadow-lg`}>
             <div className="flex items-center gap-2">
-              <Award className="h-5 w-5 text-sky-400" />
+              <Award className="h-5 w-5 text-amber-400" />
               <h3 className="font-bold text-sm text-white uppercase tracking-wider">About {lead.name}</h3>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed font-sans">
-              With over <span className="font-bold text-white">{lead.yearsInBusiness ?? 8}+ years of dedicated practice</span> in {lead.city}, {lead.name} delivers modern, high-quality, patient-centric solutions designed for convenience and fast turnaround.
+            <p className="text-xs text-slate-200 leading-relaxed font-sans">
+              With over <span className="font-bold text-white">{lead.yearsInBusiness ?? 8}+ years of dedicated practice</span> in {lead.city}, {lead.name} delivers modern, high-quality, customer-centric solutions designed for convenience and fast turnaround.
             </p>
             <div className="flex flex-wrap gap-3 text-xs font-bold pt-1">
               <span className="flex items-center gap-1 text-emerald-400"><CheckCircle2 className="h-3.5 w-3.5" /> 100% Satisfaction Guarantee</span>
@@ -700,7 +699,7 @@ function LiveWebsiteRenderer({
         {/* 5. REALTIME INFINITE ANIMATED LOOP FOR REVIEWS */}
         {(showAll || tab === "reviews") && (
           <section className="space-y-3 pt-2 overflow-hidden">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div className={`flex items-center justify-between border-b ${theme.headerBorder} pb-2`}>
               <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
                 <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> Verified Customer Reviews (Realtime Loop)
               </h3>
@@ -715,10 +714,10 @@ function LiveWebsiteRenderer({
                 className="flex items-center gap-4 whitespace-normal"
               >
                 {[...preset.reviews, ...preset.reviews, ...preset.reviews].map((rev, idx) => (
-                  <div key={idx} className="w-[280px] shrink-0 p-4 rounded-2xl border border-sky-100 bg-white shadow-2xs hover:border-sky-300 transition-all">
+                  <div key={idx} className={`w-[280px] shrink-0 p-4 rounded-2xl border ${theme.cardBorder} bg-white shadow-2xs hover:border-slate-400 transition-all`}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-sky-100 text-sky-700 font-bold text-xs flex items-center justify-center uppercase">
+                        <div className={`h-7 w-7 rounded-full ${theme.badgeBg} ${theme.accentText} font-bold text-xs flex items-center justify-center uppercase`}>
                           {rev.author[0]}
                         </div>
                         <span className="font-bold text-xs text-slate-900">{rev.author}</span>
@@ -738,9 +737,9 @@ function LiveWebsiteRenderer({
         {/* 6. INTERACTIVE FAQ ACCORDION SECTION */}
         {(showAll || tab === "faq") && (
           <section className="space-y-3 pt-2">
-            <div className="border-b border-slate-100 pb-2">
+            <div className={`border-b ${theme.headerBorder} pb-2`}>
               <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <Layers className="h-4 w-4 text-sky-600" /> Frequently Asked Questions
+                <Layers className={`h-4 w-4 ${theme.accentText}`} /> Frequently Asked Questions
               </h3>
             </div>
 
@@ -748,16 +747,16 @@ function LiveWebsiteRenderer({
               {preset.faqs.map((faq, idx) => {
                 const isOpen = openFaq === idx;
                 return (
-                  <div key={idx} className="border border-sky-100 rounded-xl bg-white overflow-hidden shadow-2xs">
+                  <div key={idx} className={`border ${theme.cardBorder} rounded-xl bg-white overflow-hidden shadow-2xs`}>
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
-                      className="w-full p-3 text-left flex items-center justify-between font-bold text-xs text-slate-800 hover:bg-sky-50/50 transition-colors"
+                      className="w-full p-3 text-left flex items-center justify-between font-bold text-xs text-slate-800 hover:bg-slate-50 transition-colors"
                     >
                       <span>{faq.q}</span>
-                      {isOpen ? <ChevronUp className="h-4 w-4 text-sky-600 shrink-0" /> : <ChevronDown className="h-4 w-4 text-slate-400 shrink-0" />}
+                      {isOpen ? <ChevronUp className={`h-4 w-4 ${theme.accentText} shrink-0`} /> : <ChevronDown className="h-4 w-4 text-slate-400 shrink-0" />}
                     </button>
                     {isOpen && (
-                      <div className="px-3 pb-3 pt-0 text-[11.5px] text-slate-600 leading-relaxed font-sans border-t border-slate-100/60 bg-sky-50/30">
+                      <div className={`px-3 pb-3 pt-0 text-[11.5px] text-slate-600 leading-relaxed font-sans border-t ${theme.headerBorder} bg-slate-50/50`}>
                         {faq.a}
                       </div>
                     )}
@@ -768,16 +767,16 @@ function LiveWebsiteRenderer({
           </section>
         )}
 
-        {/* 7. LOCATION & CONTACT SECTION */}
+        {/* 7. REALTIME GOOGLE MAPS LOCATION EMBED SECTION */}
         {(showAll || tab === "contact") && (
           <section className="space-y-3 pt-2">
-            <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-2">
-              <MapPin className="h-4 w-4 text-sky-600" /> Location & Contact Information
+            <h3 className={`font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b ${theme.headerBorder} pb-2`}>
+              <MapPin className={`h-4 w-4 ${theme.accentText}`} /> Realtime Location & Google Maps
             </h3>
 
-            <div className="p-4 rounded-xl border border-sky-100 bg-white shadow-2xs space-y-3">
+            <div className={`p-4 rounded-xl border ${theme.cardBorder} bg-white shadow-2xs space-y-3`}>
               <div className="flex items-start gap-2.5 text-xs text-slate-700">
-                <MapPin className="h-4 w-4 text-sky-600 shrink-0 mt-0.5" />
+                <MapPin className={`h-4 w-4 ${theme.accentText} shrink-0 mt-0.5`} />
                 <div>
                   <div className="font-bold text-slate-900">{lead.name}</div>
                   <div>{lead.address}</div>
@@ -785,19 +784,38 @@ function LiveWebsiteRenderer({
               </div>
 
               <div className="flex items-center gap-2.5 text-xs text-slate-700">
-                <Phone className="h-4 w-4 text-sky-600 shrink-0" />
-                <a href={`tel:${cleanPhone}`} className="font-bold text-sky-700 hover:underline">{lead.phone || "+91 98986 66601"}</a>
+                <Phone className={`h-4 w-4 ${theme.accentText} shrink-0`} />
+                <a href={`tel:${cleanPhone}`} className={`font-bold ${theme.accentText} hover:underline`}>{lead.phone || "+91 98986 66601"}</a>
               </div>
 
               <div className="flex items-center gap-2.5 text-xs text-slate-700">
-                <Clock className="h-4 w-4 text-sky-600 shrink-0" />
+                <Clock className={`h-4 w-4 ${theme.accentText} shrink-0`} />
                 <span>Monday – Saturday: 09:30 AM – 08:30 PM (Sunday by Appointment)</span>
               </div>
 
-              <div className="h-36 rounded-xl bg-sky-50 border border-sky-100 flex flex-col items-center justify-center text-xs text-sky-700 font-semibold gap-1.5 p-3 text-center">
-                <MapPin className="h-5 w-5 text-sky-600" />
-                <span>[Interactive Google Maps Location Embed]</span>
-                <span className="text-[10px] text-slate-500 font-normal">{lead.address}</span>
+              {/* REAL INTERACTIVE GOOGLE MAPS EMBED IFRAME */}
+              <div className="h-44 sm:h-52 w-full rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative bg-slate-100">
+                <iframe
+                  title={`${lead.name} Google Map`}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(lead.name + " " + lead.address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                />
+              </div>
+
+              <div className="flex justify-end pt-1">
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.name + " " + lead.address)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`inline-flex items-center gap-1.5 text-xs font-bold ${theme.accentText} hover:underline`}
+                >
+                  <Navigation className="h-3.5 w-3.5" /> Get Driving Directions on Google Maps →
+                </a>
               </div>
             </div>
           </section>
@@ -827,12 +845,12 @@ function LiveWebsiteRenderer({
 }
 
 /* ============================================================================
-   NICHE PRESET DETECTION ENGINE WITH REALTIME IMAGES & CREATIVE COPY
+   NICHE PRESET DETECTION ENGINE WITH DISTINCT COLOR THEMES & REALTIME IMAGES
    ============================================================================ */
 function getNichePreset(category: string, name: string) {
   const cat = `${category} ${name}`.toLowerCase();
 
-  // 1. Dental Clinic / Dentist
+  // 1. Dental Clinic / Dentist (Cyan & Medical Teal Theme)
   if (cat.includes("dent") || cat.includes("teeth") || cat.includes("orthodont")) {
     return {
       nicheCategory: "Dental Clinic",
@@ -841,10 +859,16 @@ function getNichePreset(category: string, name: string) {
       heroTitle: "Pain-Free Dental Care & Celebrity Smile Designs",
       heroSub: "Advanced laser dentistry, painless root canals, and invisible aligners. Trusted by over 5,000+ happy patients in your city.",
       trustBadges: ["Google 4.8★ Verified", "Certified Orthodontist", "0% EMI Available"],
-      colorTheme: {
-        heroBg: "bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-50",
-        iconBg: "bg-sky-100",
-        iconColor: "text-sky-700"
+      theme: {
+        bodyBg: "bg-cyan-50/30",
+        headerBg: "bg-white/95",
+        headerBorder: "border-cyan-100",
+        cardBorder: "border-cyan-200",
+        badgeBg: "bg-cyan-50",
+        accentText: "text-cyan-700",
+        ctaBtn: "bg-cyan-600 hover:bg-cyan-700 text-white",
+        tickerBg: "bg-cyan-950",
+        tickerText: "text-cyan-300"
       },
       ctaPrimary: "Book WhatsApp Appointment",
       ctaSecondary: "Call Dentist Direct",
@@ -871,7 +895,7 @@ function getNichePreset(category: string, name: string) {
     };
   }
 
-  // 2. Doctor / General Medical Clinic / Hospital
+  // 2. Doctor / General Medical Clinic / Hospital (Emerald & Healing Teal Theme)
   if (cat.includes("doct") || cat.includes("clinic") || cat.includes("hospit") || cat.includes("health") || cat.includes("physician") || cat.includes("dermat") || cat.includes("eye")) {
     return {
       nicheCategory: "Medical Clinic",
@@ -880,10 +904,16 @@ function getNichePreset(category: string, name: string) {
       heroTitle: "Expert Compassionate Medical Consultation & Care",
       heroSub: "Comprehensive health checkups, specialist consultation, and diagnostic care with zero OPD waiting time.",
       trustBadges: ["NABH Accredited Clinic", "15+ Years Practice", "Same-Day Appointment"],
-      colorTheme: {
-        heroBg: "bg-gradient-to-br from-emerald-50 via-teal-50 to-sky-50",
-        iconBg: "bg-teal-100",
-        iconColor: "text-teal-700"
+      theme: {
+        bodyBg: "bg-emerald-50/30",
+        headerBg: "bg-white/95",
+        headerBorder: "border-emerald-100",
+        cardBorder: "border-emerald-200",
+        badgeBg: "bg-emerald-50",
+        accentText: "text-emerald-700",
+        ctaBtn: "bg-emerald-600 hover:bg-emerald-700 text-white",
+        tickerBg: "bg-emerald-950",
+        tickerText: "text-emerald-300"
       },
       ctaPrimary: "Book Doctor Appointment",
       ctaSecondary: "Emergency Call",
@@ -910,7 +940,7 @@ function getNichePreset(category: string, name: string) {
     };
   }
 
-  // 3. Restaurant / Cafe / Dining
+  // 3. Restaurant / Cafe / Dining (Warm Culinary Amber & Terracotta Theme)
   if (cat.includes("restau") || cat.includes("cafe") || cat.includes("food") || cat.includes("dini") || cat.includes("pizz") || cat.includes("baker") || cat.includes("biryan")) {
     return {
       nicheCategory: "Restaurant & Cafe",
@@ -919,10 +949,16 @@ function getNichePreset(category: string, name: string) {
       heroTitle: "Authentic Flavors, Chef Specials & Festive Dining",
       heroSub: "Enjoy hand-crafted delicacies made with fresh ingredients. Reserve your table or order express delivery via WhatsApp.",
       trustBadges: ["FSSAI Certified 5★", "Fresh Daily Produce", "Express WhatsApp Order"],
-      colorTheme: {
-        heroBg: "bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50",
-        iconBg: "bg-orange-100",
-        iconColor: "text-orange-700"
+      theme: {
+        bodyBg: "bg-orange-50/30",
+        headerBg: "bg-white/95",
+        headerBorder: "border-orange-100",
+        cardBorder: "border-orange-200",
+        badgeBg: "bg-orange-50",
+        accentText: "text-orange-700",
+        ctaBtn: "bg-orange-600 hover:bg-orange-700 text-white",
+        tickerBg: "bg-stone-900",
+        tickerText: "text-orange-300"
       },
       ctaPrimary: "Reserve Table / Order",
       ctaSecondary: "View Digital Menu",
@@ -949,7 +985,7 @@ function getNichePreset(category: string, name: string) {
     };
   }
 
-  // 4. Real Estate / Property Dealer / Realtor
+  // 4. Real Estate / Property Dealer / Realtor (Luxury Navy & Gold Theme)
   if (cat.includes("prop") || cat.includes("real") || cat.includes("estate") || cat.includes("broker") || cat.includes("realt") || cat.includes("flat") || cat.includes("plot") || cat.includes("house")) {
     return {
       nicheCategory: "Real Estate Brokerage",
@@ -958,10 +994,16 @@ function getNichePreset(category: string, name: string) {
       heroTitle: "Find Premium Verified Properties & Smart Investments",
       heroSub: "Buy, sell, or rent luxury apartments, villas, and commercial spaces with 100% verified documentation and zero hidden brokerage.",
       trustBadges: ["RERA Approved Advisor", "100% Verified Legal Titles", "0% Extra Hidden Fee"],
-      colorTheme: {
-        heroBg: "bg-gradient-to-br from-slate-100 via-sky-50 to-indigo-50",
-        iconBg: "bg-sky-100",
-        iconColor: "text-sky-800"
+      theme: {
+        bodyBg: "bg-indigo-50/30",
+        headerBg: "bg-white/95",
+        headerBorder: "border-indigo-100",
+        cardBorder: "border-indigo-200",
+        badgeBg: "bg-indigo-50",
+        accentText: "text-indigo-800",
+        ctaBtn: "bg-indigo-700 hover:bg-indigo-800 text-white",
+        tickerBg: "bg-slate-950",
+        tickerText: "text-amber-300"
       },
       ctaPrimary: "Schedule Site Visit",
       ctaSecondary: "WhatsApp Property Catalog",
@@ -988,7 +1030,7 @@ function getNichePreset(category: string, name: string) {
     };
   }
 
-  // 5. Salon / Beauty / Spa
+  // 5. Salon / Beauty / Spa (Elegant Rose & Blush Pink Theme)
   if (cat.includes("salon") || cat.includes("spa") || cat.includes("beaut") || cat.includes("hair") || cat.includes("makeup") || cat.includes("nail") || cat.includes("barber")) {
     return {
       nicheCategory: "Luxury Beauty & Salon",
@@ -997,10 +1039,16 @@ function getNichePreset(category: string, name: string) {
       heroTitle: "Luxury Styling, Hair Care & Glowing Skin Treatments",
       heroSub: "Experience premium grooming, organic facials, and bridal makeovers by certified master stylists.",
       trustBadges: ["Imported Organic Products", "Certified Senior Stylists", "100% Sanitized Tools"],
-      colorTheme: {
-        heroBg: "bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50",
-        iconBg: "bg-pink-100",
-        iconColor: "text-pink-700"
+      theme: {
+        bodyBg: "bg-rose-50/30",
+        headerBg: "bg-white/95",
+        headerBorder: "border-rose-100",
+        cardBorder: "border-rose-200",
+        badgeBg: "bg-rose-50",
+        accentText: "text-rose-700",
+        ctaBtn: "bg-rose-600 hover:bg-rose-700 text-white",
+        tickerBg: "bg-rose-950",
+        tickerText: "text-rose-300"
       },
       ctaPrimary: "Book Salon Slot",
       ctaSecondary: "WhatsApp Rate List",
@@ -1027,7 +1075,7 @@ function getNichePreset(category: string, name: string) {
     };
   }
 
-  // 6. Gym / Fitness
+  // 6. Gym / Fitness (Vibrant Red & Cyber Dark Theme)
   if (cat.includes("gym") || cat.includes("fit") || cat.includes("workout") || cat.includes("crossfit") || cat.includes("yoga")) {
     return {
       nicheCategory: "Fitness & Training Center",
@@ -1036,10 +1084,16 @@ function getNichePreset(category: string, name: string) {
       heroTitle: "Transform Your Fitness, Build Muscle & Burn Fat",
       heroSub: "Train with certified fitness coaches using state-of-the-art equipment, functional crossfit, and custom diet plans.",
       trustBadges: ["Certified Personal Trainers", "Imported Equipment", "Free 3-Day Trial Pass"],
-      colorTheme: {
-        heroBg: "bg-gradient-to-br from-slate-100 via-sky-50 to-blue-100",
-        iconBg: "bg-sky-200",
-        iconColor: "text-sky-900"
+      theme: {
+        bodyBg: "bg-red-50/30",
+        headerBg: "bg-white/95",
+        headerBorder: "border-red-100",
+        cardBorder: "border-red-200",
+        badgeBg: "bg-red-50",
+        accentText: "text-red-700",
+        ctaBtn: "bg-red-600 hover:bg-red-700 text-white",
+        tickerBg: "bg-slate-950",
+        tickerText: "text-red-400"
       },
       ctaPrimary: "Claim Free 3-Day Pass",
       ctaSecondary: "Call Gym Manager",
@@ -1066,7 +1120,7 @@ function getNichePreset(category: string, name: string) {
     };
   }
 
-  // 7. General Local Business Fallback
+  // 7. General Local Business Fallback (Violet & Deep Indigo Theme)
   return {
     nicheCategory: category || "Local Business",
     icon: Building2,
@@ -1074,10 +1128,16 @@ function getNichePreset(category: string, name: string) {
     heroTitle: "Top-Rated Local Service & Guaranteed Quality",
     heroSub: `Serving ${name} customers in ${category} with transparent pricing, certified experts, and 100% satisfaction guarantee.`,
     trustBadges: ["Google 4.8★ Verified", "Certified Professionals", "Fast Service"],
-    colorTheme: {
-      heroBg: "bg-gradient-to-br from-sky-50 via-indigo-50 to-slate-50",
-      iconBg: "bg-sky-100",
-      iconColor: "text-sky-700"
+    theme: {
+      bodyBg: "bg-violet-50/30",
+      headerBg: "bg-white/95",
+      headerBorder: "border-violet-100",
+      cardBorder: "border-violet-200",
+      badgeBg: "bg-violet-50",
+      accentText: "text-violet-700",
+      ctaBtn: "bg-violet-600 hover:bg-violet-700 text-white",
+      tickerBg: "bg-violet-950",
+      tickerText: "text-violet-300"
     },
     ctaPrimary: "Book on WhatsApp",
     ctaSecondary: "Call Direct",
@@ -1141,7 +1201,7 @@ function buildPrompt(
 
 # DESIGN & BRAND SYSTEM
 - Mobile-First Architecture (90% of Indian users are on 375px mobile screens). Hero CTA visible above fold.
-- Color Palette: Off-white base (#FAFAFA), Primary Deep Accent (#0284C7), WhatsApp CTA (#16A34A), Slate Typography (#0F172A).
+- Color Palette: Niche Theme Accent (${preset.theme.accentText}), WhatsApp CTA (#16A34A), Slate Typography (#0F172A).
 - Typography: Inter or DM Sans font family. Clean hierarchy with large bold headlines.
 - Trust Signals: Display Google Rating badge (${rating}★, ${reviews}+ reviews), "Years in Business" badge (${l.yearsInBusiness ?? 8}+ years), and verified local badges.
 - Floating WhatsApp Widget: Sticky bottom-right chat button linking to https://wa.me/${waClean}?text=Hi%20${encodeURIComponent(name)},%20I%20would%20like%20to%20book%20a%20slot.
@@ -1156,7 +1216,7 @@ ${preset.services.map((s, i) => `   ${i + 1}. ${s.title}: ${s.desc} [Image: ${s.
 5. About & Credentials: Bio placeholder + credentials + why local customers choose ${name}.
 6. Customer Reviews Carousel (Realtime Infinite Loop): ${preset.reviews.map((r) => `"${r.text}" — ${r.author} (${r.rating}★)`).join(" | ")}.
 7. Local FAQ Accordion: 4 common customer questions (pricing, booking process, timing, payment options).
-8. Location & Directions: Embed Google Map for ${addr} + business hours + directions CTA.
+8. Location & Directions: Real interactive Google Maps embed for ${addr} + business hours + directions CTA.
 9. Footer: Full contact info, WhatsApp link, phone link, working hours, and social media links.
 
 # TECHNICAL & SEO SCHEMA
