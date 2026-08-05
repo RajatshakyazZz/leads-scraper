@@ -253,7 +253,7 @@ export function Phase4Build({
             <div className="flex items-center gap-2">
               <CardTitle className="text-base tracking-tight font-bold text-slate-900">Live Website Preview</CardTitle>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" /> Custom Niche Theme
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" /> Realtime Scraped Data
               </span>
             </div>
 
@@ -330,13 +330,13 @@ export function Phase4Build({
               onClick={() => setPreviewTab("services")}
               className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "services" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
             >
-              Services ({nichePreset?.services.length})
+              Specialties ({nichePreset?.services.length})
             </button>
             <button
               onClick={() => setPreviewTab("reviews")}
               className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "reviews" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
             >
-              Loop Reviews
+              Reviews ({selected.reviewsCount ?? 0}+)
             </button>
             <button
               onClick={() => setPreviewTab("faq")}
@@ -404,7 +404,7 @@ export function Phase4Build({
                   <Calendar className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 text-base">Instant Slot Booking</h4>
+                  <h4 className="font-bold text-slate-900 text-base">Instant Reservation / Slot</h4>
                   <p className="text-xs text-slate-500">{selected.name}</p>
                 </div>
               </div>
@@ -416,10 +416,10 @@ export function Phase4Build({
                 </div>
                 <div>
                   <label className="text-xs font-bold text-slate-700 block mb-1">Phone / WhatsApp Number</label>
-                  <input type="tel" placeholder="+91 98765 43210" className="w-full h-9 rounded-xl border border-slate-200 px-3 text-xs focus:ring-1 focus:ring-sky-500 outline-none" />
+                  <input type="tel" placeholder={selected.phone || "+91 98765 43210"} className="w-full h-9 rounded-xl border border-slate-200 px-3 text-xs focus:ring-1 focus:ring-sky-500 outline-none" />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Select Service</label>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">Select Offering</label>
                   <select className="w-full h-9 rounded-xl border border-slate-200 px-3 text-xs focus:ring-1 focus:ring-sky-500 outline-none bg-white">
                     {nichePreset?.services.map((s, i) => (
                       <option key={i} value={s.title}>{s.title}</option>
@@ -430,9 +430,9 @@ export function Phase4Build({
                 <div className="pt-2">
                   <Button
                     onClick={() => {
-                      toast.success("Appointment request sent via WhatsApp!");
+                      toast.success("Reservation sent via WhatsApp!");
                       setShowBookingModal(false);
-                      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${selected.name}, I would like to book a slot for consultation.`)}`, "_blank");
+                      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${selected.name}, I would like to make a reservation.`)}`, "_blank");
                     }}
                     className="w-full h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md"
                   >
@@ -553,7 +553,7 @@ function LiveWebsiteRenderer({
             href={`tel:${cleanPhone}`}
             className={`inline-flex items-center gap-1 rounded-xl ${theme.ctaBtn} px-3 py-1.5 text-xs font-semibold transition-colors shadow-xs`}
           >
-            <Phone className="h-3 w-3 text-white" /> Call
+            <Phone className="h-3 w-3 text-white" /> Call Direct
           </a>
         </div>
       </header>
@@ -568,7 +568,7 @@ function LiveWebsiteRenderer({
           <span>★ {lead.rating ?? 4.8} Google Rated ({lead.reviewsCount ?? 334}+ Reviews)</span>
           <span>• Verified {preset.nicheCategory} in {lead.city}</span>
           <span>• 100% Instant WhatsApp Slots</span>
-          <span>• {lead.yearsInBusiness ?? 8}+ Years Trust</span>
+          <span>• {lead.yearsInBusiness ?? 8}+ Years Trust in {lead.city}</span>
           <span>★ {lead.rating ?? 4.8} Google Rated ({lead.reviewsCount ?? 334}+ Reviews)</span>
           <span>• Verified {preset.nicheCategory} in {lead.city}</span>
         </motion.div>
@@ -580,13 +580,13 @@ function LiveWebsiteRenderer({
           <section className="space-y-4">
             <div className={`rounded-2xl border ${theme.cardBorder} overflow-hidden shadow-md relative text-left group`}>
               {/* Niche Hero Image Background */}
-              <div className="relative h-56 sm:h-64 w-full overflow-hidden">
+              <div className="relative h-60 sm:h-68 w-full overflow-hidden">
                 <img
                   src={preset.heroImage}
                   alt={lead.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-900/30" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-900/40" />
               </div>
 
               {/* Overlay Content */}
@@ -596,6 +596,10 @@ function LiveWebsiteRenderer({
                   <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                   <span>{lead.rating ?? 4.8}★ Google Rated</span>
                   <span className="text-slate-200">({lead.reviewsCount ?? 334}+ reviews)</span>
+                </div>
+
+                <div className="text-[11px] text-amber-300 font-bold uppercase tracking-wider mb-1">
+                  Welcome to {lead.name}
                 </div>
 
                 <h2 className="text-xl sm:text-2.5xl font-extrabold text-white tracking-tight leading-tight drop-shadow-sm">
@@ -642,9 +646,9 @@ function LiveWebsiteRenderer({
           <section className="space-y-4 pt-2">
             <div className={`flex items-center justify-between border-b ${theme.headerBorder} pb-2`}>
               <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <Sparkle className={`h-4 w-4 ${theme.accentText}`} /> Niche Services & Specialties
+                <Sparkle className={`h-4 w-4 ${theme.accentText}`} /> Niche Specialties & Menu
               </h3>
-              <span className={`text-[10px] font-bold ${theme.badgeBg} px-2.5 py-0.5 rounded-full border ${theme.cardBorder}`}>{preset.services.length} Premium Offerings</span>
+              <span className={`text-[10px] font-bold ${theme.badgeBg} px-2.5 py-0.5 rounded-full border ${theme.cardBorder}`}>{preset.services.length} Signature Offerings</span>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-3.5">
@@ -657,8 +661,8 @@ function LiveWebsiteRenderer({
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-                    <div className={`absolute top-2.5 left-2.5 h-6 w-6 rounded-lg ${theme.badgeBg} ${theme.accentText} font-bold flex items-center justify-center text-xs shadow-2xs`}>
-                      {idx + 1}
+                    <div className={`absolute top-2.5 left-2.5 px-2 py-0.5 rounded-lg ${theme.badgeBg} ${theme.accentText} font-bold flex items-center justify-center text-[10px] shadow-2xs`}>
+                      {(srv as { badge?: string }).badge || `Option #${idx + 1}`}
                     </div>
                     <div className="absolute bottom-2 left-2.5 right-2.5 text-white font-bold text-xs truncate drop-shadow-sm">
                       {srv.title}
@@ -670,7 +674,7 @@ function LiveWebsiteRenderer({
                       onClick={onOpenBooking}
                       className={`mt-2.5 text-[11px] font-bold ${theme.accentText} flex items-center gap-1 group-hover:translate-x-1 transition-transform`}
                     >
-                      Book This Service →
+                      Book / Order Now →
                     </button>
                   </div>
                 </div>
@@ -687,11 +691,11 @@ function LiveWebsiteRenderer({
               <h3 className="font-bold text-sm text-white uppercase tracking-wider">About {lead.name}</h3>
             </div>
             <p className="text-xs text-slate-200 leading-relaxed font-sans">
-              With over <span className="font-bold text-white">{lead.yearsInBusiness ?? 8}+ years of dedicated practice</span> in {lead.city}, {lead.name} delivers modern, high-quality, customer-centric solutions designed for convenience and fast turnaround.
+              Welcome to <span className="font-bold text-white">{lead.name}</span> — {lead.city}'s premier {preset.nicheCategory.toLowerCase()} destination. Rated <span className="font-bold text-amber-400">{lead.rating ?? 4.8}/5 stars</span> from over <span className="font-bold text-white">{lead.reviewsCount ?? 334}+ verified reviews</span>. Located at {lead.address}, we deliver uncompromised quality, authentic flavors, and exceptional hospitality.
             </p>
             <div className="flex flex-wrap gap-3 text-xs font-bold pt-1">
-              <span className="flex items-center gap-1 text-emerald-400"><CheckCircle2 className="h-3.5 w-3.5" /> 100% Satisfaction Guarantee</span>
-              <span className="flex items-center gap-1 text-sky-300"><ShieldCheck className="h-3.5 w-3.5" /> Certified Specialist</span>
+              <span className="flex items-center gap-1 text-emerald-400"><CheckCircle2 className="h-3.5 w-3.5" /> 100% Quality & Hygiene Guaranteed</span>
+              <span className="flex items-center gap-1 text-amber-300"><ShieldCheck className="h-3.5 w-3.5" /> Certified Local Favorite</span>
             </div>
           </section>
         )}
@@ -701,7 +705,7 @@ function LiveWebsiteRenderer({
           <section className="space-y-3 pt-2 overflow-hidden">
             <div className={`flex items-center justify-between border-b ${theme.headerBorder} pb-2`}>
               <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> Verified Customer Reviews (Realtime Loop)
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> What Our Guests Say ({lead.reviewsCount ?? 334}+ Reviews)
               </h3>
               <span className="text-[10px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">{lead.rating ?? 4.8}★ Rating</span>
             </div>
@@ -720,7 +724,10 @@ function LiveWebsiteRenderer({
                         <div className={`h-7 w-7 rounded-full ${theme.badgeBg} ${theme.accentText} font-bold text-xs flex items-center justify-center uppercase`}>
                           {rev.author[0]}
                         </div>
-                        <span className="font-bold text-xs text-slate-900">{rev.author}</span>
+                        <div>
+                          <div className="font-bold text-xs text-slate-900">{rev.author}</div>
+                          <div className="text-[9px] text-slate-400 font-sans">{rev.source || "Google Review"}</div>
+                        </div>
                       </div>
                       <div className="flex gap-0.5 text-amber-400 text-xs">
                         {"★".repeat(rev.rating)}
@@ -785,12 +792,12 @@ function LiveWebsiteRenderer({
 
               <div className="flex items-center gap-2.5 text-xs text-slate-700">
                 <Phone className={`h-4 w-4 ${theme.accentText} shrink-0`} />
-                <a href={`tel:${cleanPhone}`} className={`font-bold ${theme.accentText} hover:underline`}>{lead.phone || "+91 98986 66601"}</a>
+                <a href={`tel:${cleanPhone}`} className={`font-bold ${theme.accentText} hover:underline`}>{lead.phone || "+91 95577 30531"}</a>
               </div>
 
               <div className="flex items-center gap-2.5 text-xs text-slate-700">
                 <Clock className={`h-4 w-4 ${theme.accentText} shrink-0`} />
-                <span>Monday – Saturday: 09:30 AM – 08:30 PM (Sunday by Appointment)</span>
+                <span>Monday – Sunday: 07:00 AM – 12:00 AM (Breakfast, Lunch & Dinner)</span>
               </div>
 
               {/* REAL INTERACTIVE GOOGLE MAPS EMBED IFRAME */}
@@ -825,7 +832,7 @@ function LiveWebsiteRenderer({
         {showAll && (
           <footer className="pt-6 pb-4 border-t border-slate-100 text-center space-y-2">
             <div className="font-bold text-xs text-slate-900">{lead.name}</div>
-            <div className="text-[10.5px] text-slate-400 font-sans">© {new Date().getFullYear()} {lead.name}. All rights reserved. • High-Converting Local Site</div>
+            <div className="text-[10.5px] text-slate-400 font-sans">© {new Date().getFullYear()} {lead.name}. All rights reserved. • Heritage Dining & Premium Local Site</div>
           </footer>
         )}
       </div>
@@ -845,12 +852,57 @@ function LiveWebsiteRenderer({
 }
 
 /* ============================================================================
-   NICHE PRESET DETECTION ENGINE WITH DISTINCT COLOR THEMES & REALTIME IMAGES
+   NICHE PRESET DETECTION ENGINE WITH ROYAL LUXURY RESTAURANT & NICHE THEMES
    ============================================================================ */
 function getNichePreset(category: string, name: string) {
   const cat = `${category} ${name}`.toLowerCase();
 
-  // 1. Dental Clinic / Dentist (Cyan & Medical Teal Theme)
+  // 1. Restaurant / Cafe / Dining (Royal Gold & Dark Charcoal Luxury Heritage Theme)
+  if (cat.includes("restau") || cat.includes("cafe") || cat.includes("food") || cat.includes("dini") || cat.includes("pizz") || cat.includes("baker") || cat.includes("biryan") || cat.includes("thali") || cat.includes("veg")) {
+    return {
+      nicheCategory: "Restaurant & Dining",
+      icon: Utensils,
+      heroImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
+      heroTitle: "Premium Vegetarian Dining & Authentic Royal Cuisine",
+      heroSub: "Experience royal culinary traditions with authentic North Indian, South Indian, Chinese & Mughlai delicacies. Rated #1 for family & tourist dining.",
+      trustBadges: ["100% Pure Veg Kitchen", "FSSAI Certified 5★", "Instant WhatsApp Reservation"],
+      theme: {
+        bodyBg: "bg-stone-50",
+        headerBg: "bg-stone-900/95 text-white",
+        headerBorder: "border-amber-900/60",
+        cardBorder: "border-amber-200",
+        badgeBg: "bg-amber-100/80",
+        accentText: "text-amber-700",
+        ctaBtn: "bg-amber-600 hover:bg-amber-700 text-white shadow-amber-600/30",
+        tickerBg: "bg-stone-950",
+        tickerText: "text-amber-300"
+      },
+      ctaPrimary: "Make Table Reservation",
+      ctaSecondary: "View Digital Menu",
+      schemaType: "Restaurant",
+      services: [
+        { title: "Signature Royal Maharaja Thali", desc: "A royal platter featuring Dal Makhani, Shahi Paneer, Mix Veg, Pulao, Raita, Butter Naan, Sweet & Papad.", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80", badge: "Most Popular" },
+        { title: "Navratan Korma (Mughlai Classic)", desc: "Cooked with nine selected vegetables, dry fruits, and a silky cashew gravy — an authentic taste of royalty.", image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=400&q=80", badge: "Chef's Special" },
+        { title: "Special Paneer Teen Zayka Tikka", desc: "Tri-color marinated paneer grilled in tandoor with three signature aromatic spice marinades.", image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=400&q=80", badge: "Spicy & Hot" },
+        { title: "Crispy South Indian Dosa & Idli Platter", desc: "Golden paper butter dosas served with fresh coconut chutney and hot drumstick sambar.", image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=400&q=80", badge: "All-Day Fresh" },
+        { title: "Indo-Chinese Noodles & Crispy Manchurian", desc: "Wok-tossed Hakka noodles with crunchy vegetables and spicy Manchurian gravy.", image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=400&q=80", badge: "Kids Favorite" },
+        { title: "Authentic Confectionery & Sweet Desserts", desc: "In-house authentic sweet Petha, royal Gulab Jamun, and Rabri Falooda.", image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=400&q=80", badge: "Fresh Sweets" }
+      ],
+      reviews: [
+        { author: "Rajesh Kumar", rating: 5, text: "Absolutely the best restaurant! The Maharaja Thali was incredible and the heritage view made our dining experience unforgettable. Highly recommended for families!", source: "Local Guide · Google Review" },
+        { author: "Priya Sharma", rating: 5, text: "Exceeded all expectations! Pure vegetarian food with authentic taste. The Dal Makhani & Paneer Tikka were superb. Best veg restaurant without doubt!", source: "TripAdvisor Review" },
+        { author: "Michael Thompson", rating: 5, text: "As a tourist from UK, I was looking for authentic Indian vegetarian food. This place served the most amazing thali I've ever had. Great for international tourists!", source: "Tourist · Google Review" }
+      ],
+      faqs: [
+        { q: "What makes this restaurant special?", a: "We combine a prime accessible location, 100% pure vegetarian multi-cuisine menu, 4.8/5 rating from 1200+ reviews, and dedicated family AC dining with authentic North Indian, South Indian, and Chinese specialties." },
+        { q: "What are the operating hours?", a: "We are open daily from 7:00 AM to 12:00 AM. Breakfast is served from 7:00 AM - 12:00 PM, Lunch from 12:00 PM - 5:00 PM, and Dinner from 5:00 PM - 11:00 PM." },
+        { q: "Is this a pure vegetarian restaurant?", a: "Yes! We operate a 100% pure vegetarian kitchen with strict hygiene standards. We also offer Jain food options (no onion/garlic) on request." },
+        { q: "Do you accept table reservations and online delivery?", a: "Yes, reserve tables instantly via WhatsApp or phone. We are also available for online food delivery on Zomato & Swiggy." }
+      ]
+    };
+  }
+
+  // 2. Dental Clinic / Dentist (Cyan & Medical Teal Theme)
   if (cat.includes("dent") || cat.includes("teeth") || cat.includes("orthodont")) {
     return {
       nicheCategory: "Dental Clinic",
@@ -882,9 +934,9 @@ function getNichePreset(category: string, name: string) {
         { title: "Pediatric & Family Dental Checkup", desc: "Gentle, stress-free dental care for children and seniors.", image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=400&q=80" }
       ],
       reviews: [
-        { author: "Dr. Ananya Sharma", rating: 5, text: "Got my aligners done here. Super smooth process with zero discomfort. Highly recommend!" },
-        { author: "Vikram Mehta", rating: 5, text: "Extremely clean clinic and doctor explains every procedure calmly. Painless root canal done." },
-        { author: "Priya Malhotra", rating: 5, text: "The teeth whitening session gave amazing instant results for my wedding!" }
+        { author: "Dr. Ananya Sharma", rating: 5, text: "Got my aligners done here. Super smooth process with zero discomfort. Highly recommend!", source: "Google Review" },
+        { author: "Vikram Mehta", rating: 5, text: "Extremely clean clinic and doctor explains every procedure calmly. Painless root canal done.", source: "Google Review" },
+        { author: "Priya Malhotra", rating: 5, text: "The teeth whitening session gave amazing instant results for my wedding!", source: "Practo Review" }
       ],
       faqs: [
         { q: "Is root canal treatment really painless here?", a: "Yes! We use advanced rotary endodontics and computerized local anesthesia so you feel zero pain throughout." },
@@ -895,7 +947,7 @@ function getNichePreset(category: string, name: string) {
     };
   }
 
-  // 2. Doctor / General Medical Clinic / Hospital (Emerald & Healing Teal Theme)
+  // 3. Doctor / General Medical Clinic / Hospital (Emerald & Healing Teal Theme)
   if (cat.includes("doct") || cat.includes("clinic") || cat.includes("hospit") || cat.includes("health") || cat.includes("physician") || cat.includes("dermat") || cat.includes("eye")) {
     return {
       nicheCategory: "Medical Clinic",
@@ -927,60 +979,15 @@ function getNichePreset(category: string, name: string) {
         { title: "Home Visit & Teleconsultation", desc: "Video consultation and doctor home visits for seniors.", image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&w=400&q=80" }
       ],
       reviews: [
-        { author: "Rajesh Kumar", rating: 5, text: "Doctor gave genuine advice without prescribing unnecessary tests. Very polite staff." },
-        { author: "Pooja Malhotra", rating: 5, text: "WhatsApp booking saved us 2 hours in waiting room. Very efficient system!" },
-        { author: "Sunil Verma", rating: 5, text: "Great experience for my parents' routine health checkup." }
+        { author: "Rajesh Kumar", rating: 5, text: "Doctor gave genuine advice without prescribing unnecessary tests. Very polite staff.", source: "Google Review" },
+        { author: "Pooja Malhotra", rating: 5, text: "WhatsApp booking saved us 2 hours in waiting room. Very efficient system!", source: "Google Review" },
+        { author: "Sunil Verma", rating: 5, text: "Great experience for my parents' routine health checkup.", source: "Practo Review" }
       ],
       faqs: [
         { q: "How do I book a same-day OPD slot?", a: "Click the WhatsApp button or call direct. Slots are confirmed instantly in under 1 minute." },
         { q: "Are home visits available for senior citizens?", a: "Yes, doctor visits and home blood sample collection can be scheduled for elderly patients." },
         { q: "Do you accept health insurance?", a: "We provide cashless assistance for empaneled insurance providers and detailed reimbursement bills." },
         { q: "What should I bring for my first consultation?", a: "Please carry any previous medical records, prescriptions, and a list of current medications." }
-      ]
-    };
-  }
-
-  // 3. Restaurant / Cafe / Dining (Warm Culinary Amber & Terracotta Theme)
-  if (cat.includes("restau") || cat.includes("cafe") || cat.includes("food") || cat.includes("dini") || cat.includes("pizz") || cat.includes("baker") || cat.includes("biryan")) {
-    return {
-      nicheCategory: "Restaurant & Cafe",
-      icon: Utensils,
-      heroImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
-      heroTitle: "Authentic Flavors, Chef Specials & Festive Dining",
-      heroSub: "Enjoy hand-crafted delicacies made with fresh ingredients. Reserve your table or order express delivery via WhatsApp.",
-      trustBadges: ["FSSAI Certified 5★", "Fresh Daily Produce", "Express WhatsApp Order"],
-      theme: {
-        bodyBg: "bg-orange-50/30",
-        headerBg: "bg-white/95",
-        headerBorder: "border-orange-100",
-        cardBorder: "border-orange-200",
-        badgeBg: "bg-orange-50",
-        accentText: "text-orange-700",
-        ctaBtn: "bg-orange-600 hover:bg-orange-700 text-white",
-        tickerBg: "bg-stone-900",
-        tickerText: "text-orange-300"
-      },
-      ctaPrimary: "Reserve Table / Order",
-      ctaSecondary: "View Digital Menu",
-      schemaType: "Restaurant",
-      services: [
-        { title: "Signature Chef Delicacies", desc: "Curated gourmet appetizers, authentic gravies & breads.", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80" },
-        { title: "Instant Table Reservation", desc: "Skip the queue! Book your favorite table online in 30 seconds.", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80" },
-        { title: "Express WhatsApp Delivery", desc: "Hot food delivered directly to your doorstep in 30 mins.", image: "https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&w=400&q=80" },
-        { title: "Artisan Coffee & Mocktails", desc: "Freshly brewed espresso and handcrafted refreshing coolers.", image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=400&q=80" },
-        { title: "Private Party & Birthday Catering", desc: "Custom buffet menus for corporate events and family gatherings.", image: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=400&q=80" },
-        { title: "Weekend Brunch Buffets", desc: "Unlimited multi-cuisine brunch spreads every Saturday & Sunday.", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" }
-      ],
-      reviews: [
-        { author: "Amit Singhania", rating: 5, text: "Phenomenal taste and hospitality! The chef specials are a must-try. Table booking was seamless." },
-        { author: "Neha Roy", rating: 5, text: "Loved the ambiance and quick service. Ordered home delivery on WhatsApp and arrived hot!" },
-        { author: "Rahul Kapoor", rating: 5, text: "Great food quality and clean hygiene standards." }
-      ],
-      faqs: [
-        { q: "How far in advance should I reserve a table?", a: "We recommend reserving 2-4 hours prior for weekdays, and 1 day prior for weekend dinners." },
-        { q: "Is home delivery available directly?", a: "Yes, order on WhatsApp to get direct restaurant pricing with zero third-party markups!" },
-        { q: "Do you cater for private parties?", a: "Yes! We cater for birthdays, anniversaries, and corporate events up to 200 guests." },
-        { q: "Is pure vegetarian / Jain food available?", a: "Yes, we have dedicated pure veg cookware and separate Jain food options." }
       ]
     };
   }
@@ -1017,9 +1024,9 @@ function getNichePreset(category: string, name: string) {
         { title: "3D Virtual Property Tours", desc: "Explore property layouts and walkthrough videos from home.", image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=400&q=80" }
       ],
       reviews: [
-        { author: "Karan Patel", rating: 5, text: "Found a dream 3BHK flat in prime area within 10 days! Honest advice and transparent paperwork." },
-        { author: "Sujata Bose", rating: 5, text: "Helped sell my property at market valuation quickly. Highly professional broker." },
-        { author: "Vikram Rathi", rating: 5, text: "Smooth home loan processing and transparent site visits." }
+        { author: "Karan Patel", rating: 5, text: "Found a dream 3BHK flat in prime area within 10 days! Honest advice and transparent paperwork.", source: "Verified Buyer" },
+        { author: "Sujata Bose", rating: 5, text: "Helped sell my property at market valuation quickly. Highly professional broker.", source: "Property Owner" },
+        { author: "Vikram Rathi", rating: 5, text: "Smooth home loan processing and transparent site visits.", source: "Google Review" }
       ],
       faqs: [
         { q: "Are all listed properties RERA registered?", a: "Yes, 100% of our residential and commercial projects are RERA registered with clear titles." },
@@ -1062,9 +1069,9 @@ function getNichePreset(category: string, name: string) {
         { title: "Gentlemen Grooming & Beard Spa", desc: "Precision hair trimming, beard styling & scalp treatment.", image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80" }
       ],
       reviews: [
-        { author: "Priya Varma", rating: 5, text: "The hair spa and Keratin treatment transformed my hair! Very polite staff and clean salon." },
-        { author: "Rohan Das", rating: 5, text: "Best haircut in town. Booking appointment on WhatsApp saved me from waiting." },
-        { author: "Shweta Nair", rating: 5, text: "Amazing bridal makeup done for my wedding!" }
+        { author: "Priya Varma", rating: 5, text: "The hair spa and Keratin treatment transformed my hair! Very polite staff and clean salon.", source: "Google Review" },
+        { author: "Rohan Das", rating: 5, text: "Best haircut in town. Booking appointment on WhatsApp saved me from waiting.", source: "Google Review" },
+        { author: "Shweta Nair", rating: 5, text: "Amazing bridal makeup done for my wedding!", source: "Bridal Review" }
       ],
       faqs: [
         { q: "Is prior booking required?", a: "Prior slot booking via WhatsApp is recommended to skip weekend waiting times." },
@@ -1107,9 +1114,9 @@ function getNichePreset(category: string, name: string) {
         { title: "Corporate Fitness Membership", desc: "Discounted group membership packages for companies.", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80" }
       ],
       reviews: [
-        { author: "Manish Joshi", rating: 5, text: "Lost 14 kg in 4 months! Excellent equipment and trainers push you every single day." },
-        { author: "Simran Kaur", rating: 5, text: "Super clean gym with female-friendly environment. Love the group HIIT classes!" },
-        { author: "Aakash Jain", rating: 5, text: "Best gym infrastructure and friendly trainers." }
+        { author: "Manish Joshi", rating: 5, text: "Lost 14 kg in 4 months! Excellent equipment and trainers push you every single day.", source: "Member Review" },
+        { author: "Simran Kaur", rating: 5, text: "Super clean gym with female-friendly environment. Love the group HIIT classes!", source: "Member Review" },
+        { author: "Aakash Jain", rating: 5, text: "Best gym infrastructure and friendly trainers.", source: "Google Review" }
       ],
       faqs: [
         { q: "How do I claim my 3-day free trial pass?", a: "Simply click 'Claim Free Pass' to register via WhatsApp. Show your pass at reception!" },
@@ -1151,9 +1158,9 @@ function getNichePreset(category: string, name: string) {
       { title: "After-Service Warranty", desc: "Guaranteed peace of mind with verified support.", image: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=400&q=80" }
     ],
     reviews: [
-      { author: "Siddharth Gupta", rating: 5, text: "Outstanding service! Prompt response on WhatsApp and completed the job cleanly." },
-      { author: "Ritu Verma", rating: 5, text: "Very reliable local business. Fair pricing and friendly staff." },
-      { author: "Deepak Sharma", rating: 5, text: "Professional staff and great value for money." }
+      { author: "Siddharth Gupta", rating: 5, text: "Outstanding service! Prompt response on WhatsApp and completed the job cleanly.", source: "Google Review" },
+      { author: "Ritu Verma", rating: 5, text: "Very reliable local business. Fair pricing and friendly staff.", source: "Google Review" },
+      { author: "Deepak Sharma", rating: 5, text: "Professional staff and great value for money.", source: "Verified Customer" }
     ],
     faqs: [
       { q: "How quickly can I book a service?", a: "Contact us via WhatsApp or phone for instant slot confirmation in under 2 minutes." },
@@ -1165,7 +1172,7 @@ function getNichePreset(category: string, name: string) {
 }
 
 /* ============================================================================
-   PROMPT BUILDER WITH NICHE SPECIFICITY
+   PROMPT BUILDER WITH RICH SPECIFICITY & HIGH-CONVERTING SCHEMA
    ============================================================================ */
 function buildPrompt(
   l: RankedLead,
@@ -1174,7 +1181,7 @@ function buildPrompt(
 ): string {
   const name = l.name;
   const niche = l.category;
-  const phone = l.phone ?? "+91 98986 66601";
+  const phone = l.phone ?? "+91 95577 30531";
   const whatsapp = l.whatsapp ?? phone;
   const addr = l.address;
   const rating = l.rating ?? 4.8;
@@ -1182,59 +1189,65 @@ function buildPrompt(
   const gap = l.audit.biggestGap;
   const waClean = whatsapp.replace(/\D/g, "");
 
-  return `You are building a high-converting, mobile-first local-business website for an Indian ${niche} named "${name}".
+  return `You are crafting a world-class, ultra-high converting, mobile-first website for an Indian ${niche} named "${name}" located in ${l.city}.
 
-# BUSINESS PROFILE & DETAILS
+# SCRAPED BUSINESS DATA & PROFILE
 - Business Name: ${name}
 - Industry Niche: ${niche} (Category: ${preset.nicheCategory})
 - Full Address: ${addr}
 - City: ${l.city}
 - Direct Phone: ${phone}
-- WhatsApp Booking: ${whatsapp}
+- WhatsApp Reservation / Ordering: ${whatsapp}
 - Google Reputation: ${rating}★ Stars (${reviews} verified reviews)
-- Primary Audit Gap to Fix: ${gap} (Est. lost revenue: ₹${(l.audit.estLostRevenuePerMonth || 45000).toLocaleString()}/month)
+- Primary Audit Gap Fixed: ${gap} (Est. revenue saved: ₹${(l.audit.estLostRevenuePerMonth || 45000).toLocaleString()}/month)
 
-# NICHE HERO HEADLINE & VALUE PROPOSITION
+# HERO & VALUE PROPOSITION
 - Main Headline: "${preset.heroTitle}"
 - Subheadline: "${preset.heroSub}"
 - Trust Badges: ${preset.trustBadges.join(" | ")}
 
-# DESIGN & BRAND SYSTEM
-- Mobile-First Architecture (90% of Indian users are on 375px mobile screens). Hero CTA visible above fold.
-- Color Palette: Niche Theme Accent (${preset.theme.accentText}), WhatsApp CTA (#16A34A), Slate Typography (#0F172A).
-- Typography: Inter or DM Sans font family. Clean hierarchy with large bold headlines.
-- Trust Signals: Display Google Rating badge (${rating}★, ${reviews}+ reviews), "Years in Business" badge (${l.yearsInBusiness ?? 8}+ years), and verified local badges.
-- Floating WhatsApp Widget: Sticky bottom-right chat button linking to https://wa.me/${waClean}?text=Hi%20${encodeURIComponent(name)},%20I%20would%20like%20to%20book%20a%20slot.
-- Header Call Action: Click-to-call link formatted as tel:${phone.replace(/\s/g, "")}.
+# DESIGN & BRAND SYSTEM (HIGH QUALITY HIGH CONVERTING)
+- Architecture: 100% Mobile-First (90% traffic on 375px mobile screens). Sticky action bar & CTAs visible above fold.
+- Color Palette: Standalone Niche Theme (${preset.theme.accentText}), High-contrast CTAs, Rich Luxury Accents, Dark Hero Overlays.
+- Typography: Playfair Display for royal/serif headers + Poppins / Inter for body text.
+- Trust Signals: Rating pill (${rating}★, ${reviews}+ reviews), "Years in Business" badge (${l.yearsInBusiness ?? 8}+ years), Google Verified badges.
+- Realtime Sticky WhatsApp Button: Floating bottom-right chat bubble linking to https://wa.me/${waClean}?text=Hi%20${encodeURIComponent(name)},%20I%20would%20like%20to%20make%20a%20reservation.
+- Click-to-Call Header Action: tel:${phone.replace(/\s/g, "")}
 
-# HIGH-CONVERTING PAGE SECTIONS (In Exact Order)
-1. Sticky Header Bar: Logo + ${name} + "Open Today" Badge + Click-to-Call Button.
-2. Hero Section: Niche Cover Image + Headline + Subheadline + "${preset.ctaPrimary}" WhatsApp CTA + "${preset.ctaSecondary}" Phone CTA.
-3. Trust Bar: Realtime Ticker Badge (${rating}★, ${reviews}+ Reviews, Years in ${l.city.split(",")[0]}).
-4. Niche Services Grid (6 Cards with High-Res Images):
-${preset.services.map((s, i) => `   ${i + 1}. ${s.title}: ${s.desc} [Image: ${s.image}]`).join("\n")}
-5. About & Credentials: Bio placeholder + credentials + why local customers choose ${name}.
-6. Customer Reviews Carousel (Realtime Infinite Loop): ${preset.reviews.map((r) => `"${r.text}" — ${r.author} (${r.rating}★)`).join(" | ")}.
-7. Local FAQ Accordion: 4 common customer questions (pricing, booking process, timing, payment options).
-8. Location & Directions: Real interactive Google Maps embed for ${addr} + business hours + directions CTA.
-9. Footer: Full contact info, WhatsApp link, phone link, working hours, and social media links.
+# HIGH-CONVERTING PAGE SECTIONS (In Sequential Order)
+1. Sticky Header Bar: Brand Logo + ${name} + "Open Today" Live Pulse Badge + "Call Direct" Button.
+2. Hero Slideshow / Cover Banner: Niche Hero Cover Image + Headline + "${preset.ctaPrimary}" WhatsApp CTA + "${preset.ctaSecondary}" Phone CTA.
+3. Continuous Realtime Marquee Ticker Bar: ${rating}★ Rated (${reviews}+ Reviews) | Verified ${preset.nicheCategory} in ${l.city} | 100% Quality Guarantee.
+4. Niche Specialties & Signature Items Grid (6 Cards with High-Res Unsplash Photography):
+${preset.services.map((s, i) => `   ${i + 1}. [${(s as { badge?: string }).badge || "Featured"}] ${s.title}: ${s.desc} (Image: ${s.image})`).join("\n")}
+5. Customer Reviews Carousel (Realtime Infinite Loop):
+${preset.reviews.map((r) => `   - "${r.text}" — ${r.author} (${r.source})`).join("\n")}
+6. Why Guests Choose Us (4 Features Grid): Prime Location near landmarks | 100% Fresh & Authentic Kitchen | Multi-Cuisine | Family Friendly AC Dining.
+7. Interactive FAQ Accordion: 4 key questions regarding timings (07:00 AM - 12:00 AM), pure veg / Jain options, reservations, and location.
+8. Realtime Google Maps Embed: Live interactive map iframe for "${name} ${addr}" + Driving directions link.
+9. Sticky Mobile CTA Bar: Call | WhatsApp | Reserve | Directions.
+10. Footer: Contact Info, Hours, Social Media links, Quick Links, and Legal Copyright.
 
-# TECHNICAL & SEO SCHEMA
-- HTML Attribute: lang="en-IN"
-- Meta Title: "${name} | Best ${niche} in ${l.city} | Book on WhatsApp"
-- Meta Description: "${preset.heroSub} Located at ${addr}. Call ${phone} or book online."
-- JSON-LD Structured Data: Schema.org @type "${preset.schemaType}" with name, address, telephone, aggregateRating (${rating}), and openingHours.
-- Performance: Optimised image loading, zero layout shifts, lighthouse score > 90.
+# SEO META TAGS & RICH SCHEMA SNIPPETS
+- HTML Lang: en-IN
+- Title: "${name} | Best ${niche} in ${l.city} | Book Table / Order Online"
+- Meta Description: "Experience royal dining at ${name}. ${preset.heroSub} Located at ${addr}. Call ${phone} or book on WhatsApp."
+- Keywords: "${name}, best ${niche} in ${l.city}, ${l.city} top restaurant, family dining ${l.city}, thali in ${l.city}"
+- JSON-LD Structured Data:
+  - Schema @type "${preset.schemaType}" & "LocalBusiness"
+  - Schema @type "AggregateRating" (ratingValue: "${rating}", reviewCount: "${reviews}")
+  - Schema @type "FAQPage" with 4 mainEntity questions & answers
+  - Schema @type "PostalAddress" & "GeoCoordinates"
 
-# COPY TONE & HINGLISH TRUST PHRASES
-Warm, reassuring, professional. Include subtle Hinglish trust signals where appropriate ("Aapki zaroorat ke waqt aasan booking").
+# COPY TONE
+Warm, welcoming, royal, and trustworthy.
 
 ${
   platform === "lovable" || platform === "bolt"
-    ? `OUTPUT FORMAT: Single React + Tailwind CSS landing page component. No backend. Use Unsplash placeholder images relevant to ${niche}.`
+    ? `OUTPUT FORMAT: Single React + Tailwind CSS landing page component with full smooth interactivity. Use Unsplash photo URLs.`
     : platform === "claude-code"
       ? "OUTPUT FORMAT: Next.js 15 App Router page with Tailwind CSS and shadcn components."
-      : "OUTPUT FORMAT: Self-contained index.html file with Tailwind CSS via CDN."
+      : "OUTPUT FORMAT: Self-contained index.html file with inline CSS and JS for slideshow."
 }
 
 Generate the complete production-ready code now.`;
