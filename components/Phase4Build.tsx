@@ -30,9 +30,12 @@ import {
   Maximize2,
   X,
   ShieldCheck,
-  ArrowRight,
-  BadgePercent,
-  Sparkle
+  Sparkle,
+  ChevronDown,
+  ChevronUp,
+  Calendar,
+  Award,
+  Layers
 } from "lucide-react";
 import type { RankedLead } from "@/lib/types";
 import { toast } from "sonner";
@@ -63,8 +66,9 @@ export function Phase4Build({
   const [saving, setSaving] = useState(false);
   const [savedKey, setSavedKey] = useState("");
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
-  const [previewTab, setPreviewTab] = useState<"hero" | "services" | "reviews" | "contact">("hero");
+  const [previewTab, setPreviewTab] = useState<"all" | "hero" | "services" | "reviews" | "faq" | "contact">("all");
   const [fullModal, setFullModal] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
   const nichePreset = useMemo(() => (selected ? getNichePreset(selected.category, selected.name) : null), [selected]);
   const prompt = useMemo(() => (selected && nichePreset ? buildPrompt(selected, platform, nichePreset) : ""), [selected, platform, nichePreset]);
@@ -125,8 +129,8 @@ export function Phase4Build({
     setBuilding(true);
     setTimeout(() => {
       setBuilding(false);
-      toast.success(`High-converting preview generated for ${selected?.name}!`);
-    }, 1500);
+      toast.success(`Full high-converting website site ready for ${selected?.name}!`);
+    }, 1200);
   }
 
   if (!selected) {
@@ -176,7 +180,7 @@ export function Phase4Build({
             <div className="text-xs text-slate-500 mt-0.5 font-sans flex items-center gap-2">
               <span>{selected.address}</span>
               <span>•</span>
-              <span className="text-sky-700 font-semibold">{selected.rating ?? 4.5}★ ({selected.reviewsCount ?? 0} reviews)</span>
+              <span className="text-sky-700 font-semibold">{selected.rating ?? 4.8}★ ({selected.reviewsCount ?? 0} reviews)</span>
             </div>
           </div>
         </div>
@@ -218,7 +222,7 @@ export function Phase4Build({
       {/* Main Grid: Prompt Code vs Live Preview */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Left Card: Tailored Niche Prompt */}
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 flex flex-col h-[660px]">
+        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 flex flex-col h-[720px]">
           <CardHeader className="pb-3 pt-5 px-5 flex flex-row items-center justify-between border-b border-sky-100">
             <div>
               <CardTitle className="text-base tracking-tight font-bold text-slate-900 flex items-center gap-2">
@@ -241,13 +245,13 @@ export function Phase4Build({
         </Card>
 
         {/* Right Card: High Quality Interactive Preview */}
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 overflow-hidden flex flex-col h-[660px]">
+        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 overflow-hidden flex flex-col h-[720px]">
           {/* Preview Toolbar Header */}
           <CardHeader className="flex flex-row items-center justify-between pb-3 pt-4 px-5 gap-3 border-b border-sky-100 bg-slate-50/50">
             <div className="flex items-center gap-2">
               <CardTitle className="text-base tracking-tight font-bold text-slate-900">Live Website Preview</CardTitle>
-              <span className="inline-flex items-center rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                ● High Conversion
+              <span className="inline-flex items-center rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
+                ● 100% Full Page Live
               </span>
             </div>
 
@@ -277,7 +281,7 @@ export function Phase4Build({
                 className="rounded-xl h-8 px-2.5 border-sky-200 text-sky-700 text-xs font-semibold hover:bg-sky-50"
                 title="Full Screen Preview"
               >
-                <Maximize2 className="h-3.5 w-3.5 mr-1" /> Expand
+                <Maximize2 className="h-3.5 w-3.5 mr-1" /> Fullscreen
               </Button>
 
               <Button
@@ -306,48 +310,138 @@ export function Phase4Build({
             <div className="text-[10px] font-mono text-slate-400">{viewMode === "mobile" ? "375px" : "100%"}</div>
           </div>
 
-          {/* Preview Navigation Bar */}
-          <div className="bg-slate-100 border-b border-slate-200 px-4 py-1.5 flex items-center gap-2 overflow-x-auto shrink-0">
+          {/* Section Filter Bar */}
+          <div className="bg-slate-100 border-b border-slate-200 px-4 py-1.5 flex items-center gap-1.5 overflow-x-auto shrink-0 scrollbar-none">
+            <button
+              onClick={() => setPreviewTab("all")}
+              className={`px-3 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "all" ? "bg-sky-600 text-white shadow-xs" : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"}`}
+            >
+              ★ Full Page (All Sections)
+            </button>
             <button
               onClick={() => setPreviewTab("hero")}
-              className={`px-3 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "hero" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "hero" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
             >
-              Hero & CTAs
+              Hero
             </button>
             <button
               onClick={() => setPreviewTab("services")}
-              className={`px-3 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "services" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "services" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
             >
               Services ({nichePreset?.services.length})
             </button>
             <button
               onClick={() => setPreviewTab("reviews")}
-              className={`px-3 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "reviews" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "reviews" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
             >
               Reviews ({selected.reviewsCount ?? 334})
             </button>
             <button
-              onClick={() => setPreviewTab("contact")}
-              className={`px-3 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "contact" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
+              onClick={() => setPreviewTab("faq")}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "faq" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
             >
-              Location & Contact
+              FAQs
+            </button>
+            <button
+              onClick={() => setPreviewTab("contact")}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "contact" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
+            >
+              Location & Map
             </button>
           </div>
 
-          {/* Render Interactive Preview Screen */}
-          <div className="flex-1 overflow-y-auto p-4 bg-slate-100/60 relative scrollbar-thin">
+          {/* Render Interactive Scrollable Preview Screen */}
+          <div
+            data-lenis-prevent
+            className="flex-1 overflow-y-auto p-4 bg-slate-100/70 relative scrollbar-thin overscroll-contain"
+          >
             <div
               className={`transition-all duration-300 ${
                 viewMode === "mobile"
-                  ? "max-w-[375px] mx-auto bg-white rounded-3xl border-4 border-slate-900 shadow-2xl overflow-hidden min-h-[500px]"
-                  : "w-full bg-white rounded-xl border border-slate-200 shadow-sm"
+                  ? "max-w-[375px] mx-auto bg-white rounded-3xl border-4 border-slate-900 shadow-2xl overflow-hidden min-h-[550px]"
+                  : "w-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
               }`}
             >
-              {renderLiveMockup(selected, nichePreset, previewTab, waNumber, cleanPhone)}
+              <LiveWebsiteRenderer
+                lead={selected}
+                preset={nichePreset}
+                tab={previewTab}
+                waNumber={waNumber}
+                cleanPhone={cleanPhone}
+                onOpenBooking={() => setShowBookingModal(true)}
+              />
             </div>
           </div>
         </Card>
       </div>
+
+      {/* Interactive Booking Modal Simulation */}
+      <AnimatePresence>
+        {showBookingModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm p-4 flex items-center justify-center"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 16 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 16 }}
+              className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl border border-sky-100 relative"
+            >
+              <button
+                onClick={() => setShowBookingModal(false)}
+                className="absolute top-4 right-4 p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-8 w-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center font-bold">
+                  <Calendar className="h-4 w-4" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900 text-base">Instant Slot Booking</h4>
+                  <p className="text-xs text-slate-500">{selected.name}</p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mt-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">Your Full Name</label>
+                  <input type="text" placeholder="e.g. Rahul Sharma" className="w-full h-9 rounded-xl border border-slate-200 px-3 text-xs focus:ring-1 focus:ring-sky-500 outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">Phone / WhatsApp Number</label>
+                  <input type="tel" placeholder="+91 98765 43210" className="w-full h-9 rounded-xl border border-slate-200 px-3 text-xs focus:ring-1 focus:ring-sky-500 outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">Select Service</label>
+                  <select className="w-full h-9 rounded-xl border border-slate-200 px-3 text-xs focus:ring-1 focus:ring-sky-500 outline-none bg-white">
+                    {nichePreset?.services.map((s, i) => (
+                      <option key={i} value={s.title}>{s.title}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="pt-2">
+                  <Button
+                    onClick={() => {
+                      toast.success("Appointment request sent via WhatsApp!");
+                      setShowBookingModal(false);
+                      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${selected.name}, I would like to book a slot for consultation.`)}`, "_blank");
+                    }}
+                    className="w-full h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md"
+                  >
+                    Confirm & Send to WhatsApp →
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Full Screen Preview Modal */}
       <AnimatePresence>
@@ -356,13 +450,13 @@ export function Phase4Build({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md p-4 sm:p-8 flex items-center justify-center"
+            className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md p-4 sm:p-6 flex items-center justify-center"
           >
             <motion.div
               initial={{ scale: 0.95, y: 16 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 16 }}
-              className="bg-white rounded-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-sky-200"
+              className="bg-white rounded-2xl w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl border border-sky-200"
             >
               {/* Modal Header */}
               <div className="bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between border-b border-slate-800">
@@ -371,13 +465,13 @@ export function Phase4Build({
                     {nichePreset?.icon ? <nichePreset.icon className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-white">{selected.name} — Live Site Preview</h3>
+                    <h3 className="font-bold text-sm text-white">{selected.name} — 100% Full Page Live Preview</h3>
                     <p className="text-[11px] text-sky-400 font-mono">https://preview.{selected.name.toLowerCase().replace(/[^a-z0-9]/g, "")}.com</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Button size="sm" onClick={() => window.open(`https://wa.me/${waNumber}?text=Hi%20${encodeURIComponent(selected.name)}`, "_blank")} className="h-8 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold">
+                  <Button size="sm" onClick={() => window.open(`https://wa.me/${waNumber}?text=Hi%20${encodeURIComponent(selected.name)}`, "_blank")} className="h-8 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold">
                     <MessageSquare className="h-3.5 w-3.5 mr-1" /> Test WhatsApp CTA
                   </Button>
                   <button onClick={() => setFullModal(false)} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
@@ -387,12 +481,19 @@ export function Phase4Build({
               </div>
 
               {/* Modal Content */}
-              <div className="flex-1 overflow-y-auto p-6 bg-slate-50">
-                <div className="max-w-4xl mx-auto space-y-6">
-                  {renderLiveMockup(selected, nichePreset, "hero", waNumber, cleanPhone)}
-                  {renderLiveMockup(selected, nichePreset, "services", waNumber, cleanPhone)}
-                  {renderLiveMockup(selected, nichePreset, "reviews", waNumber, cleanPhone)}
-                  {renderLiveMockup(selected, nichePreset, "contact", waNumber, cleanPhone)}
+              <div data-lenis-prevent className="flex-1 overflow-y-auto p-6 bg-slate-100 overscroll-contain">
+                <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+                  <LiveWebsiteRenderer
+                    lead={selected}
+                    preset={nichePreset}
+                    tab="all"
+                    waNumber={waNumber}
+                    cleanPhone={cleanPhone}
+                    onOpenBooking={() => {
+                      setFullModal(false);
+                      setShowBookingModal(true);
+                    }}
+                  />
                 </div>
               </div>
             </motion.div>
@@ -404,210 +505,277 @@ export function Phase4Build({
 }
 
 /* ============================================================================
-   LIVE MOCKUP RENDERER ENGINE
+   LIVE WEBSITE FULL PAGE COMPONENT RENDERER
    ============================================================================ */
-function renderLiveMockup(
-  lead: RankedLead,
-  preset: ReturnType<typeof getNichePreset> | null,
-  tab: "hero" | "services" | "reviews" | "contact",
-  waNumber: string,
-  cleanPhone: string
-) {
+function LiveWebsiteRenderer({
+  lead,
+  preset,
+  tab,
+  waNumber,
+  cleanPhone,
+  onOpenBooking
+}: {
+  lead: RankedLead;
+  preset: ReturnType<typeof getNichePreset> | null;
+  tab: "all" | "hero" | "services" | "reviews" | "faq" | "contact";
+  waNumber: string;
+  cleanPhone: string;
+  onOpenBooking: () => void;
+}) {
   if (!preset) return null;
   const IconComp = preset.icon;
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const showAll = tab === "all";
 
   return (
-    <div className="font-sans text-slate-900 p-5 space-y-6">
-      {/* Site Top Banner Header */}
-      <header className="flex items-center justify-between pb-4 border-b border-slate-100 flex-wrap gap-2">
+    <div className="font-sans text-slate-900 bg-white relative">
+      {/* 1. SITE HEADER BAR */}
+      <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md px-5 py-3 border-b border-slate-100 flex items-center justify-between shadow-2xs">
         <div className="flex items-center gap-2.5">
-          <div className={`h-9 w-9 rounded-xl ${preset.colorTheme.iconBg} flex items-center justify-center ${preset.colorTheme.iconColor} font-bold shadow-xs`}>
-            <IconComp className="h-5 w-5" />
+          <div className={`h-8.5 w-8.5 rounded-xl ${preset.colorTheme.iconBg} flex items-center justify-center ${preset.colorTheme.iconColor} font-bold shadow-2xs`}>
+            <IconComp className="h-4.5 w-4.5" />
           </div>
           <div>
-            <div className="font-bold text-sm tracking-tight text-slate-900">{lead.name}</div>
-            <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">{preset.nicheCategory} • {lead.city}</div>
+            <div className="font-bold text-sm tracking-tight text-slate-900 leading-none">{lead.name}</div>
+            <div className="text-[9.5px] text-slate-500 font-semibold uppercase tracking-wider mt-0.5">{preset.nicheCategory} • {lead.city}</div>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 px-2 py-0.5 text-[10px] font-bold border border-emerald-200">
+          <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 px-2.5 py-0.5 text-[10px] font-bold border border-emerald-200">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" /> Open Today
           </span>
           <a
             href={`tel:${cleanPhone}`}
-            className="inline-flex items-center gap-1 rounded-xl bg-slate-900 text-white px-3 py-1 text-xs font-semibold hover:bg-slate-800 transition-colors"
+            className="inline-flex items-center gap-1 rounded-xl bg-slate-900 text-white px-3 py-1.5 text-xs font-semibold hover:bg-slate-800 transition-colors shadow-xs"
           >
             <Phone className="h-3 w-3 text-sky-400" /> Call
           </a>
         </div>
       </header>
 
-      {/* TAB 1: HERO & OVERVIEW */}
-      {(tab === "hero") && (
-        <div className="space-y-5">
-          {/* Hero Banner Box */}
-          <div className={`rounded-2xl p-6 ${preset.colorTheme.heroBg} border border-sky-100 text-left relative overflow-hidden`}>
-            <div className="absolute top-0 right-0 w-32 h-32 bg-sky-400/10 rounded-full blur-2xl pointer-events-none" />
+      <div className="p-5 space-y-8">
+        {/* 2. HERO BANNER & CTAs SECTION */}
+        {(showAll || tab === "hero") && (
+          <section className="space-y-4">
+            <div className={`rounded-2xl p-6 ${preset.colorTheme.heroBg} border border-sky-100 text-left relative overflow-hidden shadow-xs`}>
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-sky-400/10 rounded-full blur-2xl pointer-events-none" />
 
-            {/* Rating pill */}
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-slate-800 shadow-2xs border border-sky-100 mb-3">
-              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-              <span>{lead.rating ?? 4.8}★ Google Rated</span>
-              <span className="text-slate-400">({lead.reviewsCount ?? 334}+ reviews)</span>
-            </div>
-
-            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              {preset.heroTitle}
-            </h2>
-            <p className="text-xs text-slate-600 leading-relaxed mt-2 max-w-lg font-sans">
-              {preset.heroSub}
-            </p>
-
-            {/* CTAs */}
-            <div className="mt-5 flex flex-wrap gap-2.5 items-center">
-              <a
-                href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I would like to book an appointment.`)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 shadow-md shadow-emerald-600/20 transition-all cursor-pointer"
-              >
-                <MessageSquare className="h-3.5 w-3.5" />
-                {preset.ctaPrimary}
-              </a>
-              <a
-                href={`tel:${cleanPhone}`}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs px-4 py-2.5 border border-slate-200 shadow-2xs transition-all"
-              >
-                <Phone className="h-3.5 w-3.5 text-sky-600" />
-                {preset.ctaSecondary}
-              </a>
-            </div>
-          </div>
-
-          {/* Trust Badges Strip */}
-          <div className="grid grid-cols-3 gap-2 text-center">
-            {preset.trustBadges.map((badge, idx) => (
-              <div key={idx} className="bg-white border border-sky-100 rounded-xl p-2.5 shadow-2xs flex flex-col items-center justify-center">
-                <CheckCircle2 className="h-4 w-4 text-sky-600 mb-1" />
-                <span className="text-[10.5px] font-bold text-slate-800 leading-tight">{badge}</span>
+              {/* Rating pill */}
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-slate-800 shadow-2xs border border-sky-100 mb-3">
+                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                <span>{lead.rating ?? 4.8}★ Google Rated</span>
+                <span className="text-slate-400">({lead.reviewsCount ?? 334}+ verified reviews)</span>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
 
-      {/* TAB 2: NICHE SERVICES GRID */}
-      {(tab === "services") && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkle className="h-4 w-4 text-sky-600" /> Key Niche Specialties & Services
-            </h3>
-            <span className="text-[10px] text-slate-500 font-semibold">{preset.services.length} Premium Services</span>
-          </div>
+              <h2 className="text-xl sm:text-2.5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                {preset.heroTitle}
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2.5 max-w-xl font-sans">
+                {preset.heroSub}
+              </p>
 
-          <div className="grid sm:grid-cols-2 gap-3">
-            {preset.services.map((srv, idx) => (
-              <div key={idx} className="p-3.5 rounded-xl border border-sky-100 bg-white hover:border-sky-300 transition-all shadow-2xs group">
-                <div className="flex items-start gap-2.5">
-                  <div className="h-7 w-7 rounded-lg bg-sky-50 text-sky-600 font-bold flex items-center justify-center text-xs shrink-0 group-hover:bg-sky-600 group-hover:text-white transition-colors">
-                    {idx + 1}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-xs text-slate-900 group-hover:text-sky-700 transition-colors">{srv.title}</h4>
-                    <p className="text-[11px] text-slate-500 leading-normal mt-0.5">{srv.desc}</p>
-                  </div>
+              {/* CTAs */}
+              <div className="mt-5 flex flex-wrap gap-2.5 items-center">
+                <button
+                  onClick={onOpenBooking}
+                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 shadow-md shadow-emerald-600/20 transition-all cursor-pointer"
+                >
+                  <MessageSquare className="h-3.5 w-3.5" />
+                  {preset.ctaPrimary}
+                </button>
+                <a
+                  href={`tel:${cleanPhone}`}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs px-4 py-2.5 border border-slate-200 shadow-2xs transition-all"
+                >
+                  <Phone className="h-3.5 w-3.5 text-sky-600" />
+                  {preset.ctaSecondary}
+                </a>
+              </div>
+            </div>
+
+            {/* Trust Badges Strip */}
+            <div className="grid grid-cols-3 gap-2.5 text-center">
+              {preset.trustBadges.map((badge, idx) => (
+                <div key={idx} className="bg-white border border-sky-100 rounded-xl p-3 shadow-2xs flex flex-col items-center justify-center">
+                  <CheckCircle2 className="h-4 w-4 text-sky-600 mb-1" />
+                  <span className="text-[11px] font-bold text-slate-800 leading-tight">{badge}</span>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+              ))}
+            </div>
+          </section>
+        )}
 
-      {/* TAB 3: CUSTOMER REVIEWS */}
-      {(tab === "reviews") && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-              <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> Patient & Customer Reviews
-            </h3>
-            <span className="text-[10px] text-slate-500 font-semibold">Google Verified</span>
-          </div>
+        {/* 3. NICHE SPECIALTIES & SERVICES GRID */}
+        {(showAll || tab === "services") && (
+          <section className="space-y-3 pt-2">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+              <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <Sparkle className="h-4 w-4 text-sky-600" /> Niche Services & Treatments
+              </h3>
+              <span className="text-[10px] text-slate-500 font-bold bg-sky-50 px-2 py-0.5 rounded-full border border-sky-100">{preset.services.length} Core Offerings</span>
+            </div>
 
-          <div className="space-y-2.5">
-            {preset.reviews.map((rev, idx) => (
-              <div key={idx} className="p-3.5 rounded-xl border border-sky-100 bg-white shadow-2xs">
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-2">
-                    <div className="h-6 w-6 rounded-full bg-sky-100 text-sky-700 font-bold text-[10px] flex items-center justify-center uppercase">
-                      {rev.author[0]}
+            <div className="grid sm:grid-cols-2 gap-3">
+              {preset.services.map((srv, idx) => (
+                <div key={idx} className="p-3.5 rounded-xl border border-sky-100 bg-white hover:border-sky-300 transition-all shadow-2xs group">
+                  <div className="flex items-start gap-3">
+                    <div className="h-7 w-7 rounded-lg bg-sky-50 text-sky-600 font-bold flex items-center justify-center text-xs shrink-0 group-hover:bg-sky-600 group-hover:text-white transition-colors">
+                      {idx + 1}
                     </div>
-                    <span className="font-bold text-xs text-slate-900">{rev.author}</span>
-                  </div>
-                  <div className="flex gap-0.5 text-amber-400 text-xs">
-                    {"★".repeat(rev.rating)}
+                    <div>
+                      <h4 className="font-bold text-xs text-slate-900 group-hover:text-sky-700 transition-colors">{srv.title}</h4>
+                      <p className="text-[11px] text-slate-500 leading-relaxed mt-0.5">{srv.desc}</p>
+                    </div>
                   </div>
                 </div>
-                <p className="text-[11.5px] text-slate-600 italic font-sans leading-relaxed">"{rev.text}"</p>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 4. ABOUT & CREDENTIALS CARD */}
+        {showAll && (
+          <section className="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 space-y-3">
+            <div className="flex items-center gap-2">
+              <Award className="h-5 w-5 text-sky-600" />
+              <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider">About {lead.name}</h3>
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed font-sans">
+              With over <span className="font-bold text-slate-800">{lead.yearsInBusiness ?? 8}+ years of dedicated service</span> in {lead.city}, {lead.name} provides modern, high-quality solutions designed around customer convenience and zero waiting times.
+            </p>
+            <div className="flex items-center gap-4 text-xs font-bold text-slate-700 pt-1">
+              <span className="flex items-center gap-1 text-emerald-700"><CheckCircle2 className="h-3.5 w-3.5" /> 100% Satisfaction Guarantee</span>
+              <span className="flex items-center gap-1 text-sky-700"><ShieldCheck className="h-3.5 w-3.5" /> Certified Specialist</span>
+            </div>
+          </section>
+        )}
+
+        {/* 5. CUSTOMER REVIEWS SECTION */}
+        {(showAll || tab === "reviews") && (
+          <section className="space-y-3 pt-2">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+              <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> Verified Customer Reviews
+              </h3>
+              <span className="text-[10px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">{lead.rating ?? 4.8}★ Rating</span>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-3">
+              {preset.reviews.map((rev, idx) => (
+                <div key={idx} className="p-3.5 rounded-xl border border-sky-100 bg-white shadow-2xs">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-2">
+                      <div className="h-6.5 w-6.5 rounded-full bg-sky-100 text-sky-700 font-bold text-[10px] flex items-center justify-center uppercase">
+                        {rev.author[0]}
+                      </div>
+                      <span className="font-bold text-xs text-slate-900">{rev.author}</span>
+                    </div>
+                    <div className="flex gap-0.5 text-amber-400 text-xs">
+                      {"★".repeat(rev.rating)}
+                    </div>
+                  </div>
+                  <p className="text-[11.5px] text-slate-600 italic font-sans leading-relaxed">"{rev.text}"</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 6. INTERACTIVE FAQ ACCORDION SECTION */}
+        {(showAll || tab === "faq") && (
+          <section className="space-y-3 pt-2">
+            <div className="border-b border-slate-100 pb-2">
+              <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <Layers className="h-4 w-4 text-sky-600" /> Frequently Asked Questions
+              </h3>
+            </div>
+
+            <div className="space-y-2">
+              {preset.faqs.map((faq, idx) => {
+                const isOpen = openFaq === idx;
+                return (
+                  <div key={idx} className="border border-sky-100 rounded-xl bg-white overflow-hidden shadow-2xs">
+                    <button
+                      onClick={() => setOpenFaq(isOpen ? null : idx)}
+                      className="w-full p-3 text-left flex items-center justify-between font-bold text-xs text-slate-800 hover:bg-sky-50/50 transition-colors"
+                    >
+                      <span>{faq.q}</span>
+                      {isOpen ? <ChevronUp className="h-4 w-4 text-sky-600 shrink-0" /> : <ChevronDown className="h-4 w-4 text-slate-400 shrink-0" />}
+                    </button>
+                    {isOpen && (
+                      <div className="px-3 pb-3 pt-0 text-[11.5px] text-slate-600 leading-relaxed font-sans border-t border-slate-100/60 bg-sky-50/30">
+                        {faq.a}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* 7. LOCATION & CONTACT SECTION */}
+        {(showAll || tab === "contact") && (
+          <section className="space-y-3 pt-2">
+            <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-2">
+              <MapPin className="h-4 w-4 text-sky-600" /> Location & Contact Information
+            </h3>
+
+            <div className="p-4 rounded-xl border border-sky-100 bg-white shadow-2xs space-y-3">
+              <div className="flex items-start gap-2.5 text-xs text-slate-700">
+                <MapPin className="h-4 w-4 text-sky-600 shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-bold text-slate-900">{lead.name}</div>
+                  <div>{lead.address}</div>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
 
-      {/* TAB 4: LOCATION & CONTACT */}
-      {(tab === "contact") && (
-        <div className="space-y-3">
-          <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-            <MapPin className="h-4 w-4 text-sky-600" /> Location & Contact Info
-          </h3>
+              <div className="flex items-center gap-2.5 text-xs text-slate-700">
+                <Phone className="h-4 w-4 text-sky-600 shrink-0" />
+                <a href={`tel:${cleanPhone}`} className="font-bold text-sky-700 hover:underline">{lead.phone || "+91 98986 66601"}</a>
+              </div>
 
-          <div className="p-4 rounded-xl border border-sky-100 bg-white shadow-2xs space-y-3">
-            <div className="flex items-start gap-2.5 text-xs text-slate-700">
-              <MapPin className="h-4 w-4 text-sky-600 shrink-0 mt-0.5" />
-              <div>
-                <div className="font-bold text-slate-900">{lead.name}</div>
-                <div>{lead.address}</div>
+              <div className="flex items-center gap-2.5 text-xs text-slate-700">
+                <Clock className="h-4 w-4 text-sky-600 shrink-0" />
+                <span>Monday – Saturday: 09:30 AM – 08:30 PM (Sunday by Appointment)</span>
+              </div>
+
+              <div className="h-32 rounded-xl bg-sky-50 border border-sky-100 flex flex-col items-center justify-center text-xs text-sky-700 font-semibold gap-1.5 p-3 text-center">
+                <MapPin className="h-5 w-5 text-sky-600" />
+                <span>[Interactive Google Maps Location Embed]</span>
+                <span className="text-[10px] text-slate-500 font-normal">{lead.address}</span>
               </div>
             </div>
+          </section>
+        )}
 
-            <div className="flex items-center gap-2.5 text-xs text-slate-700">
-              <Phone className="h-4 w-4 text-sky-600 shrink-0" />
-              <a href={`tel:${cleanPhone}`} className="font-bold text-sky-700 hover:underline">{lead.phone || "+91 98986 66601"}</a>
-            </div>
+        {/* 8. FOOTER */}
+        {showAll && (
+          <footer className="pt-6 pb-4 border-t border-slate-100 text-center space-y-2">
+            <div className="font-bold text-xs text-slate-900">{lead.name}</div>
+            <div className="text-[10.5px] text-slate-400 font-sans">© {new Date().getFullYear()} {lead.name}. All rights reserved. • High-Converting Local Site</div>
+          </footer>
+        )}
+      </div>
 
-            <div className="flex items-center gap-2.5 text-xs text-slate-700">
-              <Clock className="h-4 w-4 text-sky-600 shrink-0" />
-              <span>Monday – Saturday: 09:30 AM – 08:30 PM (Sun by Appointment)</span>
-            </div>
-
-            <div className="h-28 rounded-lg bg-sky-50 border border-sky-100 flex items-center justify-center text-xs text-sky-700 font-semibold gap-1.5">
-              <MapPin className="h-4 w-4 text-sky-600" />
-              <span>[Interactive Google Maps Embed Preview]</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Floating WhatsApp Action Button inside preview frame */}
-      <div className="pt-2 flex justify-end">
-        <a
-          href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I found your business on Google.`)}`}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 text-white px-3.5 py-2 text-xs font-bold shadow-lg hover:bg-emerald-700 transition-all"
+      {/* Floating Sticky WhatsApp Button */}
+      <div className="sticky bottom-4 right-4 flex justify-end px-4 pb-2 pointer-events-auto">
+        <button
+          onClick={onOpenBooking}
+          className="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-4 py-2.5 text-xs font-bold shadow-xl hover:bg-emerald-700 transition-all cursor-pointer"
         >
           <MessageSquare className="h-4 w-4" />
-          <span>Chat on WhatsApp</span>
-        </a>
+          <span>Book Slot on WhatsApp</span>
+        </button>
       </div>
     </div>
   );
 }
 
 /* ============================================================================
-   NICHE PRESET DETECTION ENGINE
+   NICHE PRESET DETECTION ENGINE WITH FAQS & ADVANCED DETAILS
    ============================================================================ */
 function getNichePreset(category: string, name: string) {
   const cat = `${category} ${name}`.toLowerCase();
@@ -639,6 +807,12 @@ function getNichePreset(category: string, name: string) {
       reviews: [
         { author: "Dr. Ananya Sharma", rating: 5, text: "Got my aligners done here. Super smooth process with zero discomfort. Highly recommend!" },
         { author: "Vikram Mehta", rating: 5, text: "Extremely clean clinic and doctor explains every procedure calmly. Painless root canal done." }
+      ],
+      faqs: [
+        { q: "Is root canal treatment really painless here?", a: "Yes! We use advanced rotary endodontics and computerized local anesthesia so you feel zero pain throughout." },
+        { q: "How long does teeth whitening last?", a: "With basic care, laser whitening results last 12 to 24 months. We also provide a complimentary touch-up kit." },
+        { q: "Do you offer 0% EMI payment options?", a: "Yes, we support flexible 0% interest monthly installments for aligners, implants, and smile makeovers." },
+        { q: "What are the clinic timings?", a: "We are open Monday to Saturday 9:30 AM to 8:30 PM. Sunday appointments are available on prior request." }
       ]
     };
   }
@@ -670,6 +844,12 @@ function getNichePreset(category: string, name: string) {
       reviews: [
         { author: "Rajesh Kumar", rating: 5, text: "Doctor gave genuine advice without prescribing unnecessary tests. Very polite staff." },
         { author: "Pooja Malhotra", rating: 5, text: "WhatsApp booking saved us 2 hours in waiting room. Very efficient system!" }
+      ],
+      faqs: [
+        { q: "How do I book a same-day OPD slot?", a: "Click the WhatsApp button or call direct. Slots are confirmed instantly in under 1 minute." },
+        { q: "Are home visits available for senior citizens?", a: "Yes, doctor visits and home blood sample collection can be scheduled for elderly patients." },
+        { q: "Do you accept health insurance?", a: "We provide cashless assistance for empaneled insurance providers and detailed reimbursement bills." },
+        { q: "What should I bring for my first consultation?", a: "Please carry any previous medical records, prescriptions, and a list of current medications." }
       ]
     };
   }
@@ -701,6 +881,12 @@ function getNichePreset(category: string, name: string) {
       reviews: [
         { author: "Amit Singhania", rating: 5, text: "Phenomenal taste and hospitality! The chef specials are a must-try. Table booking was seamless." },
         { author: "Neha Roy", rating: 5, text: "Loved the ambiance and quick service. Ordered home delivery on WhatsApp and arrived hot!" }
+      ],
+      faqs: [
+        { q: "How far in advance should I reserve a table?", a: "We recommend reserving 2-4 hours prior for weekdays, and 1 day prior for weekend dinners." },
+        { q: "Is home delivery available directly?", a: "Yes, order on WhatsApp to get direct restaurant pricing with zero third-party markups!" },
+        { q: "Do you cater for private parties?", a: "Yes! We cater for birthdays, anniversaries, and corporate events up to 200 guests." },
+        { q: "Is pure vegetarian / Jain food available?", a: "Yes, we have dedicated pure veg cookware and separate Jain food options." }
       ]
     };
   }
@@ -732,6 +918,12 @@ function getNichePreset(category: string, name: string) {
       reviews: [
         { author: "Karan Patel", rating: 5, text: "Found a dream 3BHK flat in prime area within 10 days! Honest advice and transparent paperwork." },
         { author: "Sujata Bose", rating: 5, text: "Helped sell my property at market valuation quickly. Highly professional broker." }
+      ],
+      faqs: [
+        { q: "Are all listed properties RERA registered?", a: "Yes, 100% of our residential and commercial projects are RERA registered with clear titles." },
+        { q: "How do I schedule a site visit?", a: "Click 'Schedule Site Visit' or WhatsApp us. We arrange free cab pickup and drop for property visits." },
+        { q: "Do you help with home loans?", a: "Yes, we have tie-ups with HDFC, SBI, ICICI, and Axis Bank for fast 48-hour loan approval." },
+        { q: "What is your brokerage fee structure?", a: "We maintain complete transparency. Zero brokerage on new developer projects." }
       ]
     };
   }
@@ -763,6 +955,12 @@ function getNichePreset(category: string, name: string) {
       reviews: [
         { author: "Priya Varma", rating: 5, text: "The hair spa and Keratin treatment transformed my hair! Very polite staff and clean salon." },
         { author: "Rohan Das", rating: 5, text: "Best haircut in town. Booking appointment on WhatsApp saved me from waiting." }
+      ],
+      faqs: [
+        { q: "Is prior booking required?", a: "Prior slot booking via WhatsApp is recommended to skip weekend waiting times." },
+        { q: "What brands do you use for hair & skin?", a: "We exclusively use imported dermatologist-tested organic brands like L'Oreal Professional, Schwarzkopf, and Cheryl's." },
+        { q: "Do you offer bridal makeup packages?", a: "Yes, we provide HD Airbrush bridal packages including trial sessions, hair draping, and nail art." },
+        { q: "What are your sanitation standards?", a: "All scissors, combs, and towels undergo UV sterilization after every client visit." }
       ]
     };
   }
@@ -794,6 +992,12 @@ function getNichePreset(category: string, name: string) {
       reviews: [
         { author: "Manish Joshi", rating: 5, text: "Lost 14 kg in 4 months! Excellent equipment and trainers push you every single day." },
         { author: "Simran Kaur", rating: 5, text: "Super clean gym with female-friendly environment. Love the group HIIT classes!" }
+      ],
+      faqs: [
+        { q: "How do I claim my 3-day free trial pass?", a: "Simply click 'Claim Free Pass' to register via WhatsApp. Show your pass at reception!" },
+        { q: "Are personal trainers included in membership?", a: "General floor trainers assist all members. 1-on-1 dedicated Personal Training packages are available separately." },
+        { q: "What are gym operating hours?", a: "We open early at 5:30 AM to 10:30 PM (Monday to Saturday) and 7:00 AM to 1:00 PM on Sundays." },
+        { q: "Is diet planning included?", a: "Yes, every quarterly and annual membership includes a personalized nutritionist consultation." }
       ]
     };
   }
@@ -824,6 +1028,12 @@ function getNichePreset(category: string, name: string) {
     reviews: [
       { author: "Siddharth Gupta", rating: 5, text: "Outstanding service! Prompt response on WhatsApp and completed the job cleanly." },
       { author: "Ritu Verma", rating: 5, text: "Very reliable local business. Fair pricing and friendly staff." }
+    ],
+    faqs: [
+      { q: "How quickly can I book a service?", a: "Contact us via WhatsApp or phone for instant slot confirmation in under 2 minutes." },
+      { q: "Are prices fixed or transparent?", a: "We provide clear upfront estimates before starting any work so there are zero hidden costs." },
+      { q: "What payment methods do you accept?", a: "We accept UPI (GPay/PhonePe), Credit/Debit cards, Netbanking, and Cash." },
+      { q: "Do you offer service warranty?", a: "Yes, all our services come with a verified customer satisfaction warranty." }
     ]
   };
 }
@@ -879,7 +1089,7 @@ function buildPrompt(
 ${preset.services.map((s, i) => `   ${i + 1}. ${s.title}: ${s.desc}`).join("\n")}
 5. About & Credentials: Bio placeholder + credentials + why local customers choose ${name}.
 6. Customer Reviews Carousel: ${preset.reviews.map((r) => `"${r.text}" — ${r.author} (${r.rating}★)`).join(" | ")}.
-7. Local FAQ Accordion: 5 common customer questions (pricing, booking process, timing, payment options).
+7. Local FAQ Accordion: 4 common customer questions (pricing, booking process, timing, payment options).
 8. Location & Directions: Embed Google Map for ${addr} + business hours + directions CTA.
 9. Footer: Full contact info, WhatsApp link, phone link, working hours, and social media links.
 
