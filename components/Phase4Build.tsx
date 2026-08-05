@@ -37,7 +37,9 @@ import {
   Award,
   Layers,
   Zap,
-  Navigation
+  Navigation,
+  Heart,
+  Globe
 } from "lucide-react";
 import type { RankedLead } from "@/lib/types";
 import { toast } from "sonner";
@@ -223,9 +225,9 @@ export function Phase4Build({
 
       {/* Main Grid: Prompt Code vs Live Preview */}
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Left Card: Tailored Niche Prompt */}
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 flex flex-col h-[740px]">
-          <CardHeader className="pb-3 pt-5 px-5 flex flex-row items-center justify-between border-b border-sky-100">
+        {/* Left Card: Tailored Niche Prompt (FULLY SCROLLABLE) */}
+        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 flex flex-col h-[740px] overflow-hidden">
+          <CardHeader className="pb-3 pt-5 px-5 flex flex-row items-center justify-between border-b border-sky-100 shrink-0">
             <div>
               <CardTitle className="text-base tracking-tight font-bold text-slate-900 flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-sky-600" />
@@ -239,8 +241,8 @@ export function Phase4Build({
               <Copy className="h-3 w-3 mr-1" /> Copy
             </Button>
           </CardHeader>
-          <CardContent className="p-4 flex-1 overflow-hidden">
-            <pre className="text-[11.5px] leading-relaxed whitespace-pre-wrap font-mono bg-slate-950 text-slate-200 rounded-xl p-4 h-full overflow-y-auto border border-slate-800 shadow-inner scrollbar-thin">
+          <CardContent data-lenis-prevent className="p-4 flex-1 min-h-0 overflow-y-auto overscroll-contain">
+            <pre className="text-[11.5px] leading-relaxed whitespace-pre-wrap font-mono bg-slate-950 text-slate-200 rounded-xl p-4 min-h-full border border-slate-800 shadow-inner select-text">
               {prompt}
             </pre>
           </CardContent>
@@ -249,7 +251,7 @@ export function Phase4Build({
         {/* Right Card: High Quality Interactive Animated Preview */}
         <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 overflow-hidden flex flex-col h-[740px]">
           {/* Preview Toolbar Header */}
-          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-4 px-5 gap-3 border-b border-sky-100 bg-slate-50/50">
+          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-4 px-5 gap-3 border-b border-sky-100 bg-slate-50/50 shrink-0">
             <div className="flex items-center gap-2">
               <CardTitle className="text-base tracking-tight font-bold text-slate-900">Live Website Preview</CardTitle>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
@@ -355,13 +357,13 @@ export function Phase4Build({
           {/* Render Interactive Scrollable Preview Screen */}
           <div
             data-lenis-prevent
-            className="flex-1 overflow-y-auto p-4 bg-slate-100/70 relative scrollbar-thin overscroll-contain"
+            className="flex-1 overflow-y-auto p-4 bg-slate-900/90 relative scrollbar-thin overscroll-contain"
           >
             <div
               className={`transition-all duration-300 ${
                 viewMode === "mobile"
-                  ? "max-w-[375px] mx-auto bg-white rounded-3xl border-4 border-slate-900 shadow-2xl overflow-hidden min-h-[550px]"
-                  : "w-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+                  ? "max-w-[375px] mx-auto bg-[#1a1a1a] rounded-3xl border-4 border-amber-500/40 shadow-2xl overflow-hidden min-h-[550px]"
+                  : "w-full bg-[#1a1a1a] rounded-2xl border border-amber-500/30 shadow-sm overflow-hidden"
               }`}
             >
               <LiveWebsiteRenderer
@@ -390,37 +392,37 @@ export function Phase4Build({
               initial={{ scale: 0.9, y: 16 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 16 }}
-              className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl border border-sky-100 relative"
+              className="bg-slate-900 text-white rounded-2xl w-full max-w-md p-6 shadow-2xl border border-amber-500/40 relative"
             >
               <button
                 onClick={() => setShowBookingModal(false)}
-                className="absolute top-4 right-4 p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                className="absolute top-4 right-4 p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
               >
                 <X className="h-5 w-5" />
               </button>
 
               <div className="flex items-center gap-2 mb-3">
-                <div className="h-8 w-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center font-bold">
+                <div className="h-8 w-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
                   <Calendar className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 text-base">Instant Reservation / Slot</h4>
-                  <p className="text-xs text-slate-500">{selected.name}</p>
+                  <h4 className="font-bold text-amber-400 text-base">Make Table Reservation</h4>
+                  <p className="text-xs text-slate-400">{selected.name}</p>
                 </div>
               </div>
 
               <div className="space-y-3 mt-4">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Your Full Name</label>
-                  <input type="text" placeholder="e.g. Rahul Sharma" className="w-full h-9 rounded-xl border border-slate-200 px-3 text-xs focus:ring-1 focus:ring-sky-500 outline-none" />
+                  <label className="text-xs font-bold text-slate-300 block mb-1">Your Full Name</label>
+                  <input type="text" placeholder="e.g. Rahul Sharma" className="w-full h-9 rounded-xl bg-slate-800 border border-slate-700 px-3 text-xs text-white focus:ring-1 focus:ring-amber-500 outline-none" />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Phone / WhatsApp Number</label>
-                  <input type="tel" placeholder={selected.phone || "+91 98765 43210"} className="w-full h-9 rounded-xl border border-slate-200 px-3 text-xs focus:ring-1 focus:ring-sky-500 outline-none" />
+                  <label className="text-xs font-bold text-slate-300 block mb-1">Phone / WhatsApp Number</label>
+                  <input type="tel" placeholder={selected.phone || "+91 95577 30531"} className="w-full h-9 rounded-xl bg-slate-800 border border-slate-700 px-3 text-xs text-white focus:ring-1 focus:ring-amber-500 outline-none" />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Select Offering</label>
-                  <select className="w-full h-9 rounded-xl border border-slate-200 px-3 text-xs focus:ring-1 focus:ring-sky-500 outline-none bg-white">
+                  <label className="text-xs font-bold text-slate-300 block mb-1">Select Specialty / Table</label>
+                  <select className="w-full h-9 rounded-xl bg-slate-800 border border-slate-700 px-3 text-xs text-white focus:ring-1 focus:ring-amber-500 outline-none">
                     {nichePreset?.services.map((s, i) => (
                       <option key={i} value={s.title}>{s.title}</option>
                     ))}
@@ -430,11 +432,11 @@ export function Phase4Build({
                 <div className="pt-2">
                   <Button
                     onClick={() => {
-                      toast.success("Reservation sent via WhatsApp!");
+                      toast.success("Reservation request sent via WhatsApp!");
                       setShowBookingModal(false);
-                      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${selected.name}, I would like to make a reservation.`)}`, "_blank");
+                      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${selected.name}, I would like to reserve a table.`)}`, "_blank");
                     }}
-                    className="w-full h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md"
+                    className="w-full h-10 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20"
                   >
                     Confirm & Send to WhatsApp →
                   </Button>
@@ -458,22 +460,22 @@ export function Phase4Build({
               initial={{ scale: 0.95, y: 16 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 16 }}
-              className="bg-white rounded-2xl w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl border border-sky-200"
+              className="bg-[#1a1a1a] rounded-2xl w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl border border-amber-500/40"
             >
               {/* Modal Header */}
               <div className="bg-slate-900 text-white px-6 py-3.5 flex items-center justify-between border-b border-slate-800">
                 <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-sky-600 flex items-center justify-center text-white font-bold">
+                  <div className="h-8 w-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold border border-amber-500/30">
                     {nichePreset?.icon ? <nichePreset.icon className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-white">{selected.name} — Full Creative Niche Theme Preview</h3>
-                    <p className="text-[11px] text-sky-400 font-mono">https://preview.{selected.name.toLowerCase().replace(/[^a-z0-9]/g, "")}.com</p>
+                    <h3 className="font-bold text-sm text-white">{selected.name} — Full Royal Luxury Preview</h3>
+                    <p className="text-[11px] text-amber-400 font-mono">https://preview.{selected.name.toLowerCase().replace(/[^a-z0-9]/g, "")}.com</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Button size="sm" onClick={() => window.open(`https://wa.me/${waNumber}?text=Hi%20${encodeURIComponent(selected.name)}`, "_blank")} className="h-8 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold">
+                  <Button size="sm" onClick={() => window.open(`https://wa.me/${waNumber}?text=Hi%20${encodeURIComponent(selected.name)}`, "_blank")} className="h-8 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold">
                     <MessageSquare className="h-3.5 w-3.5 mr-1" /> Test WhatsApp CTA
                   </Button>
                   <button onClick={() => setFullModal(false)} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
@@ -483,8 +485,8 @@ export function Phase4Build({
               </div>
 
               {/* Modal Content */}
-              <div data-lenis-prevent className="flex-1 overflow-y-auto p-6 bg-slate-100 overscroll-contain">
-                <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+              <div data-lenis-prevent className="flex-1 overflow-y-auto p-6 bg-slate-950 overscroll-contain">
+                <div className="max-w-4xl mx-auto bg-[#1a1a1a] rounded-2xl shadow-2xl border border-amber-500/30 overflow-hidden">
                   <LiveWebsiteRenderer
                     lead={selected}
                     preset={nichePreset}
@@ -507,7 +509,7 @@ export function Phase4Build({
 }
 
 /* ============================================================================
-   LIVE WEBSITE FULL PAGE COMPONENT RENDERER WITH REALTIME MAPS & NICHE THEMES
+   LIVE WEBSITE FULL PAGE COMPONENT RENDERER WITH SHRIPATI ROYAL GOLD LUXURY THEME
    ============================================================================ */
 function LiveWebsiteRenderer({
   lead,
@@ -530,28 +532,31 @@ function LiveWebsiteRenderer({
 
   const showAll = tab === "all";
   const theme = preset.theme;
+  const isRestaurant = preset.nicheCategory.includes("Restaurant");
 
   return (
-    <div className={`font-sans text-slate-900 ${theme.bodyBg} relative overflow-hidden`}>
-      {/* 1. SITE HEADER BAR */}
-      <header className={`sticky top-0 z-20 ${theme.headerBg} backdrop-blur-md px-5 py-3 border-b ${theme.headerBorder} flex items-center justify-between shadow-2xs`}>
+    <div className={`font-sans text-slate-100 ${theme.bodyBg} relative overflow-hidden`}>
+      {/* 1. SITE HEADER BAR (SHRIPATI DARK ROYAL HEADER) */}
+      <header className={`sticky top-0 z-20 ${theme.headerBg} backdrop-blur-md px-5 py-3 border-b ${theme.headerBorder} flex items-center justify-between shadow-lg`}>
         <div className="flex items-center gap-2.5">
-          <div className={`h-8.5 w-8.5 rounded-xl ${theme.badgeBg} flex items-center justify-center ${theme.accentText} font-bold shadow-2xs`}>
-            <IconComp className="h-4.5 w-4.5" />
+          <div className={`h-9 w-9 rounded-xl ${theme.badgeBg} flex items-center justify-center ${theme.accentText} font-bold shadow-md border ${theme.cardBorder}`}>
+            <IconComp className="h-5 w-5" />
           </div>
           <div>
-            <div className="font-bold text-sm tracking-tight text-slate-900 leading-none">{lead.name}</div>
-            <div className={`text-[9.5px] ${theme.accentText} font-bold uppercase tracking-wider mt-0.5`}>{preset.nicheCategory} • {lead.city}</div>
+            <div className="font-bold text-sm tracking-tight text-white leading-none font-serif flex items-center gap-1.5">
+              <span>{lead.name}</span>
+            </div>
+            <div className={`text-[9.5px] ${theme.accentText} font-bold uppercase tracking-wider mt-1`}>{preset.nicheCategory} • {lead.city}</div>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 px-2.5 py-0.5 text-[10px] font-bold border border-emerald-200">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" /> Open Today
+          <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 text-amber-400 px-3 py-0.5 text-[10px] font-bold border border-amber-500/30">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" /> Open Today
           </span>
           <a
             href={`tel:${cleanPhone}`}
-            className={`inline-flex items-center gap-1 rounded-xl ${theme.ctaBtn} px-3 py-1.5 text-xs font-semibold transition-colors shadow-xs`}
+            className={`inline-flex items-center gap-1.5 rounded-xl ${theme.ctaBtn} px-3 py-1.5 text-xs font-bold transition-all shadow-md`}
           >
             <Phone className="h-3 w-3 text-white" /> Call Direct
           </a>
@@ -567,45 +572,45 @@ function LiveWebsiteRenderer({
         >
           <span>★ {lead.rating ?? 4.8} Google Rated ({lead.reviewsCount ?? 334}+ Reviews)</span>
           <span>• Verified {preset.nicheCategory} in {lead.city}</span>
-          <span>• 100% Instant WhatsApp Slots</span>
-          <span>• {lead.yearsInBusiness ?? 8}+ Years Trust in {lead.city}</span>
+          <span>• 100% Instant WhatsApp Reservations</span>
+          <span>• {lead.yearsInBusiness ?? 8}+ Years Heritage Trust in {lead.city}</span>
           <span>★ {lead.rating ?? 4.8} Google Rated ({lead.reviewsCount ?? 334}+ Reviews)</span>
           <span>• Verified {preset.nicheCategory} in {lead.city}</span>
         </motion.div>
       </div>
 
       <div className="p-5 space-y-8">
-        {/* 2. HERO BANNER & CTAs SECTION WITH NICHE IMAGE COVER */}
+        {/* 2. HERO BANNER & CTAs SECTION (SHRIPATI SLIDESHOW HERO COVER) */}
         {(showAll || tab === "hero") && (
           <section className="space-y-4">
-            <div className={`rounded-2xl border ${theme.cardBorder} overflow-hidden shadow-md relative text-left group`}>
+            <div className={`rounded-2xl border ${theme.cardBorder} overflow-hidden shadow-2xl relative text-left group`}>
               {/* Niche Hero Image Background */}
-              <div className="relative h-60 sm:h-68 w-full overflow-hidden">
+              <div className="relative h-64 sm:h-72 w-full overflow-hidden">
                 <img
                   src={preset.heroImage}
                   alt={lead.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-900/40" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/80 to-black/40" />
               </div>
 
               {/* Overlay Content */}
               <div className="absolute inset-0 p-5 sm:p-6 flex flex-col justify-end text-white z-10">
                 {/* Rating pill */}
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold text-white shadow-2xs border border-white/30 mb-2 w-fit">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-black/60 backdrop-blur-md px-3 py-1 text-xs font-bold text-amber-300 shadow-sm border border-amber-500/30 mb-2 w-fit">
                   <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                   <span>{lead.rating ?? 4.8}★ Google Rated</span>
-                  <span className="text-slate-200">({lead.reviewsCount ?? 334}+ reviews)</span>
+                  <span className="text-slate-300">({lead.reviewsCount ?? 334}+ reviews)</span>
                 </div>
 
-                <div className="text-[11px] text-amber-300 font-bold uppercase tracking-wider mb-1">
-                  Welcome to {lead.name}
+                <div className="text-[11px] text-amber-400 font-bold uppercase tracking-widest mb-1 font-serif">
+                  Welcome To <span className="text-white font-extrabold">{lead.name}</span>
                 </div>
 
-                <h2 className="text-xl sm:text-2.5xl font-extrabold text-white tracking-tight leading-tight drop-shadow-sm">
+                <h2 className="text-xl sm:text-2.5xl font-extrabold text-white tracking-tight leading-tight drop-shadow-md font-serif">
                   {preset.heroTitle}
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mt-2 max-w-xl font-sans drop-shadow-xs">
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 max-w-xl font-sans drop-shadow-xs">
                   {preset.heroSub}
                 </p>
 
@@ -613,16 +618,16 @@ function LiveWebsiteRenderer({
                 <div className="mt-4 flex flex-wrap gap-2.5 items-center">
                   <button
                     onClick={onOpenBooking}
-                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 shadow-lg shadow-emerald-500/30 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-xs px-4 py-2.5 shadow-xl shadow-amber-500/20 transition-all cursor-pointer"
                   >
-                    <MessageSquare className="h-3.5 w-3.5" />
+                    <Calendar className="h-3.5 w-3.5" />
                     {preset.ctaPrimary}
                   </button>
                   <a
                     href={`tel:${cleanPhone}`}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-white/90 backdrop-blur-md hover:bg-white text-slate-900 font-bold text-xs px-4 py-2.5 border border-white/50 shadow-2xs transition-all"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900/90 backdrop-blur-md hover:bg-slate-800 text-white font-bold text-xs px-4 py-2.5 border border-slate-700 shadow-md transition-all"
                   >
-                    <Phone className="h-3.5 w-3.5 text-slate-900" />
+                    <Phone className="h-3.5 w-3.5 text-amber-400" />
                     {preset.ctaSecondary}
                   </a>
                 </div>
@@ -632,9 +637,9 @@ function LiveWebsiteRenderer({
             {/* Trust Badges Strip */}
             <div className="grid grid-cols-3 gap-2.5 text-center">
               {preset.trustBadges.map((badge, idx) => (
-                <div key={idx} className={`bg-white border ${theme.cardBorder} rounded-xl p-3 shadow-2xs flex flex-col items-center justify-center transition-colors`}>
+                <div key={idx} className={`bg-[#222222] border ${theme.cardBorder} rounded-xl p-3 shadow-md flex flex-col items-center justify-center transition-all hover:border-amber-500/60`}>
                   <CheckCircle2 className={`h-4 w-4 ${theme.accentText} mb-1`} />
-                  <span className="text-[11px] font-bold text-slate-800 leading-tight">{badge}</span>
+                  <span className="text-[11px] font-bold text-slate-200 leading-tight">{badge}</span>
                 </div>
               ))}
             </div>
@@ -645,31 +650,31 @@ function LiveWebsiteRenderer({
         {(showAll || tab === "services") && (
           <section className="space-y-4 pt-2">
             <div className={`flex items-center justify-between border-b ${theme.headerBorder} pb-2`}>
-              <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <Sparkle className={`h-4 w-4 ${theme.accentText}`} /> Niche Specialties & Menu
+              <h3 className="font-bold text-sm text-amber-400 uppercase tracking-wider flex items-center gap-2 font-serif">
+                <Sparkle className={`h-4 w-4 ${theme.accentText}`} /> Our Specialties & Menu
               </h3>
               <span className={`text-[10px] font-bold ${theme.badgeBg} px-2.5 py-0.5 rounded-full border ${theme.cardBorder}`}>{preset.services.length} Signature Offerings</span>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-3.5">
               {preset.services.map((srv, idx) => (
-                <div key={idx} className={`rounded-2xl border ${theme.cardBorder} bg-white transition-all duration-300 shadow-2xs hover:shadow-md overflow-hidden group`}>
+                <div key={idx} className={`rounded-2xl border ${theme.cardBorder} bg-[#222222] transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden group`}>
                   <div className="h-32 w-full overflow-hidden relative">
                     <img
                       src={srv.image}
                       alt={srv.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-                    <div className={`absolute top-2.5 left-2.5 px-2 py-0.5 rounded-lg ${theme.badgeBg} ${theme.accentText} font-bold flex items-center justify-center text-[10px] shadow-2xs`}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-transparent" />
+                    <div className={`absolute top-2.5 left-2.5 px-2 py-0.5 rounded-lg ${theme.badgeBg} ${theme.accentText} font-bold flex items-center justify-center text-[10px] shadow-md border ${theme.cardBorder}`}>
                       {(srv as { badge?: string }).badge || `Option #${idx + 1}`}
                     </div>
-                    <div className="absolute bottom-2 left-2.5 right-2.5 text-white font-bold text-xs truncate drop-shadow-sm">
+                    <div className="absolute bottom-2 left-2.5 right-2.5 text-white font-bold text-xs truncate drop-shadow-md font-serif">
                       {srv.title}
                     </div>
                   </div>
-                  <div className="p-3">
-                    <p className="text-[11px] text-slate-500 leading-relaxed">{srv.desc}</p>
+                  <div className="p-3.5">
+                    <p className="text-[11px] text-slate-400 leading-relaxed font-sans">{srv.desc}</p>
                     <button
                       onClick={onOpenBooking}
                       className={`mt-2.5 text-[11px] font-bold ${theme.accentText} flex items-center gap-1 group-hover:translate-x-1 transition-transform`}
@@ -685,12 +690,12 @@ function LiveWebsiteRenderer({
 
         {/* 4. ABOUT & CREDENTIALS CARD */}
         {showAll && (
-          <section className={`${theme.tickerBg} ${theme.tickerText} rounded-2xl p-5 space-y-3 relative overflow-hidden shadow-lg`}>
+          <section className={`bg-[#222222] border ${theme.cardBorder} rounded-2xl p-5 space-y-3 relative overflow-hidden shadow-xl`}>
             <div className="flex items-center gap-2">
               <Award className="h-5 w-5 text-amber-400" />
-              <h3 className="font-bold text-sm text-white uppercase tracking-wider">About {lead.name}</h3>
+              <h3 className="font-bold text-sm text-amber-400 uppercase tracking-wider font-serif">About {lead.name}</h3>
             </div>
-            <p className="text-xs text-slate-200 leading-relaxed font-sans">
+            <p className="text-xs text-slate-300 leading-relaxed font-sans">
               Welcome to <span className="font-bold text-white">{lead.name}</span> — {lead.city}'s premier {preset.nicheCategory.toLowerCase()} destination. Rated <span className="font-bold text-amber-400">{lead.rating ?? 4.8}/5 stars</span> from over <span className="font-bold text-white">{lead.reviewsCount ?? 334}+ verified reviews</span>. Located at {lead.address}, we deliver uncompromised quality, authentic flavors, and exceptional hospitality.
             </p>
             <div className="flex flex-wrap gap-3 text-xs font-bold pt-1">
@@ -700,14 +705,59 @@ function LiveWebsiteRenderer({
           </section>
         )}
 
-        {/* 5. REALTIME INFINITE ANIMATED LOOP FOR REVIEWS */}
+        {/* 5. WHY GUESTS CHOOSE US SECTION (4 FEATURES GRID FROM SHRIPATI CODE) */}
+        {showAll && (
+          <section className="space-y-3 pt-2">
+            <div className={`border-b ${theme.headerBorder} pb-2`}>
+              <h3 className="font-bold text-sm text-amber-400 uppercase tracking-wider flex items-center gap-2 font-serif">
+                <ShieldCheck className="h-4 w-4 text-amber-400" /> Why Guests Choose {lead.name}
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 text-left">
+              <div className={`bg-[#222222] border ${theme.cardBorder} p-3.5 rounded-xl shadow-md space-y-1`}>
+                <div className="h-7 w-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold mb-2">
+                  <MapPin className="h-4 w-4" />
+                </div>
+                <h4 className="font-bold text-xs text-white">Prime Location</h4>
+                <p className="text-[10.5px] text-slate-400 leading-tight">Located at {lead.address} with quick access to landmarks.</p>
+              </div>
+
+              <div className={`bg-[#222222] border ${theme.cardBorder} p-3.5 rounded-xl shadow-md space-y-1`}>
+                <div className="h-7 w-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold mb-2">
+                  <CheckCircle2 className="h-4 w-4" />
+                </div>
+                <h4 className="font-bold text-xs text-white">100% Pure & Authentic</h4>
+                <p className="text-[10.5px] text-slate-400 leading-tight">Dedicated hygienic kitchen with fresh ingredients daily.</p>
+              </div>
+
+              <div className={`bg-[#222222] border ${theme.cardBorder} p-3.5 rounded-xl shadow-md space-y-1`}>
+                <div className="h-7 w-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold mb-2">
+                  <Utensils className="h-4 w-4" />
+                </div>
+                <h4 className="font-bold text-xs text-white">Multi-Cuisine Variety</h4>
+                <p className="text-[10.5px] text-slate-400 leading-tight">North Indian, South Indian, Chinese & Signature Thalis.</p>
+              </div>
+
+              <div className={`bg-[#222222] border ${theme.cardBorder} p-3.5 rounded-xl shadow-md space-y-1`}>
+                <div className="h-7 w-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold mb-2">
+                  <Heart className="h-4 w-4" />
+                </div>
+                <h4 className="font-bold text-xs text-white">Family Friendly AC</h4>
+                <p className="text-[10.5px] text-slate-400 leading-tight">Spacious AC dining for families, parties & celebrations.</p>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* 6. REALTIME INFINITE ANIMATED LOOP FOR REVIEWS */}
         {(showAll || tab === "reviews") && (
           <section className="space-y-3 pt-2 overflow-hidden">
             <div className={`flex items-center justify-between border-b ${theme.headerBorder} pb-2`}>
-              <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> What Our Guests Say ({lead.reviewsCount ?? 334}+ Reviews)
+              <h3 className="font-bold text-sm text-amber-400 uppercase tracking-wider flex items-center gap-2 font-serif">
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> What Guests Say ({lead.reviewsCount ?? 334}+ Reviews)
               </h3>
-              <span className="text-[10px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">{lead.rating ?? 4.8}★ Rating</span>
+              <span className="text-[10px] text-amber-300 font-bold bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">{lead.rating ?? 4.8}★ Rating</span>
             </div>
 
             {/* REALTIME MARQUEE REVIEWS ANIMATION */}
@@ -718,22 +768,22 @@ function LiveWebsiteRenderer({
                 className="flex items-center gap-4 whitespace-normal"
               >
                 {[...preset.reviews, ...preset.reviews, ...preset.reviews].map((rev, idx) => (
-                  <div key={idx} className={`w-[280px] shrink-0 p-4 rounded-2xl border ${theme.cardBorder} bg-white shadow-2xs hover:border-slate-400 transition-all`}>
+                  <div key={idx} className={`w-[280px] shrink-0 p-4 rounded-2xl border ${theme.cardBorder} bg-[#222222] shadow-md hover:border-amber-500/60 transition-all`}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <div className={`h-7 w-7 rounded-full ${theme.badgeBg} ${theme.accentText} font-bold text-xs flex items-center justify-center uppercase`}>
+                        <div className={`h-7 w-7 rounded-full ${theme.badgeBg} ${theme.accentText} font-bold text-xs flex items-center justify-center uppercase border border-amber-500/30`}>
                           {rev.author[0]}
                         </div>
                         <div>
-                          <div className="font-bold text-xs text-slate-900">{rev.author}</div>
-                          <div className="text-[9px] text-slate-400 font-sans">{rev.source || "Google Review"}</div>
+                          <div className="font-bold text-xs text-white font-serif">{rev.author}</div>
+                          <div className="text-[9px] text-amber-400 font-sans">{rev.source || "Google Review"}</div>
                         </div>
                       </div>
                       <div className="flex gap-0.5 text-amber-400 text-xs">
                         {"★".repeat(rev.rating)}
                       </div>
                     </div>
-                    <p className="text-[11.5px] text-slate-600 italic font-sans leading-relaxed">"{rev.text}"</p>
+                    <p className="text-[11.5px] text-slate-300 italic font-sans leading-relaxed">"{rev.text}"</p>
                   </div>
                 ))}
               </motion.div>
@@ -741,11 +791,11 @@ function LiveWebsiteRenderer({
           </section>
         )}
 
-        {/* 6. INTERACTIVE FAQ ACCORDION SECTION */}
+        {/* 7. INTERACTIVE FAQ ACCORDION SECTION */}
         {(showAll || tab === "faq") && (
           <section className="space-y-3 pt-2">
             <div className={`border-b ${theme.headerBorder} pb-2`}>
-              <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
+              <h3 className="font-bold text-sm text-amber-400 uppercase tracking-wider flex items-center gap-2 font-serif">
                 <Layers className={`h-4 w-4 ${theme.accentText}`} /> Frequently Asked Questions
               </h3>
             </div>
@@ -754,16 +804,16 @@ function LiveWebsiteRenderer({
               {preset.faqs.map((faq, idx) => {
                 const isOpen = openFaq === idx;
                 return (
-                  <div key={idx} className={`border ${theme.cardBorder} rounded-xl bg-white overflow-hidden shadow-2xs`}>
+                  <div key={idx} className={`border ${theme.cardBorder} rounded-xl bg-[#222222] overflow-hidden shadow-md`}>
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
-                      className="w-full p-3 text-left flex items-center justify-between font-bold text-xs text-slate-800 hover:bg-slate-50 transition-colors"
+                      className="w-full p-3 text-left flex items-center justify-between font-bold text-xs text-slate-200 hover:bg-slate-800 transition-colors"
                     >
                       <span>{faq.q}</span>
                       {isOpen ? <ChevronUp className={`h-4 w-4 ${theme.accentText} shrink-0`} /> : <ChevronDown className="h-4 w-4 text-slate-400 shrink-0" />}
                     </button>
                     {isOpen && (
-                      <div className={`px-3 pb-3 pt-0 text-[11.5px] text-slate-600 leading-relaxed font-sans border-t ${theme.headerBorder} bg-slate-50/50`}>
+                      <div className={`px-3 pb-3 pt-0 text-[11.5px] text-slate-300 leading-relaxed font-sans border-t ${theme.headerBorder} bg-slate-900/50`}>
                         {faq.a}
                       </div>
                     )}
@@ -774,34 +824,34 @@ function LiveWebsiteRenderer({
           </section>
         )}
 
-        {/* 7. REALTIME GOOGLE MAPS LOCATION EMBED SECTION */}
+        {/* 8. REALTIME GOOGLE MAPS LOCATION EMBED SECTION */}
         {(showAll || tab === "contact") && (
           <section className="space-y-3 pt-2">
-            <h3 className={`font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b ${theme.headerBorder} pb-2`}>
+            <h3 className={`font-bold text-sm text-amber-400 uppercase tracking-wider flex items-center gap-2 border-b ${theme.headerBorder} pb-2 font-serif`}>
               <MapPin className={`h-4 w-4 ${theme.accentText}`} /> Realtime Location & Google Maps
             </h3>
 
-            <div className={`p-4 rounded-xl border ${theme.cardBorder} bg-white shadow-2xs space-y-3`}>
-              <div className="flex items-start gap-2.5 text-xs text-slate-700">
+            <div className={`p-4 rounded-xl border ${theme.cardBorder} bg-[#222222] shadow-md space-y-3`}>
+              <div className="flex items-start gap-2.5 text-xs text-slate-200">
                 <MapPin className={`h-4 w-4 ${theme.accentText} shrink-0 mt-0.5`} />
                 <div>
-                  <div className="font-bold text-slate-900">{lead.name}</div>
-                  <div>{lead.address}</div>
+                  <div className="font-bold text-white font-serif">{lead.name}</div>
+                  <div className="text-slate-300">{lead.address}</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 text-xs text-slate-700">
+              <div className="flex items-center gap-2.5 text-xs text-slate-200">
                 <Phone className={`h-4 w-4 ${theme.accentText} shrink-0`} />
                 <a href={`tel:${cleanPhone}`} className={`font-bold ${theme.accentText} hover:underline`}>{lead.phone || "+91 95577 30531"}</a>
               </div>
 
-              <div className="flex items-center gap-2.5 text-xs text-slate-700">
+              <div className="flex items-center gap-2.5 text-xs text-slate-200">
                 <Clock className={`h-4 w-4 ${theme.accentText} shrink-0`} />
-                <span>Monday – Sunday: 07:00 AM – 12:00 AM (Breakfast, Lunch & Dinner)</span>
+                <span className="text-slate-300">Monday – Sunday: 07:00 AM – 12:00 AM (Breakfast, Lunch & Dinner)</span>
               </div>
 
               {/* REAL INTERACTIVE GOOGLE MAPS EMBED IFRAME */}
-              <div className="h-44 sm:h-52 w-full rounded-2xl overflow-hidden border border-slate-200 shadow-inner relative bg-slate-100">
+              <div className="h-44 sm:h-52 w-full rounded-2xl overflow-hidden border border-slate-700 shadow-inner relative bg-slate-900">
                 <iframe
                   title={`${lead.name} Google Map`}
                   width="100%"
@@ -828,24 +878,33 @@ function LiveWebsiteRenderer({
           </section>
         )}
 
-        {/* 8. FOOTER */}
+        {/* 9. FOOTER */}
         {showAll && (
-          <footer className="pt-6 pb-4 border-t border-slate-100 text-center space-y-2">
-            <div className="font-bold text-xs text-slate-900">{lead.name}</div>
+          <footer className="pt-6 pb-4 border-t border-slate-800 text-center space-y-2">
+            <div className="font-bold text-xs text-amber-400 font-serif">{lead.name}</div>
             <div className="text-[10.5px] text-slate-400 font-sans">© {new Date().getFullYear()} {lead.name}. All rights reserved. • Heritage Dining & Premium Local Site</div>
           </footer>
         )}
       </div>
 
-      {/* Floating Sticky WhatsApp Button */}
-      <div className="sticky bottom-4 right-4 flex justify-end px-4 pb-2 pointer-events-auto z-10">
-        <button
-          onClick={onOpenBooking}
-          className="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-4 py-2.5 text-xs font-bold shadow-xl hover:bg-emerald-700 transition-all cursor-pointer"
-        >
-          <MessageSquare className="h-4 w-4" />
-          <span>Book Slot on WhatsApp</span>
+      {/* MOBILE CTA BAR AT BOTTOM (FROM SHRIPATI CODE) */}
+      <div className="sticky bottom-0 inset-x-0 bg-stone-950 border-t border-amber-900/60 p-2.5 flex items-center justify-around z-20 shadow-2xl">
+        <a href={`tel:${cleanPhone}`} className="flex flex-col items-center gap-0.5 text-slate-300 hover:text-amber-400 transition-colors">
+          <Phone className="h-4 w-4 text-amber-400" />
+          <span className="text-[10px] font-bold">Call</span>
+        </a>
+        <button onClick={onOpenBooking} className="flex flex-col items-center gap-0.5 text-slate-300 hover:text-amber-400 transition-colors">
+          <MessageSquare className="h-4 w-4 text-emerald-400" />
+          <span className="text-[10px] font-bold">WhatsApp</span>
         </button>
+        <button onClick={onOpenBooking} className="flex flex-col items-center gap-0.5 text-slate-300 hover:text-amber-400 transition-colors">
+          <Calendar className="h-4 w-4 text-amber-400" />
+          <span className="text-[10px] font-bold">Reserve</span>
+        </button>
+        <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.name + " " + lead.address)}`} target="_blank" rel="noreferrer" className="flex flex-col items-center gap-0.5 text-slate-300 hover:text-amber-400 transition-colors">
+          <Navigation className="h-4 w-4 text-sky-400" />
+          <span className="text-[10px] font-bold">Directions</span>
+        </a>
       </div>
     </div>
   );
@@ -857,8 +916,8 @@ function LiveWebsiteRenderer({
 function getNichePreset(category: string, name: string) {
   const cat = `${category} ${name}`.toLowerCase();
 
-  // 1. Restaurant / Cafe / Dining (Royal Gold & Dark Charcoal Luxury Heritage Theme)
-  if (cat.includes("restau") || cat.includes("cafe") || cat.includes("food") || cat.includes("dini") || cat.includes("pizz") || cat.includes("baker") || cat.includes("biryan") || cat.includes("thali") || cat.includes("veg")) {
+  // 1. Restaurant / Cafe / Dining (Shripati Royal Gold & Dark Luxury Heritage Theme)
+  if (cat.includes("restau") || cat.includes("cafe") || cat.includes("food") || cat.includes("dini") || cat.includes("pizz") || cat.includes("baker") || cat.includes("biryan") || cat.includes("thali") || cat.includes("veg") || cat.includes("nawaab")) {
     return {
       nicheCategory: "Restaurant & Dining",
       icon: Utensils,
@@ -867,14 +926,14 @@ function getNichePreset(category: string, name: string) {
       heroSub: "Experience royal culinary traditions with authentic North Indian, South Indian, Chinese & Mughlai delicacies. Rated #1 for family & tourist dining.",
       trustBadges: ["100% Pure Veg Kitchen", "FSSAI Certified 5★", "Instant WhatsApp Reservation"],
       theme: {
-        bodyBg: "bg-stone-50",
-        headerBg: "bg-stone-900/95 text-white",
-        headerBorder: "border-amber-900/60",
-        cardBorder: "border-amber-200",
-        badgeBg: "bg-amber-100/80",
-        accentText: "text-amber-700",
-        ctaBtn: "bg-amber-600 hover:bg-amber-700 text-white shadow-amber-600/30",
-        tickerBg: "bg-stone-950",
+        bodyBg: "bg-[#141414]",
+        headerBg: "bg-[#1a1a1a]/95 text-white",
+        headerBorder: "border-amber-500/30",
+        cardBorder: "border-amber-500/30",
+        badgeBg: "bg-amber-500/20 text-amber-300",
+        accentText: "text-amber-400",
+        ctaBtn: "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 shadow-amber-500/20",
+        tickerBg: "bg-black",
         tickerText: "text-amber-300"
       },
       ctaPrimary: "Make Table Reservation",
