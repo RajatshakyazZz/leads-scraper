@@ -39,7 +39,9 @@ import {
   Zap,
   Navigation,
   Heart,
-  Globe
+  Globe,
+  Share2,
+  Link as LinkIcon
 } from "lucide-react";
 import type { RankedLead } from "@/lib/types";
 import { toast } from "sonner";
@@ -73,6 +75,11 @@ export function Phase4Build({
   const [previewTab, setPreviewTab] = useState<"all" | "hero" | "services" | "reviews" | "faq" | "contact">("all");
   const [fullModal, setFullModal] = useState(false);
   const [showBookingModal, setShowBookingModal] = useState(false);
+
+  // Client Share Link state
+  const [sharingLink, setSharingLink] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
 
   const nichePreset = useMemo(() => (selected ? getNichePreset(selected.category, selected.name) : null), [selected]);
   const prompt = useMemo(() => (selected && nichePreset ? buildPrompt(selected, platform, nichePreset) : ""), [selected, platform, nichePreset]);
@@ -121,6 +128,33 @@ export function Phase4Build({
       toast.error((e as Error).message);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function generateShareableLink() {
+    if (!selected) return;
+
+    setSharingLink(true);
+    try {
+      const res = await fetch("/api/previews", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ lead: selected }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Failed to generate preview link.");
+      }
+
+      const fullUrl = `${window.location.origin}${data.previewUrl}`;
+      setShareUrl(fullUrl);
+      navigator.clipboard.writeText(fullUrl);
+      setShareModalOpen(true);
+      toast.success("Live preview link created & copied to clipboard!");
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setSharingLink(false);
     }
   }
 
@@ -191,6 +225,16 @@ export function Phase4Build({
 
         {/* Action controls */}
         <div className="flex items-center gap-2 flex-wrap">
+          <Button
+            size="sm"
+            onClick={generateShareableLink}
+            disabled={sharingLink}
+            className="rounded-xl h-9 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 cursor-pointer"
+          >
+            {sharingLink ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" /> : <Share2 className="h-3.5 w-3.5 mr-1.5" />}
+            Share Client Preview
+          </Button>
+
           <Select value={platform} onValueChange={(v) => v && setPlatform(v)}>
             <SelectTrigger className="w-[130px] rounded-xl border-sky-200 bg-white text-xs h-9 font-medium focus:ring-1 focus:ring-sky-500">
               <SelectValue />
@@ -260,6 +304,17 @@ export function Phase4Build({
             </div>
 
             <div className="flex items-center gap-1.5">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={generateShareableLink}
+                disabled={sharingLink}
+                className="rounded-xl h-8 px-2.5 border-emerald-200 text-emerald-700 text-xs font-bold hover:bg-emerald-50"
+                title="Share Client Link"
+              >
+                {sharingLink ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Share2 className="h-3.5 w-3.5 text-emerald-600" />}
+              </Button>
+
               {/* Viewport Mode Switcher */}
               <div className="flex items-center bg-slate-200/70 p-0.5 rounded-lg mr-1">
                 <button
@@ -379,6 +434,78 @@ export function Phase4Build({
         </Card>
       </div>
 
+      {/* Share Client Preview Link Modal */}
+      <AnimatePresence>
+        {shareModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm p-4 flex items-center justify-center"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 16 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 16 }}
+              className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl border border-sky-100 relative"
+            >
+              <button
+                onClick={() => setShareModalOpen(false)}
+                className="absolute top-4 right-4 p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-10 w-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                  <Share2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900 text-base">Shareable Client Preview Link</h4>
+                  <p className="text-xs text-slate-500 font-sans">Lifetime active link stored securely in database</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                  <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Live URL</div>
+                  <div className="text-xs font-mono text-sky-700 font-bold break-all select-all">{shareUrl}</div>
+                </div>
+
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs text-emerald-800 space-y-1">
+                  <div className="font-bold flex items-center gap-1.5">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Persistent Lifetime Access
+                  </div>
+                  <p className="text-[11.5px] leading-relaxed">
+                    Your client <strong>({selected.name})</strong> can open this link anytime on mobile or desktop to view the complete live website preview with real-time Google map and WhatsApp booking!
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 pt-2">
+                  <Button
+                    onClick={() => {
+                      navigator.clipboard.writeText(shareUrl);
+                      toast.success("Preview link copied!");
+                    }}
+                    className="flex-1 h-10 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-md"
+                  >
+                    <Copy className="h-3.5 w-3.5 mr-1.5" /> Copy Link
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    onClick={() => window.open(shareUrl, "_blank")}
+                    className="h-10 rounded-xl border-slate-200 text-slate-700 font-bold text-xs px-4"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5 mr-1.5" /> Test Link
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Interactive Booking Modal Simulation */}
       <AnimatePresence>
         {showBookingModal && (
@@ -475,8 +602,8 @@ export function Phase4Build({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Button size="sm" onClick={() => window.open(`https://wa.me/${waNumber}?text=Hi%20${encodeURIComponent(selected.name)}`, "_blank")} className="h-8 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold">
-                    <MessageSquare className="h-3.5 w-3.5 mr-1" /> Test WhatsApp CTA
+                  <Button size="sm" onClick={generateShareableLink} disabled={sharingLink} className="h-8 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold">
+                    <Share2 className="h-3.5 w-3.5 mr-1" /> Share Client Link
                   </Button>
                   <button onClick={() => setFullModal(false)} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
                     <X className="h-5 w-5" />
@@ -532,7 +659,6 @@ function LiveWebsiteRenderer({
 
   const showAll = tab === "all";
   const theme = preset.theme;
-  const isRestaurant = preset.nicheCategory.includes("Restaurant");
 
   return (
     <div className={`font-sans text-slate-100 ${theme.bodyBg} relative overflow-hidden`}>
@@ -705,7 +831,7 @@ function LiveWebsiteRenderer({
           </section>
         )}
 
-        {/* 5. WHY GUESTS CHOOSE US SECTION (4 FEATURES GRID FROM SHRIPATI CODE) */}
+        {/* 5. WHY GUESTS CHOOSE US SECTION */}
         {showAll && (
           <section className="space-y-3 pt-2">
             <div className={`border-b ${theme.headerBorder} pb-2`}>
@@ -760,7 +886,6 @@ function LiveWebsiteRenderer({
               <span className="text-[10px] text-amber-300 font-bold bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">{lead.rating ?? 4.8}★ Rating</span>
             </div>
 
-            {/* REALTIME MARQUEE REVIEWS ANIMATION */}
             <div className="relative overflow-hidden py-1">
               <motion.div
                 animate={{ x: [0, -800] }}
@@ -887,7 +1012,7 @@ function LiveWebsiteRenderer({
         )}
       </div>
 
-      {/* MOBILE CTA BAR AT BOTTOM (FROM SHRIPATI CODE) */}
+      {/* MOBILE BOTTOM CTA BAR */}
       <div className="sticky bottom-0 inset-x-0 bg-stone-950 border-t border-amber-900/60 p-2.5 flex items-center justify-around z-20 shadow-2xl">
         <a href={`tel:${cleanPhone}`} className="flex flex-col items-center gap-0.5 text-slate-300 hover:text-amber-400 transition-colors">
           <Phone className="h-4 w-4 text-amber-400" />
