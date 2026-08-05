@@ -35,7 +35,9 @@ import {
   ChevronUp,
   Calendar,
   Award,
-  Layers
+  Layers,
+  Zap,
+  TrendingUp
 } from "lucide-react";
 import type { RankedLead } from "@/lib/types";
 import { toast } from "sonner";
@@ -129,7 +131,7 @@ export function Phase4Build({
     setBuilding(true);
     setTimeout(() => {
       setBuilding(false);
-      toast.success(`Full high-converting website site ready for ${selected?.name}!`);
+      toast.success(`Creative animated site ready for ${selected?.name}!`);
     }, 1200);
   }
 
@@ -159,7 +161,7 @@ export function Phase4Build({
   return (
     <PhaseShell
       title="Phase 4 — Generate website"
-      subtitle="Pick a platform. We craft a battle-tested, niche-tailored prompt with business details, conversion sections, and localized SEO baked in."
+      subtitle="Pick a platform. We craft a battle-tested, niche-tailored prompt with business details, real images, and conversion sections."
       onPrev={onPrev}
       onNext={onNext}
       nextLabel="Draft outreach"
@@ -222,7 +224,7 @@ export function Phase4Build({
       {/* Main Grid: Prompt Code vs Live Preview */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Left Card: Tailored Niche Prompt */}
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 flex flex-col h-[720px]">
+        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 flex flex-col h-[740px]">
           <CardHeader className="pb-3 pt-5 px-5 flex flex-row items-center justify-between border-b border-sky-100">
             <div>
               <CardTitle className="text-base tracking-tight font-bold text-slate-900 flex items-center gap-2">
@@ -244,14 +246,14 @@ export function Phase4Build({
           </CardContent>
         </Card>
 
-        {/* Right Card: High Quality Interactive Preview */}
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 overflow-hidden flex flex-col h-[720px]">
+        {/* Right Card: High Quality Interactive Animated Preview */}
+        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 overflow-hidden flex flex-col h-[740px]">
           {/* Preview Toolbar Header */}
           <CardHeader className="flex flex-row items-center justify-between pb-3 pt-4 px-5 gap-3 border-b border-sky-100 bg-slate-50/50">
             <div className="flex items-center gap-2">
               <CardTitle className="text-base tracking-tight font-bold text-slate-900">Live Website Preview</CardTitle>
-              <span className="inline-flex items-center rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
-                ● 100% Full Page Live
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" /> Realtime Animated Loop
               </span>
             </div>
 
@@ -334,7 +336,7 @@ export function Phase4Build({
               onClick={() => setPreviewTab("reviews")}
               className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${previewTab === "reviews" ? "bg-white text-sky-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"}`}
             >
-              Reviews ({selected.reviewsCount ?? 334})
+              Loop Reviews
             </button>
             <button
               onClick={() => setPreviewTab("faq")}
@@ -465,7 +467,7 @@ export function Phase4Build({
                     {nichePreset?.icon ? <nichePreset.icon className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-white">{selected.name} — 100% Full Page Live Preview</h3>
+                    <h3 className="font-bold text-sm text-white">{selected.name} — Full Creative Animated Preview</h3>
                     <p className="text-[11px] text-sky-400 font-mono">https://preview.{selected.name.toLowerCase().replace(/[^a-z0-9]/g, "")}.com</p>
                   </div>
                 </div>
@@ -505,7 +507,7 @@ export function Phase4Build({
 }
 
 /* ============================================================================
-   LIVE WEBSITE FULL PAGE COMPONENT RENDERER
+   LIVE WEBSITE FULL PAGE COMPONENT RENDERER WITH REALTIME ANIMATED LOOPS & IMAGES
    ============================================================================ */
 function LiveWebsiteRenderer({
   lead,
@@ -529,7 +531,7 @@ function LiveWebsiteRenderer({
   const showAll = tab === "all";
 
   return (
-    <div className="font-sans text-slate-900 bg-white relative">
+    <div className="font-sans text-slate-900 bg-white relative overflow-hidden">
       {/* 1. SITE HEADER BAR */}
       <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md px-5 py-3 border-b border-slate-100 flex items-center justify-between shadow-2xs">
         <div className="flex items-center gap-2.5">
@@ -555,50 +557,78 @@ function LiveWebsiteRenderer({
         </div>
       </header>
 
+      {/* CONTINUOUS REALTIME LOOP TICKER BAR */}
+      <div className="bg-slate-900 text-white py-1.5 px-4 overflow-hidden relative border-b border-slate-800">
+        <motion.div
+          animate={{ x: [0, -600] }}
+          transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+          className="flex items-center gap-8 whitespace-nowrap text-[10px] font-mono text-sky-300 uppercase tracking-widest"
+        >
+          <span>★ {lead.rating ?? 4.8} Google Rated ({lead.reviewsCount ?? 334}+ Reviews)</span>
+          <span>• Verified {preset.nicheCategory} in {lead.city}</span>
+          <span>• 100% Instant WhatsApp Slots</span>
+          <span>• {lead.yearsInBusiness ?? 8}+ Years Trust</span>
+          <span>★ {lead.rating ?? 4.8} Google Rated ({lead.reviewsCount ?? 334}+ Reviews)</span>
+          <span>• Verified {preset.nicheCategory} in {lead.city}</span>
+          <span>• 100% Instant WhatsApp Slots</span>
+        </motion.div>
+      </div>
+
       <div className="p-5 space-y-8">
-        {/* 2. HERO BANNER & CTAs SECTION */}
+        {/* 2. HERO BANNER & CTAs SECTION WITH NICHE IMAGE COVER */}
         {(showAll || tab === "hero") && (
           <section className="space-y-4">
-            <div className={`rounded-2xl p-6 ${preset.colorTheme.heroBg} border border-sky-100 text-left relative overflow-hidden shadow-xs`}>
-              <div className="absolute -top-10 -right-10 w-40 h-40 bg-sky-400/10 rounded-full blur-2xl pointer-events-none" />
-
-              {/* Rating pill */}
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-slate-800 shadow-2xs border border-sky-100 mb-3">
-                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                <span>{lead.rating ?? 4.8}★ Google Rated</span>
-                <span className="text-slate-400">({lead.reviewsCount ?? 334}+ verified reviews)</span>
+            <div className="rounded-2xl border border-sky-100 overflow-hidden shadow-md relative text-left group">
+              {/* Niche Hero Image Background */}
+              <div className="relative h-56 sm:h-64 w-full overflow-hidden">
+                <img
+                  src={preset.heroImage}
+                  alt={lead.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-900/30" />
               </div>
 
-              <h2 className="text-xl sm:text-2.5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                {preset.heroTitle}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2.5 max-w-xl font-sans">
-                {preset.heroSub}
-              </p>
+              {/* Overlay Content */}
+              <div className="absolute inset-0 p-5 sm:p-6 flex flex-col justify-end text-white z-10">
+                {/* Rating pill */}
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold text-white shadow-2xs border border-white/30 mb-2 w-fit">
+                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                  <span>{lead.rating ?? 4.8}★ Google Rated</span>
+                  <span className="text-slate-200">({lead.reviewsCount ?? 334}+ reviews)</span>
+                </div>
 
-              {/* CTAs */}
-              <div className="mt-5 flex flex-wrap gap-2.5 items-center">
-                <button
-                  onClick={onOpenBooking}
-                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 shadow-md shadow-emerald-600/20 transition-all cursor-pointer"
-                >
-                  <MessageSquare className="h-3.5 w-3.5" />
-                  {preset.ctaPrimary}
-                </button>
-                <a
-                  href={`tel:${cleanPhone}`}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs px-4 py-2.5 border border-slate-200 shadow-2xs transition-all"
-                >
-                  <Phone className="h-3.5 w-3.5 text-sky-600" />
-                  {preset.ctaSecondary}
-                </a>
+                <h2 className="text-xl sm:text-2.5xl font-extrabold text-white tracking-tight leading-tight drop-shadow-sm">
+                  {preset.heroTitle}
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mt-2 max-w-xl font-sans drop-shadow-xs">
+                  {preset.heroSub}
+                </p>
+
+                {/* CTAs */}
+                <div className="mt-4 flex flex-wrap gap-2.5 items-center">
+                  <button
+                    onClick={onOpenBooking}
+                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 shadow-lg shadow-emerald-500/30 transition-all cursor-pointer"
+                  >
+                    <MessageSquare className="h-3.5 w-3.5" />
+                    {preset.ctaPrimary}
+                  </button>
+                  <a
+                    href={`tel:${cleanPhone}`}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-white/90 backdrop-blur-md hover:bg-white text-slate-900 font-bold text-xs px-4 py-2.5 border border-white/50 shadow-2xs transition-all"
+                  >
+                    <Phone className="h-3.5 w-3.5 text-sky-600" />
+                    {preset.ctaSecondary}
+                  </a>
+                </div>
               </div>
             </div>
 
             {/* Trust Badges Strip */}
             <div className="grid grid-cols-3 gap-2.5 text-center">
               {preset.trustBadges.map((badge, idx) => (
-                <div key={idx} className="bg-white border border-sky-100 rounded-xl p-3 shadow-2xs flex flex-col items-center justify-center">
+                <div key={idx} className="bg-white border border-sky-100 rounded-xl p-3 shadow-2xs flex flex-col items-center justify-center hover:border-sky-300 transition-colors">
                   <CheckCircle2 className="h-4 w-4 text-sky-600 mb-1" />
                   <span className="text-[11px] font-bold text-slate-800 leading-tight">{badge}</span>
                 </div>
@@ -607,27 +637,41 @@ function LiveWebsiteRenderer({
           </section>
         )}
 
-        {/* 3. NICHE SPECIALTIES & SERVICES GRID */}
+        {/* 3. NICHE SPECIALTIES & SERVICES GRID WITH REALTIME IMAGES */}
         {(showAll || tab === "services") && (
-          <section className="space-y-3 pt-2">
+          <section className="space-y-4 pt-2">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <Sparkle className="h-4 w-4 text-sky-600" /> Niche Services & Treatments
+                <Sparkle className="h-4 w-4 text-sky-600" /> Niche Services & Specialties
               </h3>
-              <span className="text-[10px] text-slate-500 font-bold bg-sky-50 px-2 py-0.5 rounded-full border border-sky-100">{preset.services.length} Core Offerings</span>
+              <span className="text-[10px] text-slate-500 font-bold bg-sky-50 px-2 py-0.5 rounded-full border border-sky-100">{preset.services.length} Premium Offerings</span>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-3">
+            <div className="grid sm:grid-cols-2 gap-3.5">
               {preset.services.map((srv, idx) => (
-                <div key={idx} className="p-3.5 rounded-xl border border-sky-100 bg-white hover:border-sky-300 transition-all shadow-2xs group">
-                  <div className="flex items-start gap-3">
-                    <div className="h-7 w-7 rounded-lg bg-sky-50 text-sky-600 font-bold flex items-center justify-center text-xs shrink-0 group-hover:bg-sky-600 group-hover:text-white transition-colors">
+                <div key={idx} className="rounded-2xl border border-sky-100 bg-white hover:border-sky-400 transition-all duration-300 shadow-2xs hover:shadow-md overflow-hidden group">
+                  <div className="h-32 w-full overflow-hidden relative">
+                    <img
+                      src={srv.image}
+                      alt={srv.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                    <div className="absolute top-2.5 left-2.5 h-6 w-6 rounded-lg bg-white/90 backdrop-blur-md text-sky-700 font-bold flex items-center justify-center text-xs shadow-2xs">
                       {idx + 1}
                     </div>
-                    <div>
-                      <h4 className="font-bold text-xs text-slate-900 group-hover:text-sky-700 transition-colors">{srv.title}</h4>
-                      <p className="text-[11px] text-slate-500 leading-relaxed mt-0.5">{srv.desc}</p>
+                    <div className="absolute bottom-2 left-2.5 right-2.5 text-white font-bold text-xs truncate drop-shadow-sm">
+                      {srv.title}
                     </div>
+                  </div>
+                  <div className="p-3">
+                    <p className="text-[11px] text-slate-500 leading-relaxed">{srv.desc}</p>
+                    <button
+                      onClick={onOpenBooking}
+                      className="mt-2.5 text-[11px] font-bold text-sky-700 hover:text-sky-800 flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                    >
+                      Book This Service →
+                    </button>
                   </div>
                 </div>
               ))}
@@ -637,48 +681,56 @@ function LiveWebsiteRenderer({
 
         {/* 4. ABOUT & CREDENTIALS CARD */}
         {showAll && (
-          <section className="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 space-y-3">
+          <section className="bg-slate-900 text-white rounded-2xl p-5 space-y-3 relative overflow-hidden shadow-lg">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
             <div className="flex items-center gap-2">
-              <Award className="h-5 w-5 text-sky-600" />
-              <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider">About {lead.name}</h3>
+              <Award className="h-5 w-5 text-sky-400" />
+              <h3 className="font-bold text-sm text-white uppercase tracking-wider">About {lead.name}</h3>
             </div>
-            <p className="text-xs text-slate-600 leading-relaxed font-sans">
-              With over <span className="font-bold text-slate-800">{lead.yearsInBusiness ?? 8}+ years of dedicated service</span> in {lead.city}, {lead.name} provides modern, high-quality solutions designed around customer convenience and zero waiting times.
+            <p className="text-xs text-slate-300 leading-relaxed font-sans">
+              With over <span className="font-bold text-white">{lead.yearsInBusiness ?? 8}+ years of dedicated practice</span> in {lead.city}, {lead.name} delivers modern, high-quality, patient-centric solutions designed for convenience and fast turnaround.
             </p>
-            <div className="flex items-center gap-4 text-xs font-bold text-slate-700 pt-1">
-              <span className="flex items-center gap-1 text-emerald-700"><CheckCircle2 className="h-3.5 w-3.5" /> 100% Satisfaction Guarantee</span>
-              <span className="flex items-center gap-1 text-sky-700"><ShieldCheck className="h-3.5 w-3.5" /> Certified Specialist</span>
+            <div className="flex flex-wrap gap-3 text-xs font-bold pt-1">
+              <span className="flex items-center gap-1 text-emerald-400"><CheckCircle2 className="h-3.5 w-3.5" /> 100% Satisfaction Guarantee</span>
+              <span className="flex items-center gap-1 text-sky-300"><ShieldCheck className="h-3.5 w-3.5" /> Certified Specialist</span>
             </div>
           </section>
         )}
 
-        {/* 5. CUSTOMER REVIEWS SECTION */}
+        {/* 5. REALTIME INFINITE ANIMATED LOOP FOR REVIEWS */}
         {(showAll || tab === "reviews") && (
-          <section className="space-y-3 pt-2">
+          <section className="space-y-3 pt-2 overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> Verified Customer Reviews
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> Verified Customer Reviews (Realtime Loop)
               </h3>
               <span className="text-[10px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">{lead.rating ?? 4.8}★ Rating</span>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-3">
-              {preset.reviews.map((rev, idx) => (
-                <div key={idx} className="p-3.5 rounded-xl border border-sky-100 bg-white shadow-2xs">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className="flex items-center gap-2">
-                      <div className="h-6.5 w-6.5 rounded-full bg-sky-100 text-sky-700 font-bold text-[10px] flex items-center justify-center uppercase">
-                        {rev.author[0]}
+            {/* REALTIME MARQUEE REVIEWS ANIMATION */}
+            <div className="relative overflow-hidden py-1">
+              <motion.div
+                animate={{ x: [0, -800] }}
+                transition={{ repeat: Infinity, duration: 24, ease: "linear" }}
+                className="flex items-center gap-4 whitespace-normal"
+              >
+                {[...preset.reviews, ...preset.reviews, ...preset.reviews].map((rev, idx) => (
+                  <div key={idx} className="w-[280px] shrink-0 p-4 rounded-2xl border border-sky-100 bg-white shadow-2xs hover:border-sky-300 transition-all">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="h-7 w-7 rounded-full bg-sky-100 text-sky-700 font-bold text-xs flex items-center justify-center uppercase">
+                          {rev.author[0]}
+                        </div>
+                        <span className="font-bold text-xs text-slate-900">{rev.author}</span>
                       </div>
-                      <span className="font-bold text-xs text-slate-900">{rev.author}</span>
+                      <div className="flex gap-0.5 text-amber-400 text-xs">
+                        {"★".repeat(rev.rating)}
+                      </div>
                     </div>
-                    <div className="flex gap-0.5 text-amber-400 text-xs">
-                      {"★".repeat(rev.rating)}
-                    </div>
+                    <p className="text-[11.5px] text-slate-600 italic font-sans leading-relaxed">"{rev.text}"</p>
                   </div>
-                  <p className="text-[11.5px] text-slate-600 italic font-sans leading-relaxed">"{rev.text}"</p>
-                </div>
-              ))}
+                ))}
+              </motion.div>
             </div>
           </section>
         )}
@@ -742,7 +794,7 @@ function LiveWebsiteRenderer({
                 <span>Monday – Saturday: 09:30 AM – 08:30 PM (Sunday by Appointment)</span>
               </div>
 
-              <div className="h-32 rounded-xl bg-sky-50 border border-sky-100 flex flex-col items-center justify-center text-xs text-sky-700 font-semibold gap-1.5 p-3 text-center">
+              <div className="h-36 rounded-xl bg-sky-50 border border-sky-100 flex flex-col items-center justify-center text-xs text-sky-700 font-semibold gap-1.5 p-3 text-center">
                 <MapPin className="h-5 w-5 text-sky-600" />
                 <span>[Interactive Google Maps Location Embed]</span>
                 <span className="text-[10px] text-slate-500 font-normal">{lead.address}</span>
@@ -761,7 +813,7 @@ function LiveWebsiteRenderer({
       </div>
 
       {/* Floating Sticky WhatsApp Button */}
-      <div className="sticky bottom-4 right-4 flex justify-end px-4 pb-2 pointer-events-auto">
+      <div className="sticky bottom-4 right-4 flex justify-end px-4 pb-2 pointer-events-auto z-10">
         <button
           onClick={onOpenBooking}
           className="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-4 py-2.5 text-xs font-bold shadow-xl hover:bg-emerald-700 transition-all cursor-pointer"
@@ -775,7 +827,7 @@ function LiveWebsiteRenderer({
 }
 
 /* ============================================================================
-   NICHE PRESET DETECTION ENGINE WITH FAQS & ADVANCED DETAILS
+   NICHE PRESET DETECTION ENGINE WITH REALTIME IMAGES & CREATIVE COPY
    ============================================================================ */
 function getNichePreset(category: string, name: string) {
   const cat = `${category} ${name}`.toLowerCase();
@@ -785,6 +837,7 @@ function getNichePreset(category: string, name: string) {
     return {
       nicheCategory: "Dental Clinic",
       icon: Stethoscope,
+      heroImage: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80",
       heroTitle: "Pain-Free Dental Care & Celebrity Smile Designs",
       heroSub: "Advanced laser dentistry, painless root canals, and invisible aligners. Trusted by over 5,000+ happy patients in your city.",
       trustBadges: ["Google 4.8★ Verified", "Certified Orthodontist", "0% EMI Available"],
@@ -797,16 +850,17 @@ function getNichePreset(category: string, name: string) {
       ctaSecondary: "Call Dentist Direct",
       schemaType: "Dentist",
       services: [
-        { title: "Painless Root Canal (Single Sitting)", desc: "Rotary endodontics with zero pain and instant relief." },
-        { title: "Laser Teeth Whitening (Shade 3+ Cleaner)", desc: "Professional 45-min laser bleaching for bright smiles." },
-        { title: "Clear Invisible Aligners & Braces", desc: "Custom computer-designed clear aligners for adults & kids." },
-        { title: "Titanium Dental Implants", desc: "Permanent tooth replacement with lifetime warranty options." },
-        { title: "Cosmetic Veneers & Smile Makeover", desc: "Porcelain veneers for perfectly shaped white teeth." },
-        { title: "Pediatric & Family Dental Checkup", desc: "Gentle, stress-free dental care for children and seniors." }
+        { title: "Painless Root Canal (Single Sitting)", desc: "Rotary endodontics with zero pain and instant relief.", image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=400&q=80" },
+        { title: "Laser Teeth Whitening (Shade 3+ Cleaner)", desc: "Professional 45-min laser bleaching for bright smiles.", image: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=400&q=80" },
+        { title: "Clear Invisible Aligners & Braces", desc: "Custom computer-designed clear aligners for adults & kids.", image: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=400&q=80" },
+        { title: "Titanium Dental Implants", desc: "Permanent tooth replacement with lifetime warranty options.", image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=400&q=80" },
+        { title: "Cosmetic Veneers & Smile Makeover", desc: "Porcelain veneers for perfectly shaped white teeth.", image: "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&w=400&q=80" },
+        { title: "Pediatric & Family Dental Checkup", desc: "Gentle, stress-free dental care for children and seniors.", image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=400&q=80" }
       ],
       reviews: [
         { author: "Dr. Ananya Sharma", rating: 5, text: "Got my aligners done here. Super smooth process with zero discomfort. Highly recommend!" },
-        { author: "Vikram Mehta", rating: 5, text: "Extremely clean clinic and doctor explains every procedure calmly. Painless root canal done." }
+        { author: "Vikram Mehta", rating: 5, text: "Extremely clean clinic and doctor explains every procedure calmly. Painless root canal done." },
+        { author: "Priya Malhotra", rating: 5, text: "The teeth whitening session gave amazing instant results for my wedding!" }
       ],
       faqs: [
         { q: "Is root canal treatment really painless here?", a: "Yes! We use advanced rotary endodontics and computerized local anesthesia so you feel zero pain throughout." },
@@ -822,6 +876,7 @@ function getNichePreset(category: string, name: string) {
     return {
       nicheCategory: "Medical Clinic",
       icon: Stethoscope,
+      heroImage: "https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=800&q=80",
       heroTitle: "Expert Compassionate Medical Consultation & Care",
       heroSub: "Comprehensive health checkups, specialist consultation, and diagnostic care with zero OPD waiting time.",
       trustBadges: ["NABH Accredited Clinic", "15+ Years Practice", "Same-Day Appointment"],
@@ -834,16 +889,17 @@ function getNichePreset(category: string, name: string) {
       ctaSecondary: "Emergency Call",
       schemaType: "MedicalClinic",
       services: [
-        { title: "Specialist OPD Consultation", desc: "Expert diagnosis and personalized treatment plans." },
-        { title: "Complete Health Package & Diagnostics", desc: "Comprehensive blood tests, ECG, and preventive care." },
-        { title: "Chronic Disease Management", desc: "Long-term care for Diabetes, BP, Thyroid & Cholesterol." },
-        { title: "Pediatric & Vaccination Desk", desc: "Child immunizations, growth tracking, and wellness." },
-        { title: "Skin & Dermatology Care", desc: "Acne, eczema, laser skin care, and allergy tests." },
-        { title: "Home Visit & Teleconsultation", desc: "Video consultation and doctor home visits for seniors." }
+        { title: "Specialist OPD Consultation", desc: "Expert diagnosis and personalized treatment plans.", image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=400&q=80" },
+        { title: "Complete Health Package & Diagnostics", desc: "Comprehensive blood tests, ECG, and preventive care.", image: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=400&q=80" },
+        { title: "Chronic Disease Management", desc: "Long-term care for Diabetes, BP, Thyroid & Cholesterol.", image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=400&q=80" },
+        { title: "Pediatric & Vaccination Desk", desc: "Child immunizations, growth tracking, and wellness.", image: "https://images.unsplash.com/photo-1631815588090-d4bfec5b1cdb?auto=format&fit=crop&w=400&q=80" },
+        { title: "Skin & Dermatology Care", desc: "Acne, eczema, laser skin care, and allergy tests.", image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=400&q=80" },
+        { title: "Home Visit & Teleconsultation", desc: "Video consultation and doctor home visits for seniors.", image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&w=400&q=80" }
       ],
       reviews: [
         { author: "Rajesh Kumar", rating: 5, text: "Doctor gave genuine advice without prescribing unnecessary tests. Very polite staff." },
-        { author: "Pooja Malhotra", rating: 5, text: "WhatsApp booking saved us 2 hours in waiting room. Very efficient system!" }
+        { author: "Pooja Malhotra", rating: 5, text: "WhatsApp booking saved us 2 hours in waiting room. Very efficient system!" },
+        { author: "Sunil Verma", rating: 5, text: "Great experience for my parents' routine health checkup." }
       ],
       faqs: [
         { q: "How do I book a same-day OPD slot?", a: "Click the WhatsApp button or call direct. Slots are confirmed instantly in under 1 minute." },
@@ -859,6 +915,7 @@ function getNichePreset(category: string, name: string) {
     return {
       nicheCategory: "Restaurant & Cafe",
       icon: Utensils,
+      heroImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
       heroTitle: "Authentic Flavors, Chef Specials & Festive Dining",
       heroSub: "Enjoy hand-crafted delicacies made with fresh ingredients. Reserve your table or order express delivery via WhatsApp.",
       trustBadges: ["FSSAI Certified 5★", "Fresh Daily Produce", "Express WhatsApp Order"],
@@ -871,16 +928,17 @@ function getNichePreset(category: string, name: string) {
       ctaSecondary: "View Digital Menu",
       schemaType: "Restaurant",
       services: [
-        { title: "Signature Chef Delicacies", desc: "Curated gourmet appetizers, authentic gravies & breads." },
-        { title: "Instant Table Reservation", desc: "Skip the queue! Book your favorite table online in 30 seconds." },
-        { title: "Express WhatsApp Delivery", desc: "Hot food delivered directly to your doorstep in 30 mins." },
-        { title: "Artisan Coffee & Mocktails", desc: "Freshly brewed espresso and handcrafted refreshing coolers." },
-        { title: "Private Party & Birthday Catering", desc: "Custom buffet menus for corporate events and family gatherings." },
-        { title: "Weekend Brunch Buffets", desc: "Unlimited multi-cuisine brunch spreads every Saturday & Sunday." }
+        { title: "Signature Chef Delicacies", desc: "Curated gourmet appetizers, authentic gravies & breads.", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80" },
+        { title: "Instant Table Reservation", desc: "Skip the queue! Book your favorite table online in 30 seconds.", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80" },
+        { title: "Express WhatsApp Delivery", desc: "Hot food delivered directly to your doorstep in 30 mins.", image: "https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&w=400&q=80" },
+        { title: "Artisan Coffee & Mocktails", desc: "Freshly brewed espresso and handcrafted refreshing coolers.", image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=400&q=80" },
+        { title: "Private Party & Birthday Catering", desc: "Custom buffet menus for corporate events and family gatherings.", image: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=400&q=80" },
+        { title: "Weekend Brunch Buffets", desc: "Unlimited multi-cuisine brunch spreads every Saturday & Sunday.", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" }
       ],
       reviews: [
         { author: "Amit Singhania", rating: 5, text: "Phenomenal taste and hospitality! The chef specials are a must-try. Table booking was seamless." },
-        { author: "Neha Roy", rating: 5, text: "Loved the ambiance and quick service. Ordered home delivery on WhatsApp and arrived hot!" }
+        { author: "Neha Roy", rating: 5, text: "Loved the ambiance and quick service. Ordered home delivery on WhatsApp and arrived hot!" },
+        { author: "Rahul Kapoor", rating: 5, text: "Great food quality and clean hygiene standards." }
       ],
       faqs: [
         { q: "How far in advance should I reserve a table?", a: "We recommend reserving 2-4 hours prior for weekdays, and 1 day prior for weekend dinners." },
@@ -896,6 +954,7 @@ function getNichePreset(category: string, name: string) {
     return {
       nicheCategory: "Real Estate Brokerage",
       icon: Building2,
+      heroImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
       heroTitle: "Find Premium Verified Properties & Smart Investments",
       heroSub: "Buy, sell, or rent luxury apartments, villas, and commercial spaces with 100% verified documentation and zero hidden brokerage.",
       trustBadges: ["RERA Approved Advisor", "100% Verified Legal Titles", "0% Extra Hidden Fee"],
@@ -908,16 +967,17 @@ function getNichePreset(category: string, name: string) {
       ctaSecondary: "WhatsApp Property Catalog",
       schemaType: "RealEstateAgent",
       services: [
-        { title: "Luxury Residential Apartments & Villas", desc: "2, 3 & 4 BHK ready-to-move and under-construction flats." },
-        { title: "Commercial Office & Retail Spaces", desc: "High ROI commercial shops, showrooms, and tech park offices." },
-        { title: "Verified Gated Land & Plots", desc: "Clear title residential plots with immediate registry & handover." },
-        { title: "Property Valuation & Legal Registry", desc: "End-to-end stamp duty, agreement drafting, and legal support." },
-        { title: "Home Loan & EMI Assistance", desc: "Pre-approved housing loans from top banks at lowest interest rates." },
-        { title: "3D Virtual Property Tours", desc: "Explore property layouts and walkthrough videos from home." }
+        { title: "Luxury Residential Apartments & Villas", desc: "2, 3 & 4 BHK ready-to-move and under-construction flats.", image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=400&q=80" },
+        { title: "Commercial Office & Retail Spaces", desc: "High ROI commercial shops, showrooms, and tech park offices.", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=400&q=80" },
+        { title: "Verified Gated Land & Plots", desc: "Clear title residential plots with immediate registry & handover.", image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80" },
+        { title: "Property Valuation & Legal Registry", desc: "End-to-end stamp duty, agreement drafting, and legal support.", image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=400&q=80" },
+        { title: "Home Loan & EMI Assistance", desc: "Pre-approved housing loans from top banks at lowest interest rates.", image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=400&q=80" },
+        { title: "3D Virtual Property Tours", desc: "Explore property layouts and walkthrough videos from home.", image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=400&q=80" }
       ],
       reviews: [
         { author: "Karan Patel", rating: 5, text: "Found a dream 3BHK flat in prime area within 10 days! Honest advice and transparent paperwork." },
-        { author: "Sujata Bose", rating: 5, text: "Helped sell my property at market valuation quickly. Highly professional broker." }
+        { author: "Sujata Bose", rating: 5, text: "Helped sell my property at market valuation quickly. Highly professional broker." },
+        { author: "Vikram Rathi", rating: 5, text: "Smooth home loan processing and transparent site visits." }
       ],
       faqs: [
         { q: "Are all listed properties RERA registered?", a: "Yes, 100% of our residential and commercial projects are RERA registered with clear titles." },
@@ -933,6 +993,7 @@ function getNichePreset(category: string, name: string) {
     return {
       nicheCategory: "Luxury Beauty & Salon",
       icon: Scissors,
+      heroImage: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80",
       heroTitle: "Luxury Styling, Hair Care & Glowing Skin Treatments",
       heroSub: "Experience premium grooming, organic facials, and bridal makeovers by certified master stylists.",
       trustBadges: ["Imported Organic Products", "Certified Senior Stylists", "100% Sanitized Tools"],
@@ -945,16 +1006,17 @@ function getNichePreset(category: string, name: string) {
       ctaSecondary: "WhatsApp Rate List",
       schemaType: "BeautySalon",
       services: [
-        { title: "Designer Haircut & Spa Treatment", desc: "Trendy cuts, Keratin, Smoothening & scalp nourishing spa." },
-        { title: "Organic HydraFacial & Skin Glow", desc: "Deep pore cleansing, anti-tan facials & instant skin radiance." },
-        { title: "Bridal & Party Makeup Packages", desc: "HD Airbrush makeup, hair styling & saree draping for events." },
-        { title: "Gel Nail Art & Extensions", desc: "Long-lasting nail extensions, acrylic art, and gel polish." },
-        { title: "Luxury Body Spa & Aromatherapy", desc: "Rejuvenating Swedish massage and stress relief therapies." },
-        { title: "Gentlemen Grooming & Beard Spa", desc: "Precision hair trimming, beard styling & scalp treatment." }
+        { title: "Designer Haircut & Spa Treatment", desc: "Trendy cuts, Keratin, Smoothening & scalp nourishing spa.", image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80" },
+        { title: "Organic HydraFacial & Skin Glow", desc: "Deep pore cleansing, anti-tan facials & instant skin radiance.", image: "https://images.unsplash.com/photo-1512290900673-7002049c30f4?auto=format&fit=crop&w=400&q=80" },
+        { title: "Bridal & Party Makeup Packages", desc: "HD Airbrush makeup, hair styling & saree draping for events.", image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80" },
+        { title: "Gel Nail Art & Extensions", desc: "Long-lasting nail extensions, acrylic art, and gel polish.", image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=400&q=80" },
+        { title: "Luxury Body Spa & Aromatherapy", desc: "Rejuvenating Swedish massage and stress relief therapies.", image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80" },
+        { title: "Gentlemen Grooming & Beard Spa", desc: "Precision hair trimming, beard styling & scalp treatment.", image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80" }
       ],
       reviews: [
         { author: "Priya Varma", rating: 5, text: "The hair spa and Keratin treatment transformed my hair! Very polite staff and clean salon." },
-        { author: "Rohan Das", rating: 5, text: "Best haircut in town. Booking appointment on WhatsApp saved me from waiting." }
+        { author: "Rohan Das", rating: 5, text: "Best haircut in town. Booking appointment on WhatsApp saved me from waiting." },
+        { author: "Shweta Nair", rating: 5, text: "Amazing bridal makeup done for my wedding!" }
       ],
       faqs: [
         { q: "Is prior booking required?", a: "Prior slot booking via WhatsApp is recommended to skip weekend waiting times." },
@@ -970,6 +1032,7 @@ function getNichePreset(category: string, name: string) {
     return {
       nicheCategory: "Fitness & Training Center",
       icon: Dumbbell,
+      heroImage: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80",
       heroTitle: "Transform Your Fitness, Build Muscle & Burn Fat",
       heroSub: "Train with certified fitness coaches using state-of-the-art equipment, functional crossfit, and custom diet plans.",
       trustBadges: ["Certified Personal Trainers", "Imported Equipment", "Free 3-Day Trial Pass"],
@@ -982,16 +1045,17 @@ function getNichePreset(category: string, name: string) {
       ctaSecondary: "Call Gym Manager",
       schemaType: "ExerciseGym",
       services: [
-        { title: "Personal Strength & Bodybuilding", desc: "Dedicated 1-on-1 coaching for muscle building and strength." },
-        { title: "Weight Loss & HIIT Fat Burn Bootcamp", desc: "High-intensity calorie burning group cardio & endurance." },
-        { title: "Custom Nutrition & Meal Planning", desc: "Calorie-counted macro diet charts designed for your body type." },
-        { title: "Yoga & Core Flex Classes", desc: "Mindful stretching, posture correction, and core stability." },
-        { title: "Steam Bath & Recovery Zone", desc: "Post-workout muscle recovery, sauna, and relaxation." },
-        { title: "Corporate Fitness Membership", desc: "Discounted group membership packages for companies." }
+        { title: "Personal Strength & Bodybuilding", desc: "Dedicated 1-on-1 coaching for muscle building and strength.", image: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=400&q=80" },
+        { title: "Weight Loss & HIIT Fat Burn Bootcamp", desc: "High-intensity calorie burning group cardio & endurance.", image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80" },
+        { title: "Custom Nutrition & Meal Planning", desc: "Calorie-counted macro diet charts designed for your body type.", image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=400&q=80" },
+        { title: "Yoga & Core Flex Classes", desc: "Mindful stretching, posture correction, and core stability.", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=400&q=80" },
+        { title: "Steam Bath & Recovery Zone", desc: "Post-workout muscle recovery, sauna, and relaxation.", image: "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=400&q=80" },
+        { title: "Corporate Fitness Membership", desc: "Discounted group membership packages for companies.", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80" }
       ],
       reviews: [
         { author: "Manish Joshi", rating: 5, text: "Lost 14 kg in 4 months! Excellent equipment and trainers push you every single day." },
-        { author: "Simran Kaur", rating: 5, text: "Super clean gym with female-friendly environment. Love the group HIIT classes!" }
+        { author: "Simran Kaur", rating: 5, text: "Super clean gym with female-friendly environment. Love the group HIIT classes!" },
+        { author: "Aakash Jain", rating: 5, text: "Best gym infrastructure and friendly trainers." }
       ],
       faqs: [
         { q: "How do I claim my 3-day free trial pass?", a: "Simply click 'Claim Free Pass' to register via WhatsApp. Show your pass at reception!" },
@@ -1006,6 +1070,7 @@ function getNichePreset(category: string, name: string) {
   return {
     nicheCategory: category || "Local Business",
     icon: Building2,
+    heroImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
     heroTitle: "Top-Rated Local Service & Guaranteed Quality",
     heroSub: `Serving ${name} customers in ${category} with transparent pricing, certified experts, and 100% satisfaction guarantee.`,
     trustBadges: ["Google 4.8★ Verified", "Certified Professionals", "Fast Service"],
@@ -1018,16 +1083,17 @@ function getNichePreset(category: string, name: string) {
     ctaSecondary: "Call Direct",
     schemaType: "LocalBusiness",
     services: [
-      { title: "Core Professional Service", desc: "High quality execution tailored to your specific requirements." },
-      { title: "Instant WhatsApp Booking", desc: "Book appointments or request quotes in 30 seconds." },
-      { title: "Transparent Upfront Pricing", desc: "No hidden charges or unexpected surprise bills." },
-      { title: "Certified Specialist Team", desc: "Experienced staff committed to customer satisfaction." },
-      { title: "Fast Emergency Support", desc: "Prompt assistance when you need urgent local service." },
-      { title: "After-Service Warranty", desc: "Guaranteed peace of mind with verified support." }
+      { title: "Core Professional Service", desc: "High quality execution tailored to your specific requirements.", image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=400&q=80" },
+      { title: "Instant WhatsApp Booking", desc: "Book appointments or request quotes in 30 seconds.", image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=400&q=80" },
+      { title: "Transparent Upfront Pricing", desc: "No hidden charges or unexpected surprise bills.", image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=400&q=80" },
+      { title: "Certified Specialist Team", desc: "Experienced staff committed to customer satisfaction.", image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=400&q=80" },
+      { title: "Fast Emergency Support", desc: "Prompt assistance when you need urgent local service.", image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=400&q=80" },
+      { title: "After-Service Warranty", desc: "Guaranteed peace of mind with verified support.", image: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=400&q=80" }
     ],
     reviews: [
       { author: "Siddharth Gupta", rating: 5, text: "Outstanding service! Prompt response on WhatsApp and completed the job cleanly." },
-      { author: "Ritu Verma", rating: 5, text: "Very reliable local business. Fair pricing and friendly staff." }
+      { author: "Ritu Verma", rating: 5, text: "Very reliable local business. Fair pricing and friendly staff." },
+      { author: "Deepak Sharma", rating: 5, text: "Professional staff and great value for money." }
     ],
     faqs: [
       { q: "How quickly can I book a service?", a: "Contact us via WhatsApp or phone for instant slot confirmation in under 2 minutes." },
@@ -1083,12 +1149,12 @@ function buildPrompt(
 
 # HIGH-CONVERTING PAGE SECTIONS (In Exact Order)
 1. Sticky Header Bar: Logo + ${name} + "Open Today" Badge + Click-to-Call Button.
-2. Hero Section: Niche Headline + Subheadline + "${preset.ctaPrimary}" WhatsApp CTA + "${preset.ctaSecondary}" Phone CTA.
-3. Trust Bar: Google Rating pill (${rating}★) + ${reviews}+ Reviews + Years in ${l.city.split(",")[0]}.
-4. Niche Services Grid (6 Cards):
-${preset.services.map((s, i) => `   ${i + 1}. ${s.title}: ${s.desc}`).join("\n")}
+2. Hero Section: Niche Cover Image + Headline + Subheadline + "${preset.ctaPrimary}" WhatsApp CTA + "${preset.ctaSecondary}" Phone CTA.
+3. Trust Bar: Realtime Ticker Badge (${rating}★, ${reviews}+ Reviews, Years in ${l.city.split(",")[0]}).
+4. Niche Services Grid (6 Cards with High-Res Images):
+${preset.services.map((s, i) => `   ${i + 1}. ${s.title}: ${s.desc} [Image: ${s.image}]`).join("\n")}
 5. About & Credentials: Bio placeholder + credentials + why local customers choose ${name}.
-6. Customer Reviews Carousel: ${preset.reviews.map((r) => `"${r.text}" — ${r.author} (${r.rating}★)`).join(" | ")}.
+6. Customer Reviews Carousel (Realtime Infinite Loop): ${preset.reviews.map((r) => `"${r.text}" — ${r.author} (${r.rating}★)`).join(" | ")}.
 7. Local FAQ Accordion: 4 common customer questions (pricing, booking process, timing, payment options).
 8. Location & Directions: Embed Google Map for ${addr} + business hours + directions CTA.
 9. Footer: Full contact info, WhatsApp link, phone link, working hours, and social media links.
