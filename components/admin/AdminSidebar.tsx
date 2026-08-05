@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { LayoutDashboard, Users, Settings, BarChart3, ScrollText, LogOut, Menu, X } from "lucide-react";
+import { LayoutDashboard, Users, Settings, BarChart3, ScrollText, LogOut, Menu, X, Globe } from "lucide-react";
 import { useAdmin } from "./AdminProvider";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "previews", label: "Published Previews", icon: Globe },
     { id: "users", label: "Users", icon: Users },
     { id: "settings", label: "Settings", icon: Settings },
     { id: "analytics", label: "Analytics", icon: BarChart3 },

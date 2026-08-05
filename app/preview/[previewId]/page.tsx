@@ -159,6 +159,7 @@ export default function PreviewPage({ params }: { params: Promise<{ previewId: s
             lead={lead}
             preset={nichePreset}
             tab="all"
+            isMobile={viewMode === "mobile"}
             waNumber={waNumber}
             cleanPhone={cleanPhone}
             onOpenBooking={() => setShowBookingModal(true)}
@@ -238,12 +239,13 @@ export default function PreviewPage({ params }: { params: Promise<{ previewId: s
 }
 
 /* ============================================================================
-   LIVE WEBSITE RENDERER FOR PUBLIC PREVIEW PAGE
+   LIVE WEBSITE RENDERER FOR PUBLIC PREVIEW PAGE (PIXEL PERFECT MOBILE RESPONSIVE)
    ============================================================================ */
 function LiveWebsiteRenderer({
   lead,
   preset,
   tab,
+  isMobile,
   waNumber,
   cleanPhone,
   onOpenBooking
@@ -251,6 +253,7 @@ function LiveWebsiteRenderer({
   lead: RankedLead;
   preset: ReturnType<typeof getNichePreset> | null;
   tab: "all" | "hero" | "services" | "reviews" | "faq" | "contact";
+  isMobile?: boolean;
   waNumber: string;
   cleanPhone: string;
   onOpenBooking: () => void;
@@ -265,38 +268,38 @@ function LiveWebsiteRenderer({
   return (
     <div className={`font-sans text-slate-100 ${theme.bodyBg} relative overflow-hidden`}>
       {/* 1. SITE HEADER BAR */}
-      <header className={`sticky top-0 z-20 ${theme.headerBg} backdrop-blur-md px-6 py-3.5 border-b ${theme.headerBorder} flex items-center justify-between shadow-lg`}>
-        <div className="flex items-center gap-3">
-          <div className={`h-9 w-9 rounded-xl ${theme.badgeBg} flex items-center justify-center ${theme.accentText} font-bold shadow-md border ${theme.cardBorder}`}>
-            <IconComp className="h-5 w-5" />
+      <header className={`sticky top-0 z-20 ${theme.headerBg} backdrop-blur-md px-4 sm:px-6 py-3 border-b ${theme.headerBorder} flex items-center justify-between shadow-lg`}>
+        <div className="flex items-center gap-2.5">
+          <div className={`h-8 w-8 sm:h-9 sm:w-9 rounded-xl ${theme.badgeBg} flex items-center justify-center ${theme.accentText} font-bold shadow-md border ${theme.cardBorder}`}>
+            <IconComp className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
           <div>
-            <div className="font-bold text-base tracking-tight text-white leading-none font-serif flex items-center gap-1.5">
+            <div className="font-bold text-xs sm:text-base tracking-tight text-white leading-none font-serif flex items-center gap-1.5">
               <span>{lead.name}</span>
             </div>
-            <div className={`text-[10px] ${theme.accentText} font-bold uppercase tracking-wider mt-1`}>{preset.nicheCategory} • {lead.city}</div>
+            <div className={`text-[9px] sm:text-[10px] ${theme.accentText} font-bold uppercase tracking-wider mt-1`}>{preset.nicheCategory} • {lead.city}</div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 text-amber-400 px-3 py-1 text-xs font-bold border border-amber-500/30">
             <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" /> Open Today
           </span>
           <a
             href={`tel:${cleanPhone}`}
-            className={`inline-flex items-center gap-1.5 rounded-xl ${theme.ctaBtn} px-4 py-2 text-xs font-bold transition-all shadow-md`}
+            className={`inline-flex items-center gap-1.5 rounded-xl ${theme.ctaBtn} px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-bold transition-all shadow-md`}
           >
-            <Phone className="h-3.5 w-3.5 text-white" /> Call Direct
+            <Phone className="h-3 w-3 text-white" /> Call Direct
           </a>
         </div>
       </header>
 
       {/* CONTINUOUS REALTIME LOOP TICKER BAR */}
-      <div className={`${theme.tickerBg} ${theme.tickerText} py-2 px-4 overflow-hidden relative border-b ${theme.headerBorder}`}>
+      <div className={`${theme.tickerBg} ${theme.tickerText} py-1.5 px-3 overflow-hidden relative border-b ${theme.headerBorder}`}>
         <motion.div
           animate={{ x: [0, -600] }}
           transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-          className="flex items-center gap-8 whitespace-nowrap text-xs font-mono uppercase tracking-widest"
+          className="flex items-center gap-6 whitespace-nowrap text-[10px] sm:text-xs font-mono uppercase tracking-widest"
         >
           <span>★ {lead.rating ?? 4.8} Google Rated ({lead.reviewsCount ?? 334}+ Reviews)</span>
           <span>• Verified {preset.nicheCategory} in {lead.city}</span>
@@ -307,11 +310,11 @@ function LiveWebsiteRenderer({
         </motion.div>
       </div>
 
-      <div className="p-5 sm:p-8 space-y-10 max-w-7xl mx-auto">
+      <div className={`p-4 sm:p-8 space-y-6 sm:space-y-10 ${isMobile ? "max-w-full" : "max-w-7xl mx-auto"}`}>
         {/* 2. HERO BANNER */}
-        <section className="space-y-6">
-          <div className={`rounded-3xl border ${theme.cardBorder} overflow-hidden shadow-2xl relative text-left group`}>
-            <div className="relative h-72 sm:h-96 w-full overflow-hidden">
+        <section className="space-y-4 sm:space-y-6">
+          <div className={`rounded-2xl sm:rounded-3xl border ${theme.cardBorder} overflow-hidden shadow-2xl relative text-left group`}>
+            <div className={`relative ${isMobile ? "h-64" : "h-64 sm:h-96"} w-full overflow-hidden`}>
               <img
                 src={preset.heroImage}
                 alt={lead.name}
@@ -320,76 +323,76 @@ function LiveWebsiteRenderer({
               <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/80 to-black/40" />
             </div>
 
-            <div className="absolute inset-0 p-6 sm:p-10 flex flex-col justify-end text-white z-10">
-              <div className="inline-flex items-center gap-2 rounded-full bg-black/60 backdrop-blur-md px-3.5 py-1.5 text-xs font-bold text-amber-300 shadow-sm border border-amber-500/30 mb-3 w-fit">
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+            <div className="absolute inset-0 p-4 sm:p-10 flex flex-col justify-end text-white z-10">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-black/60 backdrop-blur-md px-3 py-1 text-[11px] sm:text-xs font-bold text-amber-300 shadow-sm border border-amber-500/30 mb-2 w-fit">
+                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                 <span>{lead.rating ?? 4.8}★ Google Rated</span>
                 <span className="text-slate-300">({lead.reviewsCount ?? 334}+ reviews)</span>
               </div>
 
-              <div className="text-xs sm:text-sm text-amber-400 font-bold uppercase tracking-widest mb-1.5 font-serif">
+              <div className="text-[10px] sm:text-sm text-amber-400 font-bold uppercase tracking-widest mb-1 font-serif">
                 Welcome To <span className="text-white font-extrabold">{lead.name}</span>
               </div>
 
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight drop-shadow-md font-serif max-w-3xl">
+              <h2 className={`font-extrabold text-white tracking-tight leading-tight drop-shadow-md font-serif ${isMobile ? "text-lg" : "text-xl sm:text-4xl"} max-w-3xl`}>
                 {preset.heroTitle}
               </h2>
-              <p className="text-xs sm:text-base text-slate-300 leading-relaxed mt-3 max-w-2xl font-sans drop-shadow-xs">
+              <p className={`text-slate-300 leading-relaxed mt-2 max-w-2xl font-sans drop-shadow-xs ${isMobile ? "text-[11px]" : "text-xs sm:text-base"}`}>
                 {preset.heroSub}
               </p>
 
-              <div className="mt-6 flex flex-wrap gap-3 items-center">
+              <div className="mt-4 flex flex-wrap gap-2.5 items-center">
                 <button
                   onClick={onOpenBooking}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-xs sm:text-sm px-5 py-3 shadow-xl shadow-amber-500/20 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-xs sm:text-sm px-4 sm:px-5 py-2.5 sm:py-3 shadow-xl shadow-amber-500/20 transition-all cursor-pointer"
                 >
-                  <Calendar className="h-4 w-4" />
+                  <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   {preset.ctaPrimary}
                 </button>
                 <a
                   href={`tel:${cleanPhone}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-slate-900/90 backdrop-blur-md hover:bg-slate-800 text-white font-bold text-xs sm:text-sm px-5 py-3 border border-slate-700 shadow-md transition-all"
+                  className="inline-flex items-center gap-2 rounded-xl bg-slate-900/90 backdrop-blur-md hover:bg-slate-800 text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 sm:py-3 border border-slate-700 shadow-md transition-all"
                 >
-                  <Phone className="h-4 w-4 text-amber-400" />
+                  <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-400" />
                   {preset.ctaSecondary}
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 sm:gap-4 text-center">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
             {preset.trustBadges.map((badge, idx) => (
-              <div key={idx} className={`bg-[#222222] border ${theme.cardBorder} rounded-2xl p-4 shadow-md flex flex-col items-center justify-center transition-all hover:border-amber-500/60`}>
-                <CheckCircle2 className={`h-5 w-5 ${theme.accentText} mb-1.5`} />
-                <span className="text-xs sm:text-sm font-bold text-slate-200 leading-tight">{badge}</span>
+              <div key={idx} className={`bg-[#222222] border ${theme.cardBorder} rounded-xl sm:rounded-2xl p-2.5 sm:p-4 shadow-md flex flex-col items-center justify-center transition-all hover:border-amber-500/60`}>
+                <CheckCircle2 className={`h-4 w-4 sm:h-5 sm:w-5 ${theme.accentText} mb-1`} />
+                <span className="text-[10px] sm:text-sm font-bold text-slate-200 leading-tight">{badge}</span>
               </div>
             ))}
           </div>
         </section>
 
-        {/* 3. SPECIALTIES */}
-        <section className="space-y-6 pt-2">
-          <div className={`flex items-center justify-between border-b ${theme.headerBorder} pb-3`}>
-            <h3 className="font-bold text-base sm:text-xl text-amber-400 uppercase tracking-wider flex items-center gap-2 font-serif">
-              <Sparkle className={`h-5 w-5 ${theme.accentText}`} /> Our Specialties & Menu
+        {/* 3. SPECIALTIES (PIXEL PERFECT 1-COLUMN MOBILE LAYOUT) */}
+        <section className="space-y-4 sm:space-y-6 pt-2">
+          <div className={`flex items-center justify-between border-b ${theme.headerBorder} pb-2.5`}>
+            <h3 className="font-bold text-sm sm:text-xl text-amber-400 uppercase tracking-wider flex items-center gap-2 font-serif">
+              <Sparkle className={`h-4 w-4 sm:h-5 sm:w-5 ${theme.accentText}`} /> Our Specialties & Menu
             </h3>
-            <span className={`text-xs font-bold ${theme.badgeBg} px-3 py-1 rounded-full border ${theme.cardBorder}`}>{preset.services.length} Signature Offerings</span>
+            <span className={`text-[10px] sm:text-xs font-bold ${theme.badgeBg} px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border ${theme.cardBorder}`}>{preset.services.length} Signature Offerings</span>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className={`grid gap-4 ${isMobile ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
             {preset.services.map((srv, idx) => (
               <div key={idx} className={`rounded-2xl border ${theme.cardBorder} bg-[#222222] transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden group flex flex-col`}>
-                <div className="h-44 w-full overflow-hidden relative">
+                <div className="h-40 sm:h-44 w-full overflow-hidden relative">
                   <img
                     src={srv.image}
                     alt={srv.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-transparent" />
-                  <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-lg ${theme.badgeBg} ${theme.accentText} font-bold flex items-center justify-center text-xs shadow-md border ${theme.cardBorder}`}>
+                  <div className={`absolute top-2.5 left-2.5 px-2.5 py-1 rounded-lg ${theme.badgeBg} ${theme.accentText} font-bold flex items-center justify-center text-xs shadow-md border ${theme.cardBorder}`}>
                     {(srv as { badge?: string }).badge || `Option #${idx + 1}`}
                   </div>
-                  <div className="absolute bottom-3 left-3 right-3 text-white font-bold text-sm truncate drop-shadow-md font-serif">
+                  <div className="absolute bottom-2.5 left-3 right-3 text-white font-bold text-sm leading-tight drop-shadow-md font-serif">
                     {srv.title}
                   </div>
                 </div>
@@ -408,15 +411,15 @@ function LiveWebsiteRenderer({
         </section>
 
         {/* 4. ABOUT */}
-        <section className={`bg-[#222222] border ${theme.cardBorder} rounded-3xl p-6 sm:p-8 space-y-4 relative overflow-hidden shadow-xl`}>
+        <section className={`bg-[#222222] border ${theme.cardBorder} rounded-2xl sm:rounded-3xl p-5 sm:p-8 space-y-3 relative overflow-hidden shadow-xl`}>
           <div className="flex items-center gap-2">
-            <Award className="h-6 w-6 text-amber-400" />
-            <h3 className="font-bold text-base sm:text-lg text-amber-400 uppercase tracking-wider font-serif">About {lead.name}</h3>
+            <Award className="h-5 w-5 sm:h-6 sm:w-6 text-amber-400" />
+            <h3 className="font-bold text-sm sm:text-lg text-amber-400 uppercase tracking-wider font-serif">About {lead.name}</h3>
           </div>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans max-w-4xl">
             Welcome to <span className="font-bold text-white">{lead.name}</span> — {lead.city}'s premier {preset.nicheCategory.toLowerCase()} destination. Rated <span className="font-bold text-amber-400">{lead.rating ?? 4.8}/5 stars</span> from over <span className="font-bold text-white">{lead.reviewsCount ?? 334}+ verified reviews</span>. Located at {lead.address}, we deliver uncompromised quality, authentic flavors, and exceptional hospitality.
           </p>
-          <div className="flex flex-wrap gap-4 text-xs sm:text-sm font-bold pt-2">
+          <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm font-bold pt-1">
             <span className="flex items-center gap-1.5 text-emerald-400"><CheckCircle2 className="h-4 w-4" /> 100% Quality & Hygiene Guaranteed</span>
             <span className="flex items-center gap-1.5 text-amber-300"><ShieldCheck className="h-4 w-4" /> Certified Local Favorite</span>
           </div>
@@ -424,36 +427,36 @@ function LiveWebsiteRenderer({
 
         {/* 5. REVIEWS */}
         <section className="space-y-4 pt-2 overflow-hidden">
-          <div className={`flex items-center justify-between border-b ${theme.headerBorder} pb-3`}>
-            <h3 className="font-bold text-base sm:text-xl text-amber-400 uppercase tracking-wider flex items-center gap-2 font-serif">
-              <Star className="h-5 w-5 fill-amber-400 text-amber-400" /> What Guests Say ({lead.reviewsCount ?? 334}+ Reviews)
+          <div className={`flex items-center justify-between border-b ${theme.headerBorder} pb-2.5`}>
+            <h3 className="font-bold text-sm sm:text-xl text-amber-400 uppercase tracking-wider flex items-center gap-2 font-serif">
+              <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-amber-400 text-amber-400" /> What Guests Say ({lead.reviewsCount ?? 334}+ Reviews)
             </h3>
-            <span className="text-xs text-amber-300 font-bold bg-amber-500/20 px-3 py-1 rounded-full border border-amber-500/30">{lead.rating ?? 4.8}★ Rating</span>
+            <span className="text-[10px] sm:text-xs text-amber-300 font-bold bg-amber-500/20 px-2.5 py-0.5 rounded-full border border-amber-500/30">{lead.rating ?? 4.8}★ Rating</span>
           </div>
 
-          <div className="relative overflow-hidden py-2">
+          <div className="relative overflow-hidden py-1">
             <motion.div
               animate={{ x: [0, -900] }}
               transition={{ repeat: Infinity, duration: 24, ease: "linear" }}
-              className="flex items-center gap-5 whitespace-normal"
+              className="flex items-center gap-4 sm:gap-5 whitespace-normal"
             >
               {[...preset.reviews, ...preset.reviews, ...preset.reviews].map((rev, idx) => (
-                <div key={idx} className={`w-[320px] shrink-0 p-5 rounded-2xl border ${theme.cardBorder} bg-[#222222] shadow-md hover:border-amber-500/60 transition-all`}>
-                  <div className="flex items-center justify-between mb-3">
+                <div key={idx} className={`w-[260px] sm:w-[320px] shrink-0 p-4 sm:p-5 rounded-2xl border ${theme.cardBorder} bg-[#222222] shadow-md hover:border-amber-500/60 transition-all`}>
+                  <div className="flex items-center justify-between mb-2.5">
                     <div className="flex items-center gap-2.5">
-                      <div className={`h-8 w-8 rounded-full ${theme.badgeBg} ${theme.accentText} font-bold text-xs flex items-center justify-center uppercase border border-amber-500/30`}>
+                      <div className={`h-7 w-7 sm:h-8 sm:w-8 rounded-full ${theme.badgeBg} ${theme.accentText} font-bold text-xs flex items-center justify-center uppercase border border-amber-500/30`}>
                         {rev.author[0]}
                       </div>
                       <div>
                         <div className="font-bold text-xs sm:text-sm text-white font-serif">{rev.author}</div>
-                        <div className="text-[10px] text-amber-400 font-sans">{rev.source || "Google Review"}</div>
+                        <div className="text-[9px] sm:text-[10px] text-amber-400 font-sans">{rev.source || "Google Review"}</div>
                       </div>
                     </div>
                     <div className="flex gap-0.5 text-amber-400 text-xs">
                       {"★".repeat(rev.rating)}
                     </div>
                   </div>
-                  <p className="text-xs text-slate-300 italic font-sans leading-relaxed">"{rev.text}"</p>
+                  <p className="text-[11.5px] sm:text-xs text-slate-300 italic font-sans leading-relaxed">"{rev.text}"</p>
                 </div>
               ))}
             </motion.div>
@@ -462,26 +465,26 @@ function LiveWebsiteRenderer({
 
         {/* 6. FAQS */}
         <section className="space-y-4 pt-2">
-          <div className={`border-b ${theme.headerBorder} pb-3`}>
-            <h3 className="font-bold text-base sm:text-xl text-amber-400 uppercase tracking-wider flex items-center gap-2 font-serif">
-              <Layers className={`h-5 w-5 ${theme.accentText}`} /> Frequently Asked Questions
+          <div className={`border-b ${theme.headerBorder} pb-2.5`}>
+            <h3 className="font-bold text-sm sm:text-xl text-amber-400 uppercase tracking-wider flex items-center gap-2 font-serif">
+              <Layers className={`h-4 w-4 sm:h-5 sm:w-5 ${theme.accentText}`} /> Frequently Asked Questions
             </h3>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {preset.faqs.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
-                <div key={idx} className={`border ${theme.cardBorder} rounded-2xl bg-[#222222] overflow-hidden shadow-md`}>
+                <div key={idx} className={`border ${theme.cardBorder} rounded-xl sm:rounded-2xl bg-[#222222] overflow-hidden shadow-md`}>
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="w-full p-4 text-left flex items-center justify-between font-bold text-xs sm:text-sm text-slate-200 hover:bg-slate-800 transition-colors"
+                    className="w-full p-3.5 sm:p-4 text-left flex items-center justify-between font-bold text-xs sm:text-sm text-slate-200 hover:bg-slate-800 transition-colors"
                   >
                     <span>{faq.q}</span>
-                    {isOpen ? <ChevronUp className={`h-5 w-5 ${theme.accentText} shrink-0`} /> : <ChevronDown className="h-5 w-5 text-slate-400 shrink-0" />}
+                    {isOpen ? <ChevronUp className={`h-4 w-4 sm:h-5 sm:w-5 ${theme.accentText} shrink-0`} /> : <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5 text-slate-400 shrink-0" />}
                   </button>
                   {isOpen && (
-                    <div className={`px-4 pb-4 pt-0 text-xs sm:text-sm text-slate-300 leading-relaxed font-sans border-t ${theme.headerBorder} bg-slate-900/50`}>
+                    <div className={`px-3.5 sm:px-4 pb-3.5 sm:pb-4 pt-0 text-[11.5px] sm:text-sm text-slate-300 leading-relaxed font-sans border-t ${theme.headerBorder} bg-slate-900/50`}>
                       {faq.a}
                     </div>
                   )}
@@ -493,14 +496,14 @@ function LiveWebsiteRenderer({
 
         {/* 7. REALTIME MAP */}
         <section className="space-y-4 pt-2">
-          <h3 className={`font-bold text-base sm:text-xl text-amber-400 uppercase tracking-wider flex items-center gap-2 border-b ${theme.headerBorder} pb-3 font-serif`}>
-            <MapPin className={`h-5 w-5 ${theme.accentText}`} /> Realtime Location & Google Maps
+          <h3 className={`font-bold text-sm sm:text-xl text-amber-400 uppercase tracking-wider flex items-center gap-2 border-b ${theme.headerBorder} pb-2.5 font-serif`}>
+            <MapPin className={`h-4 w-4 sm:h-5 sm:w-5 ${theme.accentText}`} /> Realtime Location & Google Maps
           </h3>
 
-          <div className={`p-5 sm:p-6 rounded-3xl border ${theme.cardBorder} bg-[#222222] shadow-md space-y-4`}>
-            <div className="grid sm:grid-cols-3 gap-4 text-xs sm:text-sm text-slate-200">
+          <div className={`p-4 sm:p-6 rounded-2xl sm:rounded-3xl border ${theme.cardBorder} bg-[#222222] shadow-md space-y-3.5`}>
+            <div className="grid sm:grid-cols-3 gap-3 text-xs sm:text-sm text-slate-200">
               <div className="flex items-start gap-2.5">
-                <MapPin className={`h-5 w-5 ${theme.accentText} shrink-0 mt-0.5`} />
+                <MapPin className={`h-4 w-4 sm:h-5 sm:w-5 ${theme.accentText} shrink-0 mt-0.5`} />
                 <div>
                   <div className="font-bold text-white font-serif">{lead.name}</div>
                   <div className="text-slate-300 mt-0.5">{lead.address}</div>
@@ -508,17 +511,17 @@ function LiveWebsiteRenderer({
               </div>
 
               <div className="flex items-center gap-2.5">
-                <Phone className={`h-5 w-5 ${theme.accentText} shrink-0`} />
-                <a href={`tel:${cleanPhone}`} className={`font-bold ${theme.accentText} hover:underline text-sm`}>{lead.phone || "+91 95577 30531"}</a>
+                <Phone className={`h-4 w-4 sm:h-5 sm:w-5 ${theme.accentText} shrink-0`} />
+                <a href={`tel:${cleanPhone}`} className={`font-bold ${theme.accentText} hover:underline text-xs sm:text-sm`}>{lead.phone || "+91 95577 30531"}</a>
               </div>
 
               <div className="flex items-center gap-2.5">
-                <Clock className={`h-5 w-5 ${theme.accentText} shrink-0`} />
+                <Clock className={`h-4 w-4 sm:h-5 sm:w-5 ${theme.accentText} shrink-0`} />
                 <span className="text-slate-300">Monday – Sunday: 07:00 AM – 12:00 AM</span>
               </div>
             </div>
 
-            <div className="h-64 sm:h-80 w-full rounded-2xl overflow-hidden border border-slate-700 shadow-inner relative bg-slate-900">
+            <div className="h-52 sm:h-80 w-full rounded-2xl overflow-hidden border border-slate-700 shadow-inner relative bg-slate-900">
               <iframe
                 title={`${lead.name} Google Map`}
                 width="100%"
@@ -536,36 +539,36 @@ function LiveWebsiteRenderer({
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.name + " " + lead.address)}`}
                 target="_blank"
                 rel="noreferrer"
-                className={`inline-flex items-center gap-2 text-xs sm:text-sm font-bold ${theme.accentText} hover:underline`}
+                className={`inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold ${theme.accentText} hover:underline`}
               >
-                <Navigation className="h-4 w-4" /> Get Driving Directions on Google Maps →
+                <Navigation className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Get Driving Directions on Google Maps →
               </a>
             </div>
           </div>
         </section>
 
-        <footer className="pt-8 pb-6 border-t border-slate-800 text-center space-y-2">
-          <div className="font-bold text-sm text-amber-400 font-serif">{lead.name}</div>
-          <div className="text-xs text-slate-400 font-sans">© {new Date().getFullYear()} {lead.name}. All rights reserved. • Heritage Dining & Premium Local Site</div>
+        <footer className="pt-6 sm:pt-8 pb-4 sm:pb-6 border-t border-slate-800 text-center space-y-2">
+          <div className="font-bold text-xs sm:text-sm text-amber-400 font-serif">{lead.name}</div>
+          <div className="text-[11px] sm:text-xs text-slate-400 font-sans">© {new Date().getFullYear()} {lead.name}. All rights reserved. • Heritage Dining & Premium Local Site</div>
         </footer>
       </div>
 
       {/* MOBILE BOTTOM CTA BAR */}
-      <div className="sticky bottom-0 inset-x-0 bg-stone-950 border-t border-amber-900/60 p-3 flex items-center justify-around z-20 shadow-2xl">
-        <a href={`tel:${cleanPhone}`} className="flex flex-col items-center gap-1 text-slate-300 hover:text-amber-400 transition-colors">
-          <Phone className="h-4.5 w-4.5 text-amber-400" />
+      <div className="sticky bottom-0 inset-x-0 bg-stone-950 border-t border-amber-900/60 p-2.5 sm:p-3 flex items-center justify-around z-20 shadow-2xl">
+        <a href={`tel:${cleanPhone}`} className="flex flex-col items-center gap-0.5 text-slate-300 hover:text-amber-400 transition-colors">
+          <Phone className="h-4 w-4 text-amber-400" />
           <span className="text-[10px] font-bold">Call</span>
         </a>
-        <button onClick={onOpenBooking} className="flex flex-col items-center gap-1 text-slate-300 hover:text-amber-400 transition-colors">
-          <MessageSquare className="h-4.5 w-4.5 text-emerald-400" />
+        <button onClick={onOpenBooking} className="flex flex-col items-center gap-0.5 text-slate-300 hover:text-amber-400 transition-colors">
+          <MessageSquare className="h-4 w-4 text-emerald-400" />
           <span className="text-[10px] font-bold">WhatsApp</span>
         </button>
-        <button onClick={onOpenBooking} className="flex flex-col items-center gap-1 text-slate-300 hover:text-amber-400 transition-colors">
-          <Calendar className="h-4.5 w-4.5 text-amber-400" />
+        <button onClick={onOpenBooking} className="flex flex-col items-center gap-0.5 text-slate-300 hover:text-amber-400 transition-colors">
+          <Calendar className="h-4 w-4 text-amber-400" />
           <span className="text-[10px] font-bold">Reserve</span>
         </button>
-        <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.name + " " + lead.address)}`} target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1 text-slate-300 hover:text-amber-400 transition-colors">
-          <Navigation className="h-4.5 w-4.5 text-sky-400" />
+        <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.name + " " + lead.address)}`} target="_blank" rel="noreferrer" className="flex flex-col items-center gap-0.5 text-slate-300 hover:text-amber-400 transition-colors">
+          <Navigation className="h-4 w-4 text-sky-400" />
           <span className="text-[10px] font-bold">Directions</span>
         </a>
       </div>

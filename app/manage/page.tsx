@@ -9,6 +9,7 @@ import { AdminUsers } from "@/components/admin/AdminUsers";
 import { AdminSettings } from "@/components/admin/AdminSettings";
 import { AdminAnalytics } from "@/components/admin/AdminAnalytics";
 import { AdminLogs } from "@/components/admin/AdminLogs";
+import { AdminPreviews } from "@/components/admin/AdminPreviews";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -37,6 +38,7 @@ function AdminContent() {
             transition={{ duration: 0.15 }}
           >
             {activeTab === "dashboard" && <AdminDashboard />}
+            {activeTab === "previews" && <AdminPreviews />}
             {activeTab === "users" && <AdminUsers />}
             {activeTab === "settings" && <AdminSettings />}
             {activeTab === "analytics" && <AdminAnalytics />}

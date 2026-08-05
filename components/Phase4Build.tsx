@@ -425,6 +425,7 @@ export function Phase4Build({
                 lead={selected}
                 preset={nichePreset}
                 tab={previewTab}
+                isMobile={viewMode === "mobile"}
                 waNumber={waNumber}
                 cleanPhone={cleanPhone}
                 onOpenBooking={() => setShowBookingModal(true)}
@@ -642,6 +643,7 @@ function LiveWebsiteRenderer({
   lead,
   preset,
   tab,
+  isMobile,
   waNumber,
   cleanPhone,
   onOpenBooking
@@ -649,6 +651,7 @@ function LiveWebsiteRenderer({
   lead: RankedLead;
   preset: ReturnType<typeof getNichePreset> | null;
   tab: "all" | "hero" | "services" | "reviews" | "faq" | "contact";
+  isMobile?: boolean;
   waNumber: string;
   cleanPhone: string;
   onOpenBooking: () => void;
@@ -705,7 +708,7 @@ function LiveWebsiteRenderer({
         </motion.div>
       </div>
 
-      <div className="p-5 space-y-8">
+      <div className="p-4 sm:p-5 space-y-6 sm:space-y-8">
         {/* 2. HERO BANNER & CTAs SECTION (SHRIPATI SLIDESHOW HERO COVER) */}
         {(showAll || tab === "hero") && (
           <section className="space-y-4">
@@ -733,7 +736,7 @@ function LiveWebsiteRenderer({
                   Welcome To <span className="text-white font-extrabold">{lead.name}</span>
                 </div>
 
-                <h2 className="text-xl sm:text-2.5xl font-extrabold text-white tracking-tight leading-tight drop-shadow-md font-serif">
+                <h2 className={`font-extrabold text-white tracking-tight leading-tight drop-shadow-md font-serif ${isMobile ? "text-lg" : "text-xl sm:text-2.5xl"}`}>
                   {preset.heroTitle}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 max-w-xl font-sans drop-shadow-xs">
@@ -761,11 +764,11 @@ function LiveWebsiteRenderer({
             </div>
 
             {/* Trust Badges Strip */}
-            <div className="grid grid-cols-3 gap-2.5 text-center">
+            <div className="grid grid-cols-3 gap-2 text-center">
               {preset.trustBadges.map((badge, idx) => (
-                <div key={idx} className={`bg-[#222222] border ${theme.cardBorder} rounded-xl p-3 shadow-md flex flex-col items-center justify-center transition-all hover:border-amber-500/60`}>
+                <div key={idx} className={`bg-[#222222] border ${theme.cardBorder} rounded-xl p-2.5 shadow-md flex flex-col items-center justify-center transition-all hover:border-amber-500/60`}>
                   <CheckCircle2 className={`h-4 w-4 ${theme.accentText} mb-1`} />
-                  <span className="text-[11px] font-bold text-slate-200 leading-tight">{badge}</span>
+                  <span className="text-[10px] sm:text-[11px] font-bold text-slate-200 leading-tight">{badge}</span>
                 </div>
               ))}
             </div>
@@ -782,20 +785,20 @@ function LiveWebsiteRenderer({
               <span className={`text-[10px] font-bold ${theme.badgeBg} px-2.5 py-0.5 rounded-full border ${theme.cardBorder}`}>{preset.services.length} Signature Offerings</span>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-3.5">
+            <div className={`grid gap-3.5 ${isMobile ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
               {preset.services.map((srv, idx) => (
                 <div key={idx} className={`rounded-2xl border ${theme.cardBorder} bg-[#222222] transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden group`}>
-                  <div className="h-32 w-full overflow-hidden relative">
+                  <div className="h-36 w-full overflow-hidden relative">
                     <img
                       src={srv.image}
                       alt={srv.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-transparent" />
                     <div className={`absolute top-2.5 left-2.5 px-2 py-0.5 rounded-lg ${theme.badgeBg} ${theme.accentText} font-bold flex items-center justify-center text-[10px] shadow-md border ${theme.cardBorder}`}>
                       {(srv as { badge?: string }).badge || `Option #${idx + 1}`}
                     </div>
-                    <div className="absolute bottom-2 left-2.5 right-2.5 text-white font-bold text-xs truncate drop-shadow-md font-serif">
+                    <div className="absolute bottom-2 left-2.5 right-2.5 text-white font-bold text-xs leading-tight drop-shadow-md font-serif">
                       {srv.title}
                     </div>
                   </div>
