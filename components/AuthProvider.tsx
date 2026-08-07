@@ -2,7 +2,15 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { User } from "firebase/auth";
-import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  signInWithPopup,
+  signOut,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  sendPasswordResetEmail
+} from "firebase/auth";
 import { getFirebaseAuth, getGoogleProvider, hasFirebaseClientConfig } from "@/lib/firebase-client";
 import type { AccountQuota } from "@/lib/types";
 
@@ -13,6 +21,9 @@ type AuthContextValue = {
   firebaseConfigured: boolean;
   authError: string | null;
   signInWithGoogle: () => Promise<void>;
+  signUpWithEmail: (email: string, password: string, displayName?: string) => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<void>;
+  sendPasswordReset: (email: string) => Promise<void>;
   signOutUser: () => Promise<void>;
   getIdToken: () => Promise<string>;
   refreshAccount: () => Promise<void>;
@@ -91,6 +102,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await signInWithPopup(auth, getGoogleProvider());
   }, []);
 
+  const signUpWithEmail = useCallback(async (email: string, password: string, displayName?: string) => {
+    const auth = getFirebaseAuth();
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    if (displayName && cred.user) {
+      await updateProfile(cred.user, { displayName });
+    }
+  }, []);
+
+  const signInWithEmail = useCallback(async (email: string, password: string) => {
+    const auth = getFirebaseAuth();
+    await signInWithEmailAndPassword(auth, email, password);
+  }, []);
+
+  const sendPasswordReset = useCallback(async (email: string) => {
+    const auth = getFirebaseAuth();
+    await sendPasswordResetEmail(auth, email);
+  }, []);
+
   const signOutUser = useCallback(async () => {
     if (!hasFirebaseClientConfig) return;
     await signOut(getFirebaseAuth());
@@ -98,7 +127,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const getIdToken = useCallback(async () => {
-    if (!user) throw new Error("Sign in with Google before scraping leads.");
+    if (!user) throw new Error("Sign in before scraping leads.");
     return user.getIdToken();
   }, [user]);
 
@@ -110,12 +139,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       firebaseConfigured: hasFirebaseClientConfig,
       authError,
       signInWithGoogle,
+      signUpWithEmail,
+      signInWithEmail,
+      sendPasswordReset,
       signOutUser,
       getIdToken,
       refreshAccount,
       updateQuota: setQuota,
     }),
-    [authError, getIdToken, loading, quota, refreshAccount, signInWithGoogle, signOutUser, user],
+    [authError, getIdToken, loading, quota, refreshAccount, signInWithGoogle, signUpWithEmail, signInWithEmail, sendPasswordReset, signOutUser, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
