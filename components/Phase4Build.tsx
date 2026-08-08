@@ -665,17 +665,28 @@ export function Phase4Build({
               {/* Modal Content */}
               <div data-lenis-prevent className="flex-1 overflow-y-auto p-6 bg-slate-950 overscroll-contain">
                 <div className="max-w-4xl mx-auto bg-[#1a1a1a] rounded-2xl shadow-2xl border border-amber-500/30 overflow-hidden">
-                  <LiveWebsiteRenderer
-                    lead={selected}
-                    preset={nichePreset}
-                    tab="all"
-                    waNumber={waNumber}
-                    cleanPhone={cleanPhone}
-                    onOpenBooking={() => {
-                      setFullModal(false);
-                      setShowBookingModal(true);
-                    }}
-                  />
+                  {isRestaurant && restaurantStyle === "crav" && nichePreset ? (
+                    <CravArtisanWebsiteRenderer
+                      lead={selected}
+                      preset={nichePreset}
+                      isMobile={false}
+                      waNumber={waNumber}
+                      cleanPhone={cleanPhone}
+                      onOpenBooking={() => setShowBookingModal(true)}
+                    />
+                  ) : (
+                    <LiveWebsiteRenderer
+                      lead={selected}
+                      preset={nichePreset}
+                      tab="all"
+                      waNumber={waNumber}
+                      cleanPhone={cleanPhone}
+                      onOpenBooking={() => {
+                        setFullModal(false);
+                        setShowBookingModal(true);
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -1727,6 +1738,65 @@ function CravArtisanWebsiteRenderer({
       </section>
 
       {/* JELLY WAVE DIVIDER 4 */}
+      <div className="w-full overflow-hidden leading-none z-20 relative">
+        <svg className="w-full h-16 sm:h-28" viewBox="0 0 1536 300" fill="none" preserveAspectRatio="none">
+          <path d="M1536,0 H-1 V135 S184.32,65 460.8,155 S860.16,105 1121.28,137 S1413.12,105 1536,105 V0" fill="#4C0016" />
+        </svg>
+      </div>
+
+      {/* 5.5. INDIAN CUSTOMER REVIEWS MARQUEE LOOP */}
+      <section className="bg-[#4C0016] text-[#F5E3CD] py-12 overflow-hidden relative border-y-4 border-[#FFC614]">
+        <div className="text-center mb-6">
+          <div className="inline-block bg-[#EF1624] text-white font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-3 shadow-lg">
+            WHAT FOODIES SAY ★
+          </div>
+          <h3 className="font-modak text-4xl sm:text-7xl text-[#FFC614] text-stroke-dark uppercase mt-2">
+            GUEST REVIEWS & LOVE
+          </h3>
+        </div>
+
+        {/* Infinite Horizontal Marquee Track */}
+        <div className="flex overflow-hidden relative py-4">
+          <motion.div
+            animate={{ x: [0, -1400] }}
+            transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+            className="flex gap-6 whitespace-normal shrink-0"
+          >
+            {[
+              { author: "Rajesh Sharma", location: "Delhi • Local Guide", text: "The double smashed burger is out of this world! Melted cheddar and crispy caramelized edges in every bite. 5★ rating!", rating: "★★★★★" },
+              { author: "Ananya Verma", location: "Mumbai • Food Blogger", text: "Best smashed kitchen experience! Super fast WhatsApp booking, clean standards, and unbelievable taste.", rating: "★★★★★" },
+              { author: "Vikramaditya Singh", location: "Jaipur • Gourmet Diner", text: "Authentic artisanal flavor! We ordered for a family party and everyone was blown away. 100% recommended!", rating: "★★★★★" },
+              { author: "Priya Patel", location: "Ahmedabad • Verified Guest", text: "So juicy, crispy & fresh! Love the peri-peri loaded fries and craft Belgian chocolate shake!", rating: "★★★★★" },
+              { author: "Kabir Mehta", location: "Bengaluru • Tech Lead", text: "World class smashed patties! Easily beats top global burger spots. Will visit again every weekend!", rating: "★★★★★" },
+              { author: "Sneha Kulkarni", location: "Pune • Foodie", text: "Super fast table reservation and top-notch organic ingredients. 5 Stars without doubt!", rating: "★★★★★" },
+              { author: "Rajesh Sharma", location: "Delhi • Local Guide", text: "The double smashed burger is out of this world! Melted cheddar and crispy caramelized edges in every bite. 5★ rating!", rating: "★★★★★" },
+              { author: "Ananya Verma", location: "Mumbai • Food Blogger", text: "Best smashed kitchen experience! Super fast WhatsApp booking, clean standards, and unbelievable taste.", rating: "★★★★★" },
+              { author: "Vikramaditya Singh", location: "Jaipur • Gourmet Diner", text: "Authentic artisanal flavor! We ordered for a family party and everyone was blown away. 100% recommended!", rating: "★★★★★" },
+              { author: "Priya Patel", location: "Ahmedabad • Verified Guest", text: "So juicy, crispy & fresh! Love the peri-peri loaded fries and craft Belgian chocolate shake!", rating: "★★★★★" },
+              { author: "Kabir Mehta", location: "Bengaluru • Tech Lead", text: "World class smashed patties! Easily beats top global burger spots. Will visit again every weekend!", rating: "★★★★★" },
+              { author: "Sneha Kulkarni", location: "Pune • Foodie", text: "Super fast table reservation and top-notch organic ingredients. 5 Stars without doubt!", rating: "★★★★★" }
+            ].map((rev, idx) => (
+              <div
+                key={idx}
+                className="bg-[#F5E3CD] text-[#4C0016] p-5 rounded-3xl border-4 border-[#FFC614] shadow-2xl w-80 sm:w-96 shrink-0 transform hover:scale-105 transition-transform"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-modak text-xl text-[#EF1624]">{rev.author}</span>
+                  <span className="text-amber-600 font-bold text-sm tracking-widest">{rev.rating}</span>
+                </div>
+                <div className="font-mouse-memoirs text-xs text-[#EF1624] font-bold mb-2 uppercase tracking-wide">
+                  {rev.location}
+                </div>
+                <p className="font-mouse-memoirs text-base text-[#4C0016] leading-snug">
+                  "{rev.text}"
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* JELLY WAVE DIVIDER 5 */}
       <div className="w-full overflow-hidden leading-none z-20 relative">
         <svg className="w-full h-16 sm:h-28" viewBox="0 0 1536 300" fill="none" preserveAspectRatio="none">
           <path d="M1536,0 H-1 V135 S184.32,65 460.8,155 S860.16,105 1121.28,137 S1413.12,105 1536,105 V0" fill="#FFC614" />
