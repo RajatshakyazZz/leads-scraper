@@ -71,6 +71,7 @@ export function Phase4Build({
   const [building, setBuilding] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savedKey, setSavedKey] = useState("");
+  const [restaurantStyle, setRestaurantStyle] = useState<"crav" | "classic">("crav");
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
   const [previewTab, setPreviewTab] = useState<"all" | "hero" | "services" | "reviews" | "faq" | "contact">("all");
   const [fullModal, setFullModal] = useState(false);
@@ -80,6 +81,23 @@ export function Phase4Build({
   const [sharingLink, setSharingLink] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
+
+  const isRestaurant = useMemo(() => {
+    if (!selected) return false;
+    const cat = `${selected.category} ${selected.name}`.toLowerCase();
+    return (
+      cat.includes("restau") ||
+      cat.includes("cafe") ||
+      cat.includes("burg") ||
+      cat.includes("food") ||
+      cat.includes("dini") ||
+      cat.includes("pizz") ||
+      cat.includes("baker") ||
+      cat.includes("biryan") ||
+      cat.includes("thali") ||
+      cat.includes("veg")
+    );
+  }, [selected]);
 
   const nichePreset = useMemo(() => (selected ? getNichePreset(selected.category, selected.name) : null), [selected]);
   const prompt = useMemo(() => (selected && nichePreset ? buildPrompt(selected, platform, nichePreset) : ""), [selected, platform, nichePreset]);
@@ -333,6 +351,27 @@ export function Phase4Build({
                 </button>
               </div>
 
+              {isRestaurant && (
+                <div className="flex items-center bg-slate-200/80 p-0.5 rounded-lg border border-slate-300">
+                  <button
+                    onClick={() => setRestaurantStyle("crav")}
+                    className={`px-2 py-0.5 rounded text-[10px] font-extrabold transition-all ${
+                      restaurantStyle === "crav" ? "bg-rose-600 text-white shadow-xs" : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    🍔 CRAV Theme
+                  </button>
+                  <button
+                    onClick={() => setRestaurantStyle("classic")}
+                    className={`px-2 py-0.5 rounded text-[10px] font-extrabold transition-all ${
+                      restaurantStyle === "classic" ? "bg-amber-500 text-slate-950 shadow-xs" : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    👑 Heritage
+                  </button>
+                </div>
+              )}
+
               <Button
                 size="sm"
                 variant="outline"
@@ -421,15 +460,26 @@ export function Phase4Build({
                   : "w-full bg-[#1a1a1a] rounded-2xl border border-amber-500/30 shadow-sm overflow-hidden"
               }`}
             >
-              <LiveWebsiteRenderer
-                lead={selected}
-                preset={nichePreset}
-                tab={previewTab}
-                isMobile={viewMode === "mobile"}
-                waNumber={waNumber}
-                cleanPhone={cleanPhone}
-                onOpenBooking={() => setShowBookingModal(true)}
-              />
+              {isRestaurant && restaurantStyle === "crav" && nichePreset ? (
+                <CravArtisanWebsiteRenderer
+                  lead={selected}
+                  preset={nichePreset}
+                  isMobile={viewMode === "mobile"}
+                  waNumber={waNumber}
+                  cleanPhone={cleanPhone}
+                  onOpenBooking={() => setShowBookingModal(true)}
+                />
+              ) : (
+                <LiveWebsiteRenderer
+                  lead={selected}
+                  preset={nichePreset}
+                  tab={previewTab}
+                  isMobile={viewMode === "mobile"}
+                  waNumber={waNumber}
+                  cleanPhone={cleanPhone}
+                  onOpenBooking={() => setShowBookingModal(true)}
+                />
+              )}
             </div>
           </div>
         </Card>
@@ -1438,4 +1488,312 @@ ${
 }
 
 Generate the complete production-ready code now.`;
+}
+
+/* ============================================================================
+   CRAV ARTISAN SMASHED BURGER & RESTAURANT WEBSITE RENDERER (EXACT SOURCE CODE STYLE)
+   ============================================================================ */
+function CravArtisanWebsiteRenderer({
+  lead,
+  preset,
+  isMobile,
+  waNumber,
+  cleanPhone,
+  onOpenBooking
+}: {
+  lead: RankedLead;
+  preset: ReturnType<typeof getNichePreset>;
+  isMobile?: boolean;
+  waNumber: string;
+  cleanPhone: string;
+  onOpenBooking: () => void;
+}) {
+  const brandName = lead.name.toUpperCase();
+  const shortName = brandName.split(" ")[0] || "CRAV";
+
+  return (
+    <div className="bg-[#F5E3CD] text-[#4C0016] font-sans relative overflow-x-hidden selection:bg-[#EF1624] selection:text-white">
+      {/* 1. TOP NAVBAR (BEIGE & RED) */}
+      <nav className="w-full flex items-center justify-between px-4 sm:px-10 py-4 bg-[#F5E3CD] sticky top-0 z-40 border-b border-[#4C0016]/10">
+        <a href="#hero" className="font-modak text-3xl sm:text-5xl text-[#EF1624] text-stroke-180 hover:scale-105 transition-transform tracking-wider">
+          {shortName}
+        </a>
+        <div className="flex items-center gap-2 sm:gap-4 font-mouse-memoirs">
+          <button
+            onClick={onOpenBooking}
+            className="text-sm sm:text-lg uppercase text-white bg-[#EF1624] px-4 sm:px-6 py-1.5 sm:py-2 rounded-full hover:bg-black transition-colors font-bold shadow-md cursor-pointer"
+          >
+            ORDER NOW
+          </button>
+          <button
+            onClick={onOpenBooking}
+            className="flex items-center gap-1.5 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full border-2 border-[#4C0016] text-xs sm:text-base font-bold uppercase text-[#4C0016] hover:bg-[#4C0016] hover:text-white transition-all cursor-pointer"
+          >
+            <span>MENU ≡</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* 2. HERO SECTION 1 */}
+      <section id="hero" className="relative min-h-[90vh] flex flex-col justify-between items-center pt-8 sm:pt-14 pb-8 px-4 text-center overflow-hidden">
+        {/* Tilted Floating Badges */}
+        <div className="w-full max-w-6xl mx-auto relative z-10 flex flex-col items-center">
+          <motion.div
+            initial={{ scale: 0.8, rotate: -12 }}
+            animate={{ scale: 1, rotate: -12 }}
+            className="absolute -top-4 sm:top-2 left-2 sm:left-12 bg-[#FFC614] text-[#4C0016] font-modak text-xl sm:text-4xl px-3 sm:px-6 py-1 rounded-2xl border-2 border-[#4C0016] shadow-lg transform -rotate-12 z-20"
+          >
+            SMASHED FRESH
+          </motion.div>
+
+          <motion.div
+            initial={{ scale: 0.8, rotate: 15 }}
+            animate={{ scale: 1, rotate: 15 }}
+            className="absolute -top-4 sm:top-2 right-2 sm:right-12 bg-[#FFC614] text-[#4C0016] font-modak text-xl sm:text-4xl px-3 sm:px-6 py-1 rounded-2xl border-2 border-[#4C0016] shadow-lg transform rotate-15 z-20"
+          >
+            BOLD FLAVOR
+          </motion.div>
+
+          <h1 className="font-modak text-6xl sm:text-[11vw] text-[#EF1624] text-stroke-180 leading-none tracking-tight drop-shadow-md">
+            THE BURGER
+          </h1>
+
+          {/* Center Hero Image with Animated Cartoon Eyes */}
+          <div className="relative my-4 sm:my-6 w-64 h-64 sm:w-96 sm:h-96 mx-auto group">
+            <img
+              src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80"
+              alt={lead.name}
+              className="w-full h-full object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500 rounded-full"
+            />
+            {/* Cartoon Eyes Animation Overlay */}
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 flex gap-4 pointer-events-none">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white rounded-full border-2 border-[#4C0016] flex items-center justify-center shadow-md animate-bounce">
+                <div className="w-3 h-3 sm:w-5 sm:h-5 bg-black rounded-full" />
+              </div>
+              <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white rounded-full border-2 border-[#4C0016] flex items-center justify-center shadow-md animate-bounce delay-100">
+                <div className="w-3 h-3 sm:w-5 sm:h-5 bg-black rounded-full" />
+              </div>
+            </div>
+          </div>
+
+          <h2 className="font-modak text-5xl sm:text-[9vw] text-[#FFC614] text-stroke-dark leading-none tracking-wide">
+            {brandName}
+          </h2>
+        </div>
+
+        {/* Hero Bottom Side Descriptions */}
+        <div className="w-full max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 text-xs sm:text-xl font-mouse-memoirs text-[#4C0016] tracking-wide">
+          <p className="text-left max-sm:text-center font-bold">
+            Smashed hot on the flat top, our prime patties lock in ultimate juiciness under a caramelized crust.
+          </p>
+          <p className="text-right max-sm:text-center font-bold">
+            Topped with melted cheddar and our signature chili honey glaze crafted in {lead.city}.
+          </p>
+        </div>
+      </section>
+
+      {/* JELLY WAVE DIVIDER 1 */}
+      <div className="w-full overflow-hidden leading-none z-20 relative">
+        <svg className="w-full h-16 sm:h-28" viewBox="0 0 1536 300" fill="none" preserveAspectRatio="none">
+          <path d="M1536,0 H-1 V135 S184.32,65 460.8,155 S860.16,105 1121.28,137 S1413.12,105 1536,105 V0" fill="#EF1624" />
+        </svg>
+      </div>
+
+      {/* 3. SECTION 2: TOP CLASSIC (RED BACKGROUND #EF1624) */}
+      <section className="bg-[#EF1624] text-white py-12 px-4 sm:px-10 text-center relative overflow-hidden">
+        <div className="inline-block bg-[#FFC614] text-[#4C0016] font-modak text-lg sm:text-2xl px-4 py-1 rounded-full border-2 border-white transform -rotate-5 mb-4 shadow-lg">
+          TOP CLASSIC ★
+        </div>
+
+        <h2 className="font-modak text-4xl sm:text-8xl text-white text-stroke-red leading-none mb-4 uppercase">
+          JUICY CHEESY FULLY LOADED
+        </h2>
+
+        <p className="max-w-2xl mx-auto font-mouse-memoirs text-xl sm:text-3xl text-[#F5E3CD] leading-snug mb-8">
+          {lead.name} is back and bolder than ever. Honoring our rich culinary roots, we bring you the ultimate smashed experience — hot, fresh & fully loaded in {lead.city}!
+        </p>
+
+        {/* Red Wavy Blob Order Button */}
+        <button
+          onClick={onOpenBooking}
+          className="inline-block bg-[#FFC614] hover:bg-white text-[#EF1624] font-modak text-2xl sm:text-4xl px-8 sm:px-12 py-3 sm:py-4 rounded-full border-4 border-white shadow-2xl transition-all hover:scale-105 cursor-pointer uppercase mb-12"
+        >
+          ORDER NOW →
+        </button>
+
+        {/* 3 Tilted Showcase Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto items-center">
+          <div className="bg-[#F5E3CD] p-3 rounded-3xl border-4 border-[#4C0016] shadow-xl transform sm:-rotate-6 hover:rotate-0 transition-transform duration-300">
+            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80" alt="Artisan Smash Burger" className="w-full h-48 sm:h-56 object-cover rounded-2xl mb-3" />
+            <h3 className="font-modak text-xl text-[#EF1624] uppercase">Double Smashed Patty</h3>
+            <p className="font-mouse-memoirs text-base text-[#4C0016]">Caramelized crust & chili honey glaze</p>
+          </div>
+
+          <div className="bg-[#F5E3CD] p-3 rounded-3xl border-4 border-[#4C0016] shadow-xl transform sm:rotate-0 hover:scale-105 transition-transform duration-300 z-10">
+            <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80" alt="Cheesy Loaded" className="w-full h-48 sm:h-56 object-cover rounded-2xl mb-3" />
+            <h3 className="font-modak text-xl text-[#EF1624] uppercase">Cheesy Loaded Smash</h3>
+            <p className="font-mouse-memoirs text-base text-[#4C0016]">Extra cheddar & smoky bacon relish</p>
+          </div>
+
+          <div className="bg-[#F5E3CD] p-3 rounded-3xl border-4 border-[#4C0016] shadow-xl transform sm:rotate-6 hover:rotate-0 transition-transform duration-300">
+            <img src="https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=400&q=80" alt="Golden Fries" className="w-full h-48 sm:h-56 object-cover rounded-2xl mb-3" />
+            <h3 className="font-modak text-xl text-[#EF1624] uppercase">Peri Peri Golden Fries</h3>
+            <p className="font-mouse-memoirs text-base text-[#4C0016]">Hand-cut skin-on fries with truffle mayo</p>
+          </div>
+        </div>
+      </section>
+
+      {/* JELLY WAVE DIVIDER 2 */}
+      <div className="w-full overflow-hidden leading-none z-20 relative">
+        <svg className="w-full h-16 sm:h-28" viewBox="0 0 1536 300" fill="none" preserveAspectRatio="none">
+          <path d="M1536,0 H-1 V135 S184.32,65 460.8,155 S860.16,105 1121.28,137 S1413.12,105 1536,105 V0" fill="#f91814" />
+        </svg>
+      </div>
+
+      {/* 4. SECTION 3: FOOD THAT FEELS GOOD (#f91814 Crimson Red Background) */}
+      <section className="bg-[#f91814] text-white py-14 px-4 sm:px-10 text-center relative overflow-hidden">
+        <div className="inline-block bg-[#FFC614] text-[#4C0016] font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-8 mb-4 shadow-lg">
+          EXPERIENCE
+        </div>
+
+        <h2 className="font-modak text-4xl sm:text-8xl text-[#F5E3CD] text-stroke-dark leading-none uppercase mb-6">
+          FOOD THAT FEELS GOOD
+        </h2>
+
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 my-8">
+          <div className="bg-[#4C0016]/40 backdrop-blur-md p-4 rounded-2xl border-2 border-[#FFC614] text-left sm:w-64">
+            <span className="font-modak text-2xl text-[#FFC614] block">450 kcal</span>
+            <span className="font-mouse-memoirs text-lg text-white">High Protein • 100% Fresh Organic Ingredients</span>
+          </div>
+
+          <div className="relative w-64 h-64 sm:w-80 sm:h-80 mx-auto">
+            <img
+              src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80"
+              alt="Artisan Smashed Dish"
+              className="w-full h-full object-cover rounded-full border-4 border-[#FFC614] shadow-2xl"
+            />
+          </div>
+
+          <div className="bg-[#4C0016]/40 backdrop-blur-md p-4 rounded-2xl border-2 border-[#FFC614] text-right sm:w-64">
+            <span className="font-modak text-2xl text-[#FFC614] block">100% ORGANIC</span>
+            <span className="font-mouse-memoirs text-lg text-white">Zero Guilt • True Artisanal Taste</span>
+          </div>
+        </div>
+      </section>
+
+      {/* JELLY WAVE DIVIDER 3 */}
+      <div className="w-full overflow-hidden leading-none z-20 relative">
+        <svg className="w-full h-16 sm:h-28" viewBox="0 0 1536 300" fill="none" preserveAspectRatio="none">
+          <path d="M1536,0 H-1 V135 S184.32,65 460.8,155 S860.16,105 1121.28,137 S1413.12,105 1536,105 V0" fill="#F5E3CD" />
+        </svg>
+      </div>
+
+      {/* 5. SECTION 4: PURE QUALITY & INGREDIENTS (#F5E3CD Cream Background) */}
+      <section className="bg-[#F5E3CD] text-[#4C0016] py-14 px-4 sm:px-10 text-center relative overflow-hidden">
+        <div className="inline-block bg-[#EF1624] text-white font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-[#4C0016] transform -rotate-6 mb-4 shadow-lg">
+          PURE QUALITY
+        </div>
+
+        <h2 className="font-modak text-4xl sm:text-7xl text-[#EF1624] text-stroke-180 leading-tight uppercase max-w-4xl mx-auto mb-10">
+          EVERY LAYER PACKED WITH SIGNATURE FLAVOR
+        </h2>
+
+        {/* 4 Floating Ingredient Cards Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
+          <div className="bg-white/80 backdrop-blur-md p-4 rounded-3xl border-2 border-[#4C0016] shadow-md flex flex-col items-center hover:scale-105 transition-transform">
+            <span className="text-4xl mb-2">🥬</span>
+            <h4 className="font-modak text-lg text-[#EF1624]">Garden Lettuce</h4>
+            <p className="font-mouse-memoirs text-xs sm:text-sm text-[#4C0016]">Crispy & Farm Fresh</p>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-md p-4 rounded-3xl border-2 border-[#4C0016] shadow-md flex flex-col items-center hover:scale-105 transition-transform">
+            <span className="text-4xl mb-2">🍅</span>
+            <h4 className="font-modak text-lg text-[#EF1624]">Vine Tomatoes</h4>
+            <p className="font-mouse-memoirs text-xs sm:text-sm text-[#4C0016]">Sun-Ripened Sweetness</p>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-md p-4 rounded-3xl border-2 border-[#4C0016] shadow-md flex flex-col items-center hover:scale-105 transition-transform">
+            <span className="text-4xl mb-2">🧀</span>
+            <h4 className="font-modak text-lg text-[#EF1624]">Melted Cheddar</h4>
+            <p className="font-mouse-memoirs text-xs sm:text-sm text-[#4C0016]">Rich Aged Cheese</p>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-md p-4 rounded-3xl border-2 border-[#4C0016] shadow-md flex flex-col items-center hover:scale-105 transition-transform">
+            <span className="text-4xl mb-2">🥩</span>
+            <h4 className="font-modak text-lg text-[#EF1624]">Prime Patty</h4>
+            <p className="font-mouse-memoirs text-xs sm:text-sm text-[#4C0016]">Smashed Flat-Top 400°F</p>
+          </div>
+        </div>
+      </section>
+
+      {/* JELLY WAVE DIVIDER 4 */}
+      <div className="w-full overflow-hidden leading-none z-20 relative">
+        <svg className="w-full h-16 sm:h-28" viewBox="0 0 1536 300" fill="none" preserveAspectRatio="none">
+          <path d="M1536,0 H-1 V135 S184.32,65 460.8,155 S860.16,105 1121.28,137 S1413.12,105 1536,105 V0" fill="#FFC614" />
+        </svg>
+      </div>
+
+      {/* 6. SECTION 5: TAKE AWAY (#FFC614 Mustard Yellow Background) */}
+      <section className="bg-[#FFC614] text-[#4C0016] py-14 px-4 sm:px-10 text-center relative overflow-hidden">
+        <div className="inline-block bg-[#EF1624] text-white font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-7 mb-4 shadow-lg">
+          TAKE AWAY
+        </div>
+
+        <h2 className="font-modak text-4xl sm:text-8xl text-white text-stroke-mustard leading-none uppercase mb-4">
+          QUALITY THAT TRAVELS WITH YOU
+        </h2>
+
+        <p className="font-mouse-memoirs text-xl sm:text-3xl text-[#4C0016] max-w-2xl mx-auto mb-10">
+          Freshly packed smash burgers ready to go wherever you crave. From our flat-top to any corner of {lead.city}!
+        </p>
+
+        {/* 5 Location / Takeaway Cards */}
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 max-w-5xl mx-auto">
+          {["BERLIN", "LONDON", "NEW YORK", "SYDNEY", "TOKYO"].map((loc, idx) => (
+            <div
+              key={idx}
+              className="bg-white/90 p-4 rounded-3xl border-3 border-[#4C0016] shadow-lg flex flex-col items-center w-36 sm:w-44 hover:scale-105 transition-transform"
+            >
+              <h4 className="font-modak text-lg text-[#EF1624] uppercase">{loc}</h4>
+              <p className="font-mouse-memoirs text-xs text-[#4C0016]">Smash Kitchen Express</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 7. FOOTER & EMBEDDED GOOGLE MAP */}
+      <footer className="bg-[#4C0016] text-[#F5E3CD] py-12 px-4 sm:px-10 text-center relative">
+        <h2 className="font-modak text-5xl sm:text-8xl text-[#FFC614] text-stroke-dark uppercase mb-4">
+          FEEL THE CHANGE
+        </h2>
+        <p className="font-mouse-memoirs text-xl sm:text-2xl max-w-xl mx-auto mb-6">
+          Smashed for the bold, built for the hungry. Visit us at {lead.address || lead.city}!
+        </p>
+
+        <button
+          onClick={onOpenBooking}
+          className="bg-[#EF1624] hover:bg-[#FFC614] hover:text-[#4C0016] text-white font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer mb-10"
+        >
+          RESERVE TABLE / ORDER WHATSAPP →
+        </button>
+
+        {/* Embedded Google Map */}
+        <div className="max-w-4xl mx-auto rounded-3xl overflow-hidden border-4 border-[#FFC614] shadow-2xl mb-8">
+          <iframe
+            title={`Map for ${lead.name}`}
+            width="100%"
+            height="260"
+            style={{ border: 0 }}
+            loading="lazy"
+            allowFullScreen
+            src={`https://www.google.com/maps?q=${encodeURIComponent(`${lead.name}, ${lead.address || ""}, ${lead.city}`)}&output=embed`}
+          />
+        </div>
+
+        <div className="border-t border-[#F5E3CD]/20 pt-6 font-mouse-memoirs text-sm sm:text-base opacity-80">
+          © 2026 {lead.name} • All rights reserved • Powered by ClientForge Live Preview Engine
+        </div>
+      </footer>
+    </div>
+  );
 }

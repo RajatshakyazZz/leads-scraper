@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Modak&family=Mouse+Memoirs&family=Fredoka:wght@600;700;800&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -7,8 +8,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans), "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
-  --font-display: var(--font-sans), "Outfit", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-sans), "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Modak", var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Modak", var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -188,5 +189,37 @@ html.lenis body {
       linear-gradient(to right, rgba(132, 204, 22, 0.08) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(132, 204, 22, 0.08) 1px, transparent 1px);
     background-size: 44px 44px;
+  }
+
+  .font-modak {
+    font-family: "Modak", system-ui, sans-serif;
+  }
+
+  .font-mouse-memoirs {
+    font-family: "Mouse Memoirs", sans-serif;
+  }
+
+  .font-fredoka {
+    font-family: "Fredoka", sans-serif;
+  }
+
+  .text-stroke-180 {
+    -webkit-text-stroke: 3px #ffffff;
+    paint-order: stroke fill;
+  }
+
+  .text-stroke-red {
+    -webkit-text-stroke: 3px #ef1624;
+    paint-order: stroke fill;
+  }
+
+  .text-stroke-mustard {
+    -webkit-text-stroke: 3px #f4a804;
+    paint-order: stroke fill;
+  }
+
+  .text-stroke-dark {
+    -webkit-text-stroke: 3px #4c0016;
+    paint-order: stroke fill;
   }
 }
