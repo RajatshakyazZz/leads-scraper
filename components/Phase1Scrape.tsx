@@ -11,13 +11,20 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PhaseShell } from "./PhaseShell";
-import { Download, Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail, ShieldCheck, Zap, Radio, Search, CheckCircle2, Sparkles } from "lucide-react";
+import { Download, Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail, ShieldCheck, Zap, Radio, Search, CheckCircle2, Sparkles, Navigation, Layers } from "lucide-react";
 import type { Lead, ScrapeInput } from "@/lib/types";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
 
 const LeadMap = dynamic(() => import("./LeadMap"), { ssr: false });
 const WHATSAPP_LIMIT_URL = `https://wa.me/917895317940?text=${encodeURIComponent("Hi, I want to increase my Lead to Launch leads limit.")}`;
+
+const SCRAPE_STEPS = [
+  { id: 1, label: "1. Connect Radar", minPct: 0 },
+  { id: 2, label: "2. Scan G-Maps", minPct: 25 },
+  { id: 3, label: "3. Extract Contacts", minPct: 50 },
+  { id: 4, label: "4. Index Workspace", minPct: 85 },
+];
 
 export function Phase1Scrape({
   leads,
@@ -40,7 +47,7 @@ export function Phase1Scrape({
   const [exporting, setExporting] = useState(false);
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
 
-  // Scrape Progress State
+  // Prominent Scrape Progress State
   const [progress, setProgress] = useState(0);
   const [scrapeStage, setScrapeStage] = useState("");
   const [currentLeadCount, setCurrentLeadCount] = useState(0);
@@ -67,21 +74,21 @@ export function Phase1Scrape({
 
     setLoading(true);
     setProgress(5);
-    setScrapeStage(`📡 Connecting to Google Maps radar for ${nextInput.niche}...`);
+    setScrapeStage(`📡 Connecting Google Maps Radar API for "${nextInput.niche}"...`);
     setCurrentLeadCount(0);
     setTotalTargetCount(nextInput.count);
 
     // Initial API simulation progress interval
     const progressTimer = setInterval(() => {
       setProgress((prev) => {
-        if (prev < 40) {
-          if (prev === 15) setScrapeStage(`🔍 Scanning Google Maps for ${nextInput.niche} in ${nextInput.city}...`);
-          if (prev === 30) setScrapeStage(`📍 Resolving GPS coordinates & place listings...`);
-          return prev + 5;
+        if (prev < 42) {
+          if (prev === 15) setScrapeStage(`🔍 Scanning Google Maps listings for "${nextInput.niche}" in ${nextInput.city}...`);
+          if (prev === 30) setScrapeStage(`📍 Resolving GPS location coordinates & place IDs...`);
+          return prev + 4;
         }
         return prev;
       });
-    }, 180);
+    }, 150);
 
     try {
       const token = await getIdToken();
@@ -104,7 +111,7 @@ export function Phase1Scrape({
       }
 
       setLeads([]);
-      setProgress(45);
+      setProgress(48);
       const totalLeads = data.leads.length;
       setTotalTargetCount(totalLeads);
 
@@ -115,13 +122,13 @@ export function Phase1Scrape({
         setLeads(data.leads.slice(0, i + 1));
         setCurrentLeadCount(i + 1);
 
-        const currentPct = Math.min(98, Math.round(45 + ((i + 1) / totalLeads) * 50));
+        const currentPct = Math.min(98, Math.round(48 + ((i + 1) / totalLeads) * 48));
         setProgress(currentPct);
-        setScrapeStage(`📞 Extracting contact & review metrics for "${lead.name}"...`);
+        setScrapeStage(`📞 Extracting phone, WhatsApp & review metrics for "${lead.name}"...`);
       }
 
       setProgress(100);
-      setScrapeStage(`✨ ${totalLeads} Leads Scraped & Stored to Workspace Database!`);
+      setScrapeStage(`✨ ${totalLeads} Businesses Scraped & Saved to Workspace Database!`);
       toast.success(`${totalLeads} leads scraped from ${nextInput.city}`);
     } catch (e) {
       clearInterval(progressTimer);
@@ -130,7 +137,7 @@ export function Phase1Scrape({
     } finally {
       setTimeout(() => {
         setLoading(false);
-      }, 600);
+      }, 700);
     }
   }
 
@@ -175,6 +182,85 @@ export function Phase1Scrape({
       nextDisabled={leads.length === 0}
       nextLabel="Audit these leads"
     >
+      {/* Prominent High-Impact Interactive Scrape Radar Panel */}
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.98, y: -10 }}
+            className="mb-6 rounded-2xl border border-lime-500/50 bg-gradient-to-r from-[#0C1322] via-[#0F182C] to-[#0A101C] p-5 sm:p-6 shadow-2xl shadow-lime-500/10 relative overflow-hidden backdrop-blur-md"
+          >
+            <div className="absolute top-0 right-0 w-64 h-64 bg-lime-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            {/* Header Row */}
+            <div className="flex items-center justify-between gap-4 flex-wrap pb-3 border-b border-slate-800/80">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-lime-500/20 border border-lime-500/40 text-lime-400 flex items-center justify-center font-bold shrink-0 shadow-lg shadow-lime-500/20">
+                  <Radio className="h-5 w-5 animate-pulse text-lime-400" />
+                </div>
+                <div>
+                  <div className="text-[10px] font-mono font-extrabold uppercase tracking-[0.18em] text-lime-400">REALTIME GOOGLE MAPS API RADAR</div>
+                  <h2 className="font-sans font-black text-lg sm:text-xl tracking-tight text-white uppercase leading-none mt-0.5">
+                    SCRAPING PROSPECT LEADS IN PROGRESS...
+                  </h2>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                {totalTargetCount > 0 && (
+                  <Badge className="bg-slate-900 border border-lime-500/30 text-lime-400 font-mono text-xs px-3 py-1 font-black uppercase tracking-wider tabular-nums">
+                    Scraped {currentLeadCount} / {totalTargetCount} Businesses
+                  </Badge>
+                )}
+                <div className="font-mono text-3xl sm:text-4xl font-black text-lime-400 tabular-nums drop-shadow-[0_0_12px_rgba(132,204,22,0.6)]">
+                  {progress}%
+                </div>
+              </div>
+            </div>
+
+            {/* Prominent Large Interactive Animated Progress Bar */}
+            <div className="mt-4 mb-4">
+              <div className="w-full h-4 rounded-full bg-slate-950 overflow-hidden border border-slate-800 relative shadow-inner p-0.5">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-lime-500 via-lime-400 to-emerald-400 shadow-[0_0_20px_rgba(132,204,22,0.8)] rounded-full transition-all duration-300 relative"
+                  style={{ width: `${progress}%` }}
+                >
+                  <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.4)_50%,transparent_100%)] animate-shimmer" />
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Realtime Stage Status Row */}
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-2 text-xs font-mono font-extrabold text-slate-200">
+                <Loader2 className="h-4 w-4 animate-spin text-lime-400 shrink-0" />
+                <span className="text-white bg-slate-900/80 px-3 py-1 rounded-lg border border-slate-800">{scrapeStage}</span>
+              </div>
+
+              {/* 4 Interactive Step Indicators */}
+              <div className="flex items-center gap-2 flex-wrap">
+                {SCRAPE_STEPS.map((s) => {
+                  const active = progress >= s.minPct;
+                  return (
+                    <span
+                      key={s.id}
+                      className={`text-[10px] font-mono px-2.5 py-1 rounded-lg font-bold border transition-all ${
+                        active
+                          ? "bg-lime-500/10 border-lime-500/40 text-lime-400 shadow-xs"
+                          : "bg-slate-900/60 border-slate-800 text-slate-500"
+                      }`}
+                    >
+                      {active ? "✓ " : ""}{s.label}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="grid md:grid-cols-3 gap-6">
         <Card className="md:col-span-1 rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl relative overflow-hidden flex flex-col justify-between">
           <div className="absolute top-0 right-0 w-32 h-32 bg-lime-500/10 rounded-full blur-2xl pointer-events-none" />
@@ -205,46 +291,9 @@ export function Phase1Scrape({
               <ShieldCheck className="h-5 w-5 text-lime-400" aria-hidden="true" />
             </div>
 
-            {/* Interactive Realtime Loading Bar */}
-            <AnimatePresence>
-              {loading && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="rounded-xl border border-lime-500/40 bg-slate-950 p-3.5 space-y-2 shadow-lg overflow-hidden"
-                >
-                  <div className="flex items-center justify-between text-xs font-mono">
-                    <div className="flex items-center gap-2 text-lime-400 font-bold">
-                      <Radio className="h-4 w-4 animate-pulse text-lime-400 shrink-0" />
-                      <span className="truncate max-w-[180px]">{scrapeStage}</span>
-                    </div>
-                    <span className="font-black text-lime-400 tabular-nums">{progress}%</span>
-                  </div>
-
-                  {/* Animated Glow Bar */}
-                  <div className="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800 relative">
-                    <motion.div
-                      className="h-full bg-lime-400 shadow-[0_0_12px_rgba(132,204,22,0.8)] rounded-full transition-all duration-300"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-
-                  {totalTargetCount > 0 && (
-                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-0.5">
-                      <span>Status: Extracting Live Data</span>
-                      <span className="text-white font-bold tabular-nums">
-                        {currentLeadCount} / {totalTargetCount} Leads
-                      </span>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
             <Button onClick={runScrape} disabled={loading} className="w-full h-11 rounded-xl bg-lime-500 hover:bg-lime-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer transition-all">
               {loading ? (
-                <><Loader2 className="h-4 w-4 mr-2 animate-spin text-slate-950" /> Scraping Google Maps ({progress}%)...</>
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin text-slate-950" /> Scraping ({progress}%)...</>
               ) : (quota && quota.remaining <= 0) ? (
                 "Increase lead limit"
               ) : (
@@ -266,8 +315,8 @@ export function Phase1Scrape({
               <MapPin className="h-4 w-4 text-lime-400" /> Realtime Scraped Google Map Radar
             </CardTitle>
             {loading && (
-              <Badge className="bg-lime-500/10 text-lime-400 border-lime-500/30 font-mono text-[10px] font-black uppercase tracking-wider animate-pulse flex items-center gap-1.5">
-                <Radio className="h-3 w-3 animate-spin text-lime-400" /> Live Scanning ({progress}%)
+              <Badge className="bg-lime-500/10 text-lime-400 border border-lime-500/30 font-mono text-xs font-black uppercase tracking-wider animate-pulse flex items-center gap-1.5 px-3 py-1">
+                <Radio className="h-3.5 w-3.5 animate-spin text-lime-400" /> Radar Active ({progress}%)
               </Badge>
             )}
           </CardHeader>
