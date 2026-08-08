@@ -53,10 +53,10 @@ export async function POST(req: Request) {
   if (!lead.whatsapp) gaps.push("No WhatsApp click-to-chat");
   gaps.push("No online booking", "No schema markup", "Weak local SEO");
 
-  const estLostRevenuePerMonth = Math.max(
-    20000,
-    (lead.reviewsCount ?? 30) * 400 + (hasWebsite ? 0 : 30000),
-  );
+  // Realistic monthly revenue loss assumption for local SMB (Capped between ₹18k and ₹42k)
+  const baseLoss = hasWebsite ? 18000 : 28000;
+  const reviewFactor = Math.min(10000, Math.floor((lead.reviewsCount ?? 10) * 15));
+  const estLostRevenuePerMonth = Math.min(42000, Math.max(18000, baseLoss + reviewFactor));
 
   const audit: AuditResult = {
     leadId: lead.id,

@@ -10,6 +10,7 @@ import { PhaseShell } from "./PhaseShell";
 import { IncompleteState } from "./IncompleteState";
 import { Loader2, AlertTriangle, IndianRupee, Gauge, Star, Phone, MessageCircle, Globe, Flame } from "lucide-react";
 import type { Lead, AuditResult } from "@/lib/types";
+import { formatRevenueRange, formatTotalRevenueRange } from "@/lib/scoring";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -144,7 +145,7 @@ export function Phase2Audit({
       nextDisabled={auditedCount === 0}
       nextLabel="Rank prospects"
     >
-      {/* High Impact Coral Red Warning Banner (Matching Reference Image) */}
+      {/* High Impact Coral Red Warning Banner */}
       <div className="mb-6 rounded-2xl border border-red-500/30 bg-gradient-to-r from-red-950/40 via-red-900/20 to-slate-950 p-4 sm:p-5 flex items-center justify-between gap-4 flex-wrap shadow-xl">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl bg-red-500/20 text-red-500 flex items-center justify-center font-black shrink-0 border border-red-500/40">
@@ -158,9 +159,9 @@ export function Phase2Audit({
           </div>
         </div>
         <div className="text-right">
-          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Total Revenue Leakage</div>
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Est. Total Revenue Leakage</div>
           <div className="font-mono text-xl sm:text-2xl font-black text-white flex items-center justify-end">
-            <IndianRupee className="h-5 w-5 text-red-500 mr-0.5" /> {totalLost.toLocaleString("en-IN")}<span className="text-xs text-slate-400 font-sans font-normal">/mo</span>
+            <IndianRupee className="h-5 w-5 text-red-500 mr-0.5" /> {formatTotalRevenueRange(totalLost)}<span className="text-xs text-slate-400 font-sans font-normal">/mo (est. total)</span>
           </div>
         </div>
       </div>
@@ -191,8 +192,8 @@ export function Phase2Audit({
         <Card className="rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-xl">
           <CardContent className="pt-5 pb-5 px-5">
             <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-mono font-extrabold">Est. Monthly Lost Revenue</div>
-            <div className="font-mono text-2xl font-black tabular-nums text-red-500 flex items-center mt-1">
-              <IndianRupee className="h-5 w-5 text-red-500 mr-0.5" strokeWidth={2} />{totalLost.toLocaleString("en-IN")}
+            <div className="font-mono text-xl font-black tabular-nums text-red-500 flex items-center mt-1">
+              <IndianRupee className="h-4 w-4 text-red-500 mr-0.5" strokeWidth={2} />{formatTotalRevenueRange(totalLost)}
             </div>
           </CardContent>
         </Card>
@@ -294,7 +295,7 @@ export function Phase2Audit({
                         <div className="flex-1 min-w-0">
                           <div className="text-[9px] uppercase tracking-[0.14em] text-slate-400 font-mono font-extrabold">Est. Monthly Lost Revenue</div>
                           <div className="font-mono text-base font-black tabular-nums text-red-500 flex items-center mt-0.5">
-                            <IndianRupee className="h-4 w-4 text-red-500 mr-0.5" strokeWidth={2} />{a.estLostRevenuePerMonth.toLocaleString("en-IN")}
+                            <IndianRupee className="h-4 w-4 text-red-500 mr-0.5" strokeWidth={2} />{formatRevenueRange(a.estLostRevenuePerMonth)}<span className="text-[10px] font-sans font-normal text-slate-400 ml-1">/mo</span>
                           </div>
                         </div>
                       </div>

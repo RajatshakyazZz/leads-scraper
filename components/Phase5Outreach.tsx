@@ -11,6 +11,7 @@ import { MessageCircle, Mail, Share2, Copy, Check, ExternalLink, Sparkles, Refre
 import type { RankedLead } from "@/lib/types";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
+import { formatRevenueRange } from "@/lib/scoring";
 
 const CHANNELS = [
   { id: "whatsapp", label: "WhatsApp", icon: MessageCircle },
@@ -316,7 +317,7 @@ function generatePitch(
   const city = l.city.split(",")[0];
   const reviews = l.reviewsCount ?? 0;
   const rating = l.rating ?? 4.5;
-  const lost = (l.audit.estLostRevenuePerMonth || 45000).toLocaleString("en-IN");
+  const lost = formatRevenueRange(l.audit.estLostRevenuePerMonth || 28000);
   const gap = l.audit.biggestGap;
 
   const linkBlock = includeLink && previewUrl

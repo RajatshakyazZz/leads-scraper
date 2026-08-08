@@ -10,7 +10,7 @@ import { PhaseShell } from "./PhaseShell";
 import { IncompleteState } from "./IncompleteState";
 import { Crown, IndianRupee, MessageCircle, Phone, Mail, CheckCircle2 } from "lucide-react";
 import type { Lead, AuditResult, RankedLead } from "@/lib/types";
-import { scoreLead } from "@/lib/scoring";
+import { scoreLead, formatRevenueRange } from "@/lib/scoring";
 import { useAuth } from "@/components/AuthProvider";
 
 export function Phase3Rank({
@@ -135,7 +135,7 @@ export function Phase3Rank({
                 <div className="font-black text-base leading-snug text-white font-serif truncate">{lead.name}</div>
                 <div className="text-xs text-slate-400 mt-0.5 font-sans truncate">{lead.address}</div>
                 <div className="mt-3.5 flex items-center gap-2.5 text-xs font-sans text-slate-300 font-mono tabular-nums">
-                  <span className="flex items-center gap-1 text-red-400 font-bold"><IndianRupee className="h-3.5 w-3.5 text-red-500" />{lead.audit.estLostRevenuePerMonth.toLocaleString("en-IN")}/mo</span>
+                  <span className="flex items-center gap-1 text-red-400 font-bold"><IndianRupee className="h-3.5 w-3.5 text-red-500" />{formatRevenueRange(lead.audit.estLostRevenuePerMonth)}/mo</span>
                   <span className="text-slate-600">•</span>
                   <span>{lead.reviewsCount} reviews</span>
                 </div>
@@ -169,7 +169,7 @@ export function Phase3Rank({
                   <TableHead className="w-12 text-center text-xs font-black text-slate-400 py-3 uppercase font-mono">#</TableHead>
                   <TableHead className="text-xs font-black text-slate-400 py-3 uppercase font-mono">Business Name</TableHead>
                   <TableHead className="w-[240px] text-xs font-black text-slate-400 py-3 uppercase font-mono">Opportunity Score</TableHead>
-                  <TableHead className="text-xs font-black text-slate-400 py-3 uppercase font-mono">₹ Lost / mo</TableHead>
+                  <TableHead className="text-xs font-black text-slate-400 py-3 uppercase font-mono">₹ Lost / mo (Est.)</TableHead>
                   <TableHead className="text-xs font-black text-slate-400 py-3 uppercase font-mono">Audit Status</TableHead>
                   <TableHead className="text-right text-xs font-black text-slate-400 py-3 pr-4 uppercase font-mono">Action</TableHead>
                 </TableRow>
@@ -195,7 +195,7 @@ export function Phase3Rank({
                         <span className="font-mono text-xs font-black text-lime-400 w-9 text-right tabular-nums">{lead.score}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="font-mono text-xs font-black tabular-nums text-red-400 py-3.5">₹{lead.audit.estLostRevenuePerMonth.toLocaleString("en-IN")}</TableCell>
+                    <TableCell className="font-mono text-xs font-black tabular-nums text-red-400 py-3.5">{formatRevenueRange(lead.audit.estLostRevenuePerMonth)}</TableCell>
                     <TableCell className="py-3.5">
                       {lead.audit.hasWebsite ? (
                         <Badge variant="secondary" className="text-[10px] font-extrabold h-5 px-2 bg-slate-900 text-lime-400 border border-lime-500/30">{lead.audit.pageSpeedScore} PageSpeed</Badge>
