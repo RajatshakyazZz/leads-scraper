@@ -45,7 +45,7 @@ export default function PreviewPage({ params }: { params: Promise<{ previewId: s
   const [lead, setLead] = useState<RankedLead | null>(null);
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
   const [showBookingModal, setShowBookingModal] = useState(false);
-  const [restaurantStyle, setRestaurantStyle] = useState<"crav" | "classic">("crav");
+  const [restaurantStyle, setRestaurantStyle] = useState<"crav" | "madre" | "classic">("crav");
 
   useEffect(() => {
     async function fetchPreview() {
@@ -142,7 +142,15 @@ export default function PreviewPage({ params }: { params: Promise<{ previewId: s
                   restaurantStyle === "crav" ? "bg-red-600 text-white shadow-md" : "text-slate-400 hover:text-white"
                 }`}
               >
-                <span>🍔 CRAV Artisan Theme</span>
+                <span>🍔 CRAV Theme</span>
+              </button>
+              <button
+                onClick={() => setRestaurantStyle("madre")}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                  restaurantStyle === "madre" ? "bg-[#F83E1C] text-white shadow-md" : "text-slate-400 hover:text-white"
+                }`}
+              >
+                <span>🌮 Madre Theme</span>
               </button>
               <button
                 onClick={() => setRestaurantStyle("classic")}
@@ -196,6 +204,15 @@ export default function PreviewPage({ params }: { params: Promise<{ previewId: s
         >
           {isRestaurant && restaurantStyle === "crav" ? (
             <CravArtisanWebsiteRenderer
+              lead={lead}
+              preset={nichePreset}
+              isMobile={viewMode === "mobile"}
+              waNumber={waNumber}
+              cleanPhone={cleanPhone}
+              onOpenBooking={() => setShowBookingModal(true)}
+            />
+          ) : isRestaurant && restaurantStyle === "madre" ? (
+            <BurritoMadreWebsiteRenderer
               lead={lead}
               preset={nichePreset}
               isMobile={viewMode === "mobile"}
@@ -1140,3 +1157,281 @@ function CravArtisanWebsiteRenderer({
     </div>
   );
 }
+
+/* ============================================================================
+   BURRITO MADRE / TEX-MEX STREET FOOD WEBSITE RENDERER
+   ============================================================================ */
+function BurritoMadreWebsiteRenderer({
+  lead,
+  preset,
+  isMobile,
+  waNumber,
+  cleanPhone,
+  onOpenBooking
+}: {
+  lead: RankedLead;
+  preset: ReturnType<typeof getNichePreset>;
+  isMobile?: boolean;
+  waNumber: string;
+  cleanPhone: string;
+  onOpenBooking: () => void;
+}) {
+  const brandName = lead.name.toUpperCase();
+  const phoneDisplay = lead.phone || "+91 95577 30531";
+
+  const texMexMenu = [
+    { title: "BURRITO SUPREME", desc: "Golden foil-wrapped tortilla filled with seasoned rice, beans, grilled steak & melted queso.", image: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=400&q=80", badge: "POPULAR" },
+    { title: "BURRITO GRANDE", desc: "Double stacked jumbo burrito packed with carnitas, fresh guacamole & pico de gallo.", image: "https://images.unsplash.com/photo-1566740933430-b5e70b06d2d5?auto=format&fit=crop&w=400&q=80", badge: "BIG BITE" },
+    { title: "CHIPS & SALSA VERDE", desc: "Crispy house-made corn tortilla chips served with fresh tomatillo salsa & guacamole.", image: "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?auto=format&fit=crop&w=400&q=80", badge: "FRESH DIP" },
+    { title: "MADRE FIESTA COMBO MEAL", desc: "Street tacos, crispy cinnamon churros, loaded nachos & ice-cold horchata.", image: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=400&q=80", badge: "BEST VALUE" },
+    { title: "LOADED QUESO NACHOS", desc: "Warm tortilla chips smothered in liquid cheddar, pickled jalapeños, sour cream & salsa.", image: "https://images.unsplash.com/photo-1582169296194-e4d644c48063?auto=format&fit=crop&w=400&q=80", badge: "CHEESY" },
+    { title: "GRILLED CHEESE QUESADILLA", desc: "Large flour tortilla folded with melted Monterey Jack cheese, grilled chicken & pico.", image: "https://images.unsplash.com/photo-1618040996337-56904b7850b9?auto=format&fit=crop&w=400&q=80", badge: "HOT MELT" },
+    { title: "FRESH FIESTA SALAD BOWL", desc: "Crisp romaine, black beans, sweet corn, sliced avocado, cojita cheese & cilantro lime dressing.", image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80", badge: "HEALTHY" },
+    { title: "STREET TACO TRIO", desc: "Three soft corn tortillas with slow-roasted barbacoa, diced onions, fresh cilantro & lime.", image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=400&q=80", badge: "STREET STYLE" }
+  ];
+
+  return (
+    <div className="bg-[#FAE8DF] text-[#5F0E00] font-sans relative overflow-x-hidden selection:bg-[#F83E1C] selection:text-white">
+      {/* 1. TOP NAVBAR (CREAM & EMERALD WITH DIRECT CALL & WHATSAPP BUTTONS) */}
+      <nav className="w-full flex flex-wrap items-center justify-between px-4 sm:px-10 py-3.5 bg-[#FAE8DF] sticky top-0 z-40 border-b border-[#5F0E00]/15 shadow-sm gap-3">
+        <a href="#hero" className="flex items-center gap-2">
+          <div className="w-9 h-9 rounded-full bg-[#053626] text-[#FFC042] flex items-center justify-center font-bold text-lg shadow-md border-2 border-[#F83E1C]">
+            🌮
+          </div>
+          <span className="font-modak text-xl sm:text-3xl text-[#F83E1C] font-extrabold uppercase tracking-wide truncate">
+            {lead.name}
+          </span>
+        </a>
+
+        <div className="flex items-center gap-2 sm:gap-3 font-sans">
+          <a
+            href={`tel:${cleanPhone}`}
+            className="flex items-center gap-1.5 bg-[#053626] text-[#FFC042] px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-extrabold uppercase hover:bg-black transition-colors shadow-sm"
+          >
+            <Phone className="h-3.5 w-3.5" /> <span>{phoneDisplay}</span>
+          </a>
+          <a
+            href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order Burrito Madre.`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 bg-[#F83E1C] text-white px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-extrabold uppercase hover:bg-black transition-colors shadow-sm"
+          >
+            <MessageSquare className="h-3.5 w-3.5" /> <span>WhatsApp Order</span>
+          </a>
+        </div>
+      </nav>
+
+      {/* 2. HERO SECTION WITH POP-ART GRAPHIC BANNER */}
+      <section id="hero" className="relative bg-[#FFC042] pt-8 sm:pt-12 pb-12 px-4 text-center border-b-4 border-[#5F0E00] overflow-hidden">
+        <div className="max-w-6xl mx-auto flex flex-col items-center relative z-10">
+          {/* Reputation Pill */}
+          <div className="inline-flex items-center gap-2 bg-[#053626] text-[#FFC042] px-4 py-1.5 rounded-full text-xs sm:text-base mb-4 shadow-lg border border-[#F83E1C]">
+            <span className="font-bold">★ {lead.rating ?? 4.8} Google Rated</span>
+            <span className="text-white">({lead.reviewsCount ?? 334}+ Reviews)</span>
+            <span className="text-[#FFC042]">• {lead.city}</span>
+          </div>
+
+          <h1 className="font-modak text-4xl sm:text-8xl text-[#F83E1C] font-extrabold uppercase tracking-tight leading-none drop-shadow-md my-2">
+            WELCOME TO {brandName}
+          </h1>
+
+          <p className="font-sans text-lg sm:text-2xl text-[#5F0E00] font-bold max-w-2xl mx-auto my-3">
+            ROLL WITH THE REAL • 100% Authentic Tex-Mex Fiesta Kitchen in {lead.city}!
+          </p>
+
+          {/* Center Pop-Art Illustration Showcase */}
+          <div className="relative my-6 w-full max-w-2xl bg-[#FAE8DF] p-6 rounded-3xl border-4 border-[#5F0E00] shadow-2xl overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-3">
+              <div className="w-16 h-16 rounded-full bg-[#F83E1C] text-white flex items-center justify-center text-3xl font-extrabold shadow-md border-2 border-[#053626]">
+                🌮
+              </div>
+              <div className="text-left">
+                <h4 className="font-modak text-xl text-[#053626] uppercase font-extrabold">REAL DEAL TEX-MEX</h4>
+                <p className="text-xs text-[#5F0E00] font-bold">Gold-Wrapped Burritos, Queso Nachos & Craft Salsa</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <span className="bg-[#053626] text-[#FFC042] text-xs font-extrabold px-3 py-1.5 rounded-xl uppercase shadow-sm">
+                FSSAI Certified
+              </span>
+              <span className="bg-[#F83E1C] text-white text-xs font-extrabold px-3 py-1.5 rounded-xl uppercase shadow-sm">
+                Fast WhatsApp Pickup
+              </span>
+            </div>
+          </div>
+
+          {/* Action Call / WhatsApp Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+            <a
+              href={`tel:${cleanPhone}`}
+              className="inline-flex items-center gap-2 bg-[#053626] hover:bg-black text-[#FFC042] font-modak text-base sm:text-xl font-extrabold px-6 py-3 rounded-full border-2 border-[#FFC042] shadow-xl transition-all"
+            >
+              <Phone className="h-4 w-4" /> CALL DIRECT: {phoneDisplay}
+            </a>
+            <a
+              href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order Burrito Madre.`)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 bg-[#F83E1C] hover:bg-black text-white font-modak text-base sm:text-xl font-extrabold px-6 py-3 rounded-full border-2 border-white shadow-xl transition-all"
+            >
+              <MessageSquare className="h-4 w-4" /> INSTANT WHATSAPP ORDER
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. SCRAPED BUSINESS DATA BAR (#053626 Cantina Emerald) */}
+      <section className="bg-[#053626] text-[#FAE8DF] py-6 px-4 sm:px-10 border-b-4 border-[#FFC042]">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-center font-sans">
+          <div className="bg-[#FAE8DF]/10 p-3 rounded-2xl border border-[#FFC042]/30">
+            <span className="text-[#FFC042] font-bold text-xs uppercase block">📍 Address & City</span>
+            <span className="text-white text-sm sm:text-base font-extrabold truncate block">{lead.address || lead.city}</span>
+          </div>
+          <div className="bg-[#FAE8DF]/10 p-3 rounded-2xl border border-[#FFC042]/30">
+            <span className="text-[#FFC042] font-bold text-xs uppercase block">📞 Phone Line</span>
+            <span className="text-white text-sm sm:text-base font-extrabold truncate block">{phoneDisplay}</span>
+          </div>
+          <div className="bg-[#FAE8DF]/10 p-3 rounded-2xl border border-[#FFC042]/30">
+            <span className="text-[#FFC042] font-bold text-xs uppercase block">💬 WhatsApp Express</span>
+            <span className="text-white text-sm sm:text-base font-extrabold truncate block">Instant Order & Pickup</span>
+          </div>
+          <div className="bg-[#FAE8DF]/10 p-3 rounded-2xl border border-[#FFC042]/30">
+            <span className="text-[#FFC042] font-bold text-xs uppercase block">⭐ Reputation</span>
+            <span className="text-white text-sm sm:text-base font-extrabold truncate block">{lead.rating ?? 4.8}★ ({lead.reviewsCount ?? 334}+ Reviews)</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. 8-ITEM TEX-MEX STREET FOOD MENU SHOWCASE GRID */}
+      <section className="py-14 px-4 sm:px-10 bg-[#FAE8DF]">
+        <div className="max-w-6xl mx-auto text-center mb-10">
+          <span className="bg-[#F83E1C] text-white font-modak text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">
+            BURRITO MADRE MENU ★
+          </span>
+          <h2 className="font-modak text-4xl sm:text-7xl text-[#5F0E00] font-extrabold uppercase mt-3 tracking-tight">
+            CRAFT TEX-MEX FIESTA
+          </h2>
+          <p className="text-base sm:text-xl text-[#5F0E00] font-bold max-w-xl mx-auto mt-2">
+            Freshly prepared in {lead.city} using 100% natural ingredients, gold-wrapped burritos & artisanal salsas!
+          </p>
+        </div>
+
+        {/* 8 Product Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          {texMexMenu.map((item, idx) => (
+            <div
+              key={idx}
+              className="bg-white p-4 rounded-3xl border-3 border-[#5F0E00] shadow-lg flex flex-col justify-between hover:scale-105 transition-transform duration-300"
+            >
+              <div>
+                <div className="relative overflow-hidden rounded-2xl mb-3 h-44">
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                  <span className="absolute top-2 left-2 bg-[#F83E1C] text-white font-modak text-[11px] px-3 py-1 rounded-full shadow-md uppercase font-bold">
+                    {item.badge}
+                  </span>
+                </div>
+                <h3 className="font-modak text-lg text-[#F83E1C] uppercase font-extrabold mb-1">{item.title}</h3>
+                <p className="text-xs text-[#5F0E00] font-semibold leading-relaxed mb-3">{item.desc}</p>
+              </div>
+
+              <a
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order ${item.title}.`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-2 bg-[#FFC042] hover:bg-[#053626] hover:text-white text-[#053626] font-modak text-sm font-extrabold rounded-2xl border-2 border-[#053626] transition-colors uppercase text-center block"
+              >
+                ORDER ON WHATSAPP →
+              </a>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 5. "ROLL WITH THE REAL" BANNER SECTION */}
+      <section className="bg-[#F83E1C] text-white py-14 px-4 sm:px-10 text-center relative overflow-hidden">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="font-modak text-5xl sm:text-9xl text-white font-extrabold uppercase leading-none tracking-tight drop-shadow-lg mb-4">
+            ROLL WITH THE REAL
+          </h2>
+          <p className="text-lg sm:text-3xl font-extrabold text-[#FFC042] max-w-2xl mx-auto mb-8">
+            Experience the real taste at {lead.name}. No shortcuts, no fake flavors — only fresh ingredients crafted daily in {lead.city}!
+          </p>
+          <a
+            href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to reserve a table.`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-block bg-[#053626] hover:bg-white hover:text-[#053626] text-[#FFC042] font-modak text-xl sm:text-3xl font-extrabold px-10 py-4 rounded-full border-4 border-white shadow-2xl transition-all uppercase cursor-pointer"
+          >
+            ORDER / RESERVE TABLE →
+          </a>
+        </div>
+      </section>
+
+      {/* 6. LOYALTY SECTION ("PROVE HOW LOYAL YOU ARE") */}
+      <section className="bg-[#FAE8DF] py-14 px-4 sm:px-10 text-center border-t-4 border-[#5F0E00]">
+        <div className="max-w-4xl mx-auto bg-white p-8 rounded-3xl border-4 border-[#053626] shadow-2xl">
+          <span className="bg-[#053626] text-[#FFC042] font-modak text-xs font-extrabold px-4 py-1 rounded-full uppercase">
+            MADRE REWARDS & LOYALTY ★
+          </span>
+          <h3 className="font-modak text-3xl sm:text-6xl text-[#F83E1C] font-extrabold uppercase my-3">
+            PROVE HOW LOYAL YOU ARE
+          </h3>
+          <p className="text-sm sm:text-lg text-[#5F0E00] font-bold mb-6">
+            Earn points on every order at {lead.name} and unlock free burritos, loaded nachos & craft beverages!
+          </p>
+          <a
+            href={`tel:${cleanPhone}`}
+            className="inline-block bg-[#F83E1C] text-white font-modak text-lg sm:text-2xl px-8 py-3 rounded-full border-2 border-[#5F0E00] shadow-md hover:bg-black transition-colors uppercase font-extrabold"
+          >
+            CALL FOR LOYALTY PERKS: {phoneDisplay}
+          </a>
+        </div>
+      </section>
+
+      {/* 7. DARK EMERALD FOOTER & EMBEDDED GOOGLE MAP */}
+      <footer className="bg-[#053626] text-[#FAE8DF] py-12 px-4 sm:px-10 text-center relative">
+        <h2 className="font-modak text-4xl sm:text-8xl text-[#FFC042] font-extrabold uppercase mb-3">
+          {brandName}
+        </h2>
+        <p className="text-base sm:text-xl text-[#FAE8DF] font-bold max-w-xl mx-auto mb-6">
+          Serving hot authentic Tex-Mex street food in {lead.city}. Visit us at {lead.address || lead.city}!
+        </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
+          <a
+            href={`tel:${cleanPhone}`}
+            className="bg-[#FFC042] hover:bg-white text-[#053626] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer"
+          >
+            📞 CALL: {phoneDisplay}
+          </a>
+          <a
+            href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order Burrito Madre.`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="bg-[#F83E1C] hover:bg-white text-white hover:text-[#F83E1C] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer"
+          >
+            💬 WHATSAPP ORDER →
+          </a>
+        </div>
+
+        {/* Embedded Google Map */}
+        <div className="max-w-4xl mx-auto rounded-3xl overflow-hidden border-4 border-[#FFC042] shadow-2xl mb-8">
+          <iframe
+            title={`Map for ${lead.name}`}
+            width="100%"
+            height="260"
+            style={{ border: 0 }}
+            loading="lazy"
+            allowFullScreen
+            src={`https://www.google.com/maps?q=${encodeURIComponent(`${lead.name}, ${lead.address || ""}, ${lead.city}`)}&output=embed`}
+          />
+        </div>
+
+        <div className="border-t border-[#FAE8DF]/20 pt-6 text-xs sm:text-sm font-semibold opacity-80">
+          © 2026 {lead.name} • {lead.city} • All rights reserved • Powered by ClientForge Live Preview Engine
+        </div>
+      </footer>
+    </div>
+  );
+}
+
