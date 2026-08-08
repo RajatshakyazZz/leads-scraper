@@ -73,22 +73,25 @@ export function Phase1Scrape({
     }
 
     setLoading(true);
-    setProgress(5);
+    setProgress(3);
     setScrapeStage(`📡 Connecting Google Maps Radar API for "${nextInput.niche}"...`);
     setCurrentLeadCount(0);
     setTotalTargetCount(nextInput.count);
 
-    // Initial API simulation progress interval
+    // Realistic continuous 30-40s progress interval while network request runs
     const progressTimer = setInterval(() => {
       setProgress((prev) => {
-        if (prev < 42) {
-          if (prev === 15) setScrapeStage(`🔍 Scanning Google Maps listings for "${nextInput.niche}" in ${nextInput.city}...`);
-          if (prev === 30) setScrapeStage(`📍 Resolving GPS location coordinates & place IDs...`);
-          return prev + 4;
+        if (prev < 85) {
+          const next = prev + 1;
+          if (next === 12) setScrapeStage(`🔍 Querying live Google Maps listings for "${nextInput.niche}" in ${nextInput.city}...`);
+          if (next === 30) setScrapeStage(`📍 Resolving GPS coordinates & place IDs...`);
+          if (next === 52) setScrapeStage(`📞 Extracting direct phone numbers, WhatsApp & Google review metrics...`);
+          if (next === 74) setScrapeStage(`💾 Indexing business profiles & storing to workspace database...`);
+          return next;
         }
         return prev;
       });
-    }, 150);
+    }, 380); // 380ms * 85 steps = ~32 seconds smooth realistic arc
 
     try {
       const token = await getIdToken();
@@ -111,20 +114,20 @@ export function Phase1Scrape({
       }
 
       setLeads([]);
-      setProgress(48);
       const totalLeads = data.leads.length;
       setTotalTargetCount(totalLeads);
+      const startPct = Math.max(75, progress);
 
-      // Stagger leads into state with accurate incremental percentage
+      // Stagger leads into state every 300ms for a realistic 3-4s visual reveal on map and table
       for (let i = 0; i < totalLeads; i++) {
         const lead = data.leads[i];
-        await new Promise((r) => setTimeout(r, 90));
+        await new Promise((r) => setTimeout(r, 280));
         setLeads(data.leads.slice(0, i + 1));
         setCurrentLeadCount(i + 1);
 
-        const currentPct = Math.min(98, Math.round(48 + ((i + 1) / totalLeads) * 48));
+        const currentPct = Math.min(99, Math.round(startPct + ((i + 1) / totalLeads) * (99 - startPct)));
         setProgress(currentPct);
-        setScrapeStage(`📞 Extracting phone, WhatsApp & review metrics for "${lead.name}"...`);
+        setScrapeStage(`✨ Found Business #${i + 1}: "${lead.name}" (${lead.rating ?? 4.8}★, ${lead.reviewsCount ?? 0} reviews)`);
       }
 
       setProgress(100);
@@ -137,7 +140,7 @@ export function Phase1Scrape({
     } finally {
       setTimeout(() => {
         setLoading(false);
-      }, 700);
+      }, 1000);
     }
   }
 
