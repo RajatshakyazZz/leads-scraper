@@ -13,9 +13,10 @@ import { Phase4Build } from "@/components/Phase4Build";
 import { Phase5Outreach } from "@/components/Phase5Outreach";
 import { scoreLead } from "@/lib/scoring";
 import type { Lead, AuditResult } from "@/lib/types";
-import { Loader2, LogOut, Sparkles, History, Zap } from "lucide-react";
+import { Loader2, LogOut, Sparkles, History, Zap, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SessionHistory } from "@/components/SessionHistory";
+import { ProfileModal } from "@/components/ProfileModal";
 import { toast } from "sonner";
 
 export default function Page() {
@@ -34,6 +35,7 @@ function LeadLaunchApp() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -157,6 +159,16 @@ function LeadLaunchApp() {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => setShowProfile(true)}
+              aria-label="Manage Profile"
+              className="h-9 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white"
+            >
+              <User className="h-3.5 w-3.5 mr-1.5 text-lime-400" aria-hidden="true" />
+              Profile
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => setShowHistory(true)}
               aria-label="View Scraped History"
               className="h-9 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white"
@@ -251,6 +263,11 @@ function LeadLaunchApp() {
             onLoadSession={handleLoadSession}
             currentSessionId={sessionId}
             onDuplicateSession={handleDuplicateSession}
+          />
+        )}
+        {showProfile && (
+          <ProfileModal
+            onClose={() => setShowProfile(false)}
           />
         )}
       </AnimatePresence>
