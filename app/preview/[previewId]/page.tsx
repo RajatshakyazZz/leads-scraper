@@ -90,8 +90,8 @@ export default function PreviewPage({ params }: { params: Promise<{ previewId: s
         </div>
         <h2 className="text-xl font-bold text-white mb-2">Preview Not Found</h2>
         <p className="text-sm text-slate-400 max-w-md mb-6">{error || "This preview link could not be found."}</p>
-        <Button onClick={() => window.location.href = "/"} className="bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl">
-          Return to DizoPulse Homepage
+        <Button onClick={() => window.location.href = "/"} className="bg-lime-500 hover:bg-lime-400 text-slate-950 font-bold text-xs rounded-xl">
+          Return to LeadForge Homepage
         </Button>
       </div>
     );
@@ -110,7 +110,7 @@ export default function PreviewPage({ params }: { params: Promise<{ previewId: s
           </div>
           <div className="truncate">
             <h1 className="font-bold text-xs sm:text-sm text-white truncate">{lead.name} — Live Website Preview</h1>
-            <p className="text-[10px] text-amber-400/90 font-mono truncate">Lifetime Active Link • DizoPulse Leads Scraper</p>
+            <p className="text-[10px] text-amber-400/90 font-mono truncate">Lifetime Active Link • LeadForge Cold Lead Engine</p>
           </div>
         </div>
 

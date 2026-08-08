@@ -29,18 +29,18 @@ export function AdminLogin() {
       <Card className="w-full max-w-sm rounded-2xl border border-sky-100 bg-white/95 shadow-xl shadow-sky-500/5">
         <CardHeader className="text-center space-y-3 pt-6">
           <Image
-            src="/logo.png"
-            alt="DizoPulse"
-            width={120}
-            height={40}
+            src="/icon.png"
+            alt="LeadForge"
+            width={44}
+            height={44}
             priority
-            className="mx-auto h-auto w-[110px]"
+            className="mx-auto h-11 w-11 object-contain rounded-xl border border-lime-500/30 bg-slate-950 p-1"
           />
           <div>
             <CardTitle className="font-sans font-bold text-2xl text-slate-900 flex items-center justify-center gap-1">
-              Dizo<span className="text-sky-600 font-extrabold">Pulse</span>
+              LEAD<span className="text-lime-600 font-black">FORGE</span>
             </CardTitle>
-            <CardDescription className="text-xs text-sky-600/90 font-sans font-bold uppercase tracking-wider mt-1">Admin Panel</CardDescription>
+            <CardDescription className="text-xs text-lime-600/90 font-sans font-bold uppercase tracking-wider mt-1">Admin Panel</CardDescription>
           </div>
         </CardHeader>
 

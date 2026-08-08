@@ -30,18 +30,18 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
     <div className="flex flex-col h-full bg-white border-r border-sky-100 w-64 shrink-0">
       <div className="p-5 flex items-center gap-2.5 border-b border-sky-100/60">
         <Image
-          src="/logo.png"
-          alt="DizoPulse"
-          width={40}
-          height={40}
+          src="/icon.png"
+          alt="LeadForge"
+          width={36}
+          height={36}
           priority
-          className="h-9 w-9 object-contain rounded-xl"
+          className="h-9 w-9 object-contain rounded-xl border border-lime-500/30 bg-slate-950 p-1"
         />
         <div>
           <div className="font-sans font-bold text-base tracking-tight leading-none text-slate-900 flex items-center gap-1">
-            Dizo<span className="text-sky-600 font-extrabold">Pulse</span>
+            LEAD<span className="text-lime-600 font-extrabold">FORGE</span>
           </div>
-          <div className="text-[9px] text-sky-600/90 leading-tight tracking-[0.14em] uppercase mt-0.5 font-sans font-bold">
+          <div className="text-[9px] text-lime-600/90 leading-tight tracking-[0.14em] uppercase mt-0.5 font-sans font-bold">
             Admin Panel
           </div>
         </div>

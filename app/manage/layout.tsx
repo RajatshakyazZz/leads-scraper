@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Admin · DizoPulse",
+  title: "Admin · LeadForge",
   robots: { index: false, follow: false },
 };
 

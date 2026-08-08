@@ -106,7 +106,7 @@ function LeadLaunchApp() {
       <main className="min-h-screen flex items-center justify-center px-4 bg-[#080B11]">
         <div className="flex flex-col items-center gap-3 text-sm text-slate-400 font-bold">
           <Loader2 className="h-8 w-8 animate-spin text-lime-400" aria-hidden="true" />
-          <span>INITIALIZING DIZOPULSE AGENT ENGINE...</span>
+          <span>INITIALIZING LEADFORGE AGENT ENGINE...</span>
         </div>
       </main>
     );
@@ -128,16 +128,16 @@ function LeadLaunchApp() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Image
-              src="/logo.png"
-              alt="DizoPulse"
-              width={50}
-              height={50}
+              src="/icon.png"
+              alt="LeadForge"
+              width={40}
+              height={40}
               priority
-              className="h-10 w-10 object-contain rounded-xl border border-lime-500/30"
+              className="h-10 w-10 object-contain rounded-xl border border-lime-500/30 shadow-md shadow-lime-500/20"
             />
             <div>
               <div className="font-sans font-black text-xl tracking-tight leading-none text-white flex items-center gap-1">
-                DIZO<span className="text-lime-400 font-black">PULSE</span>
+                LEAD<span className="text-lime-400 font-black">FORGE</span>
               </div>
               <div className="text-[9px] text-lime-400/90 leading-tight tracking-[0.18em] uppercase mt-1 font-mono font-bold">
                 LEAD → LAUNCH AI

@@ -18,11 +18,11 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DizoPulse · Leads Scraper",
-  description: "DizoPulse — High-converting local business scraping, auditing, ranking, building, and outreach engine.",
+  title: "LeadForge · Cold Lead to Live Demo Engine",
+  description: "LeadForge — High-converting local business scraping, auditing, ranking, website building, and cold outreach engine.",
   icons: {
     icon: "/icon.png",
-    shortcut: "/favicon.ico",
+    shortcut: "/icon.png",
     apple: "/icon.png",
   },
 };
