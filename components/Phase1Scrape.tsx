@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PhaseShell } from "./PhaseShell";
-import { Download, Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail, ShieldCheck, Zap } from "lucide-react";
+import { Download, Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail, ShieldCheck, Zap, Radio, Search, CheckCircle2, Sparkles } from "lucide-react";
 import type { Lead, ScrapeInput } from "@/lib/types";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
@@ -39,6 +39,13 @@ export function Phase1Scrape({
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
+
+  // Scrape Progress State
+  const [progress, setProgress] = useState(0);
+  const [scrapeStage, setScrapeStage] = useState("");
+  const [currentLeadCount, setCurrentLeadCount] = useState(0);
+  const [totalTargetCount, setTotalTargetCount] = useState(0);
+
   const DEFAULT_LEAD_LIMIT = 15;
   const remaining = quota?.remaining ?? DEFAULT_LEAD_LIMIT;
   const maxCount = Math.max(1, Math.min(25, remaining));
@@ -59,6 +66,23 @@ export function Phase1Scrape({
     }
 
     setLoading(true);
+    setProgress(5);
+    setScrapeStage(`📡 Connecting to Google Maps radar for ${nextInput.niche}...`);
+    setCurrentLeadCount(0);
+    setTotalTargetCount(nextInput.count);
+
+    // Initial API simulation progress interval
+    const progressTimer = setInterval(() => {
+      setProgress((prev) => {
+        if (prev < 40) {
+          if (prev === 15) setScrapeStage(`🔍 Scanning Google Maps for ${nextInput.niche} in ${nextInput.city}...`);
+          if (prev === 30) setScrapeStage(`📍 Resolving GPS coordinates & place listings...`);
+          return prev + 5;
+        }
+        return prev;
+      });
+    }, 180);
+
     try {
       const token = await getIdToken();
       const res = await fetch("/api/scrape", {
@@ -66,6 +90,8 @@ export function Phase1Scrape({
         headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
         body: JSON.stringify(nextInput),
       });
+      clearInterval(progressTimer);
+
       const data = await res.json();
       if (data.quota) updateQuota(data.quota);
       if (!res.ok) {
@@ -78,16 +104,33 @@ export function Phase1Scrape({
       }
 
       setLeads([]);
-      // Stagger in for visual drama
-      for (let i = 0; i < data.leads.length; i++) {
-        await new Promise((r) => setTimeout(r, 80));
+      setProgress(45);
+      const totalLeads = data.leads.length;
+      setTotalTargetCount(totalLeads);
+
+      // Stagger leads into state with accurate incremental percentage
+      for (let i = 0; i < totalLeads; i++) {
+        const lead = data.leads[i];
+        await new Promise((r) => setTimeout(r, 90));
         setLeads(data.leads.slice(0, i + 1));
+        setCurrentLeadCount(i + 1);
+
+        const currentPct = Math.min(98, Math.round(45 + ((i + 1) / totalLeads) * 50));
+        setProgress(currentPct);
+        setScrapeStage(`📞 Extracting contact & review metrics for "${lead.name}"...`);
       }
-      toast.success(`${data.leads.length} leads scraped from ${nextInput.city}`);
+
+      setProgress(100);
+      setScrapeStage(`✨ ${totalLeads} Leads Scraped & Stored to Workspace Database!`);
+      toast.success(`${totalLeads} leads scraped from ${nextInput.city}`);
     } catch (e) {
+      clearInterval(progressTimer);
+      setProgress(0);
       toast.error((e as Error).message);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 600);
     }
   }
 
@@ -133,7 +176,7 @@ export function Phase1Scrape({
       nextLabel="Audit these leads"
     >
       <div className="grid md:grid-cols-3 gap-6">
-        <Card className="md:col-span-1 rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl relative overflow-hidden">
+        <Card className="md:col-span-1 rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl relative overflow-hidden flex flex-col justify-between">
           <div className="absolute top-0 right-0 w-32 h-32 bg-lime-500/10 rounded-full blur-2xl pointer-events-none" />
           <CardHeader className="pb-3 pt-5 px-5 border-b border-slate-800">
             <CardTitle className="text-base tracking-tight font-black text-white uppercase flex items-center gap-2">
@@ -161,9 +204,54 @@ export function Phase1Scrape({
               </div>
               <ShieldCheck className="h-5 w-5 text-lime-400" aria-hidden="true" />
             </div>
+
+            {/* Interactive Realtime Loading Bar */}
+            <AnimatePresence>
+              {loading && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="rounded-xl border border-lime-500/40 bg-slate-950 p-3.5 space-y-2 shadow-lg overflow-hidden"
+                >
+                  <div className="flex items-center justify-between text-xs font-mono">
+                    <div className="flex items-center gap-2 text-lime-400 font-bold">
+                      <Radio className="h-4 w-4 animate-pulse text-lime-400 shrink-0" />
+                      <span className="truncate max-w-[180px]">{scrapeStage}</span>
+                    </div>
+                    <span className="font-black text-lime-400 tabular-nums">{progress}%</span>
+                  </div>
+
+                  {/* Animated Glow Bar */}
+                  <div className="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800 relative">
+                    <motion.div
+                      className="h-full bg-lime-400 shadow-[0_0_12px_rgba(132,204,22,0.8)] rounded-full transition-all duration-300"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+
+                  {totalTargetCount > 0 && (
+                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-0.5">
+                      <span>Status: Extracting Live Data</span>
+                      <span className="text-white font-bold tabular-nums">
+                        {currentLeadCount} / {totalTargetCount} Leads
+                      </span>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <Button onClick={runScrape} disabled={loading} className="w-full h-11 rounded-xl bg-lime-500 hover:bg-lime-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer transition-all">
-              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin text-slate-950" /> Scraping Google Maps...</> : (quota && quota.remaining <= 0) ? "Increase lead limit" : "Scrape Leads Now →"}
+              {loading ? (
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin text-slate-950" /> Scraping Google Maps ({progress}%)...</>
+              ) : (quota && quota.remaining <= 0) ? (
+                "Increase lead limit"
+              ) : (
+                "Scrape Leads Now →"
+              )}
             </Button>
+
             <div className="grid grid-cols-3 gap-2 pt-1">
               <Stat label="Found" value={leads.length} />
               <Stat label="With phone" value={leads.filter((l) => l.phone).length} />
@@ -172,11 +260,16 @@ export function Phase1Scrape({
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-2 rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl overflow-hidden flex flex-col">
-          <CardHeader className="pb-3 pt-5 px-5 border-b border-slate-800">
+        <Card className="md:col-span-2 rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl overflow-hidden flex flex-col relative">
+          <CardHeader className="pb-3 pt-5 px-5 border-b border-slate-800 flex flex-row items-center justify-between">
             <CardTitle className="text-base tracking-tight font-black text-white uppercase flex items-center gap-2">
               <MapPin className="h-4 w-4 text-lime-400" /> Realtime Scraped Google Map Radar
             </CardTitle>
+            {loading && (
+              <Badge className="bg-lime-500/10 text-lime-400 border-lime-500/30 font-mono text-[10px] font-black uppercase tracking-wider animate-pulse flex items-center gap-1.5">
+                <Radio className="h-3 w-3 animate-spin text-lime-400" /> Live Scanning ({progress}%)
+              </Badge>
+            )}
           </CardHeader>
           <CardContent className="h-[360px] md:h-full min-h-[380px] p-0 relative">
             <div className="absolute inset-0 z-0">
