@@ -100,7 +100,7 @@ export function Phase4Build({
   }, [selected]);
 
   const nichePreset = useMemo(() => (selected ? getNichePreset(selected.category, selected.name) : null), [selected]);
-  const prompt = useMemo(() => (selected && nichePreset ? buildPrompt(selected, platform, nichePreset) : ""), [selected, platform, nichePreset]);
+  const prompt = useMemo(() => (selected && nichePreset ? buildPrompt(selected, platform, nichePreset, restaurantStyle) : ""), [selected, platform, nichePreset, restaurantStyle]);
 
   function copyPrompt() {
     if (!prompt) return;
@@ -1425,7 +1425,8 @@ function getNichePreset(category: string, name: string) {
 function buildPrompt(
   l: RankedLead,
   platform: string,
-  preset: ReturnType<typeof getNichePreset>
+  preset: ReturnType<typeof getNichePreset>,
+  style: "crav" | "classic" = "crav"
 ): string {
   const name = l.name;
   const niche = l.category;
@@ -1436,6 +1437,80 @@ function buildPrompt(
   const reviews = l.reviewsCount ?? 334;
   const gap = l.audit.biggestGap;
   const waClean = whatsapp.replace(/\D/g, "");
+
+  const isRest = `${niche} ${name}`.toLowerCase().match(/restau|cafe|burg|food|dini|pizz|baker|biryan|thali|veg/);
+
+  if (isRest && style === "crav") {
+    return `You are crafting a world-class, high-energy, ultra-bold Artisan Smashed Burger & Dining landing page for "${name}", located in ${l.city}.
+
+# CLIENT BUSINESS PROFILE
+- Business Name: ${name}
+- Industry Niche: ${niche} (Artisan Dining & Smashed Kitchen)
+- Address: ${addr}
+- City: ${l.city}
+- Direct Phone: ${phone}
+- WhatsApp Reservation / Ordering: ${whatsapp}
+- Google Reputation: ${rating}★ Stars (${reviews}+ Verified Reviews)
+- Audit Gap Solved: ${gap} (Est. Revenue Impact: ₹${(l.audit.estLostRevenuePerMonth || 45000).toLocaleString()}/month)
+
+# ARTISAN DESIGN SYSTEM (EXACT CRAV SOURCE CODE THEME)
+- Display Fonts: Display Headers in Google Font "Modak" (bubble retro thick serif) with white/red text-stroke (-webkit-text-stroke: 3px #ffffff / #4C0016). Subtitles & Quotes in Google Font "Mouse Memoirs".
+- Color Palette:
+  - Cream Beige: #F5E3CD
+  - Crimson Red: #EF1624 / #f91814
+  - Mustard Yellow: #FFC614
+  - Dark Burgundy: #4C0016
+- Section Dividers: SVG Jelly Wave Dividers between all sections (<path fill="#EF1624" d="M1536,0 H-1 V135 S184.32,65 460.8,155..." />).
+- Micro-Animations: Tilted floating badge stickers (-12deg / 15deg), hero dish image with animated cartoon eye badges (<div className="w-12 h-12 bg-white rounded-full"><div className="w-5 h-5 bg-black animate-bounce" /></div>), floating ingredient cards, and infinite marquee loop.
+
+# HIGH-CONVERTING PAGE SECTIONS (CRAV ARTISAN LAYOUT)
+1. Top Sticky Nav Bar: Brand Logo "${name.split(" ")[0]}" in giant Modak font + "ORDER NOW" Red Pill Button + "MENU ≡" Outline Button.
+2. Hero Section (#F5E3CD Cream):
+   - Tilted Badges: "SMASHED FRESH" (-12deg) & "BOLD FLAVOR" (15deg) in Mustard Yellow #FFC614.
+   - Giant Header: "THE BURGER" in Red #EF1624 with white text-stroke.
+   - Center Hero Image: Artisan Smashed Double Patty with cartoon eye overlays.
+   - Giant Mustard Footer Text: "${name.toUpperCase()}" in #FFC614 with dark stroke.
+   - Side Callouts: "Smashed hot on the flat top, our prime patties lock in ultimate juiciness..." & "Topped with melted cheddar and signature chili honey glaze in ${l.city}."
+3. Section 2 - Top Classic (#EF1624 Red Background):
+   - Tilted Pill: "TOP CLASSIC ★"
+   - Stacked Title: "JUICY CHEESY FULLY LOADED"
+   - Red Blob CTA Button: "ORDER NOW →"
+   - 3 Tilted Cards (-6deg, 0deg, 6deg): Double Smashed Patty, Cheesy Loaded Smash, Peri Peri Golden Fries.
+4. Section 3 - Food That Feels Good (#f91814 Crimson Background):
+   - Tilted Pill: "EXPERIENCE"
+   - Giant Title: "FOOD THAT FEELS GOOD"
+   - Dish image surrounded by floating stats: "450 kcal High Protein Fresh Ingredients" & "100% Organic Zero Guilt True Taste".
+5. Section 4 - Pure Quality Ingredients (#F5E3CD Cream Background):
+   - Tilted Pill: "PURE QUALITY"
+   - Giant Title: "EVERY LAYER PACKED WITH SIGNATURE FLAVOR"
+   - 4 Floating Ingredient Cards: Garden Lettuce 🥬, Vine Tomatoes 🍅, Melted Cheddar 🧀, Prime Patty 🥩.
+6. Section 5 - Indian Guest Reviews Marquee Loop (#4C0016 Dark Burgundy):
+   - Continuous horizontal scrolling marquee loop (motion.div animate={{ x: [0, -1400] }} transition={{ repeat: Infinity, duration: 25, ease: "linear" }}).
+   - Review Cards in #F5E3CD with #FFC614 border:
+     * Rajesh Sharma (Delhi • Local Guide 5★)
+     * Ananya Verma (Mumbai • Food Blogger 5★)
+     * Vikramaditya Singh (Jaipur • Gourmet Diner 5★)
+     * Priya Patel (Ahmedabad • Verified Guest 5★)
+     * Kabir Mehta (Bengaluru • Tech Lead 5★)
+     * Sneha Kulkarni (Pune • Foodie 5★)
+7. Section 6 - Take Away (#FFC614 Mustard Yellow Background):
+   - Giant Title: "QUALITY THAT TRAVELS WITH YOU"
+   - 5 Location Takeaway Cards: Berlin, London, New York, Sydney, Tokyo (Express Takeaway Zones in ${l.city}).
+8. Section 7 - Footer & Live Map (#4C0016 Burgundy):
+   - Section Title: "FEEL THE CHANGE"
+   - WhatsApp Order Button: https://wa.me/${waClean}?text=Hi%20${encodeURIComponent(name)},%20I%20want%20to%20order%20or%20reserve%20a%20table.
+   - Embedded Google Maps Iframe: Location map for "${name}, ${addr}, ${l.city}".
+
+${
+  platform === "lovable" || platform === "bolt"
+    ? `OUTPUT FORMAT: Single React + Tailwind CSS landing page component with full smooth interactivity. Use Unsplash photo URLs.`
+    : platform === "claude-code"
+      ? "OUTPUT FORMAT: Next.js 15 App Router page with Tailwind CSS and shadcn components."
+      : "OUTPUT FORMAT: Self-contained index.html file with inline CSS and JS for slideshow."
+}
+
+Generate the complete production-ready code now.`;
+  }
 
   return `You are crafting a world-class, ultra-high converting, mobile-first website for an Indian ${niche} named "${name}" located in ${l.city}.
 
@@ -1467,7 +1542,7 @@ function buildPrompt(
 2. Hero Slideshow / Cover Banner: Niche Hero Cover Image + Headline + "${preset.ctaPrimary}" WhatsApp CTA + "${preset.ctaSecondary}" Phone CTA.
 3. Continuous Realtime Marquee Ticker Bar: ${rating}★ Rated (${reviews}+ Reviews) | Verified ${preset.nicheCategory} in ${l.city} | 100% Quality Guarantee.
 4. Niche Specialties & Signature Items Grid (6 Cards with High-Res Unsplash Photography):
-${preset.services.map((s, i) => `   ${i + 1}. [${(s as { badge?: string }).badge || "Featured"}] ${s.title}: ${s.desc} (Image: ${s.image})`).join("\n")}
+${preset.services.map((s, i) => `   ${i + 1}. [${(s as { badge?: string }).badge || "Featured"} ] ${s.title}: ${s.desc} (Image: ${s.image})`).join("\n")}
 5. Customer Reviews Carousel (Realtime Infinite Loop):
 ${preset.reviews.map((r) => `   - "${r.text}" — ${r.author} (${r.source})`).join("\n")}
 6. Why Guests Choose Us (4 Features Grid): Prime Location near landmarks | 100% Fresh & Authentic Kitchen | Multi-Cuisine | Family Friendly AC Dining.
