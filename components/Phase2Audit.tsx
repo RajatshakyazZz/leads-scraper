@@ -145,28 +145,28 @@ export function Phase2Audit({
       nextDisabled={auditedCount === 0}
       nextLabel="Rank prospects"
     >
-      {/* High Impact Coral Red Warning Banner */}
-      <div className="mb-6 rounded-2xl border border-red-500/30 bg-gradient-to-r from-red-950/40 via-red-900/20 to-slate-950 p-4 sm:p-5 flex items-center justify-between gap-4 flex-wrap shadow-xl">
+      {/* Sleek Minimal Revenue Leakage Summary Banner */}
+      <div className="mb-6 rounded-2xl border border-red-500/20 bg-gradient-to-r from-red-950/30 via-slate-900/40 to-slate-950 p-4 sm:p-5 flex items-center justify-between gap-4 flex-wrap shadow-lg">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-red-500/20 text-red-500 flex items-center justify-center font-black shrink-0 border border-red-500/40">
-            <Flame className="h-5 w-5" />
+          <div className="h-9 w-9 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center font-black shrink-0 border border-red-500/30">
+            <Flame className="h-4.5 w-4.5" />
           </div>
           <div>
-            <div className="text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-red-400">THE REVENUE PROBLEM</div>
-            <h2 className="font-sans font-black text-xl sm:text-2.5xl tracking-tight text-white uppercase leading-none">
-              IS THIS <span className="text-red-500">YOUR REALITY?</span>
+            <div className="text-[9px] font-mono font-extrabold uppercase tracking-[0.18em] text-red-400">REVENUE LEAKAGE AUDIT</div>
+            <h2 className="font-sans font-black text-lg sm:text-xl tracking-tight text-white uppercase leading-none mt-0.5">
+              UNCOVERED GROWTH BOTTLENECKS
             </h2>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Est. Total Revenue Leakage</div>
-          <div className="font-mono text-xl sm:text-2xl font-black text-white flex items-center justify-end">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-extrabold">Est. Total Revenue Leakage</div>
+          <div className="font-mono text-lg sm:text-xl font-black text-white flex items-center justify-end mt-0.5">
             {auditedCount > 0 ? (
               <>
-                <IndianRupee className="h-5 w-5 text-red-500 mr-0.5" /> {formatTotalRevenueRange(totalLost)}<span className="text-xs text-slate-400 font-sans font-normal">/mo (est. total)</span>
+                <IndianRupee className="h-4 w-4 text-red-500 mr-0.5" /> {formatTotalRevenueRange(totalLost)}<span className="text-xs text-slate-400 font-sans font-normal ml-1">/mo</span>
               </>
             ) : (
-              <span className="text-sm font-mono text-slate-400 font-bold">Awaiting Audit</span>
+              <span className="text-xs font-mono text-slate-500 font-bold">Awaiting Audit</span>
             )}
           </div>
         </div>

@@ -179,12 +179,12 @@ function LeadLaunchApp() {
         <Stepper current={phase} completed={completed} onJump={(n) => setPhase(n)} />
       </header>
 
-      {/* High-Impact Top Banner Statement (Matching User Reference Image) */}
-      <div className="bg-[#05070B] border-b border-slate-800/80 py-3 px-4 text-center">
-        <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 flex-wrap text-xs sm:text-sm font-black tracking-tight uppercase">
-          <span className="text-white">WE DON'T RUN COLD ADS.</span>
-          <span className="text-lime-400 bg-lime-500/10 px-2 py-0.5 rounded-md border border-lime-500/30">WE PRINT REVENUE FOR YOUR BUSINESS.</span>
-          <span className="text-slate-400 font-mono text-[11px] font-normal">| 5-Min Automated Lead → Prototype Pipeline</span>
+      {/* Minimal Professional Sub-Header Bar */}
+      <div className="border-b border-slate-800/60 bg-slate-950/60 py-2.5 px-4 text-center">
+        <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 flex-wrap text-xs font-mono font-bold tracking-wider uppercase text-slate-400">
+          <span className="text-lime-400 font-extrabold">CLIENTFORGE PIPELINE</span>
+          <span className="text-slate-700">•</span>
+          <span className="text-slate-300">AUTOMATED GOOGLE MAPS SCRAPING, AUDITING & LIVE PREVIEW ENGINE</span>
         </div>
       </div>
 
