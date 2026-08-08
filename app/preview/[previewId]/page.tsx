@@ -728,39 +728,56 @@ function CravArtisanWebsiteRenderer({
   onOpenBooking: () => void;
 }) {
   const brandName = lead.name.toUpperCase();
-  const shortName = brandName.split(" ")[0] || "CRAV";
+  const phoneDisplay = lead.phone || "+91 95577 30531";
+
+  const recipes = [
+    { title: "Signature Artisan Double Smashed Patty", desc: "Dual prime patties smashed hot at 400°F on flat-top, melted cheddar & chili honey glaze.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80", tag: "Best Seller ★" },
+    { title: "Fully Loaded Cheesy Bacon & Mushroom Smash", desc: "Crispy caramelized patty topped with extra melted cheese & smoked pepper relish.", image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80", tag: "Chef's Special" },
+    { title: "Crispy Peri-Peri Golden Fries & Truffle Mayo", desc: "Hand-cut skin-on fries tossed in peri-peri spices, served with in-house truffle dip.", image: "https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=400&q=80", badge: "Hot & Crispy" },
+    { title: "Royal Shahi Paneer & Butter Garlic Naan", desc: "Rich cashew cream gravy cooked with royal spices, served with hot tandoori naan.", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80", tag: "Pure Veg Classic" },
+    { title: "Paneer Teen Zayka Tandoori Tikka Platter", desc: "Tri-color marinated paneer grilled in tandoor with three signature aromatic marinades.", image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=400&q=80", tag: "Tandoori Special" },
+    { title: "Belgian Chocolate & Alphonso Mango Thick Shake", desc: "Craft thick shake topped with real Alphonso mango pulp, fresh cream & cherries.", image: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=400&q=80", tag: "Sweet Treats" }
+  ];
 
   return (
     <div className="bg-[#F5E3CD] text-[#4C0016] font-sans relative overflow-x-hidden selection:bg-[#EF1624] selection:text-white">
-      {/* 1. TOP NAVBAR (BEIGE & RED) */}
-      <nav className="w-full flex items-center justify-between px-4 sm:px-10 py-4 bg-[#F5E3CD] sticky top-0 z-40 border-b border-[#4C0016]/10">
-        <a href="#hero" className="font-modak text-3xl sm:text-5xl text-[#EF1624] text-stroke-180 hover:scale-105 transition-transform tracking-wider">
-          {shortName}
+      {/* 1. TOP NAVBAR (BEIGE & RED WITH PROMINENT BUSINESS DETAILS & BUTTONS) */}
+      <nav className="w-full flex flex-wrap items-center justify-between px-4 sm:px-10 py-3.5 bg-[#F5E3CD] sticky top-0 z-40 border-b border-[#4C0016]/15 shadow-md gap-3">
+        <a href="#hero" className="font-modak text-2xl sm:text-4xl text-[#EF1624] text-stroke-180 hover:scale-105 transition-transform tracking-wider uppercase truncate">
+          {lead.name}
         </a>
-        <div className="flex items-center gap-2 sm:gap-4 font-mouse-memoirs">
-          <button
-            onClick={onOpenBooking}
-            className="text-sm sm:text-lg uppercase text-white bg-[#EF1624] px-4 sm:px-6 py-1.5 sm:py-2 rounded-full hover:bg-black transition-colors font-bold shadow-md cursor-pointer"
+        <div className="flex items-center gap-2 sm:gap-3 font-mouse-memoirs">
+          <a
+            href={`tel:${cleanPhone}`}
+            className="flex items-center gap-1.5 bg-[#4C0016] text-[#FFC614] px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-base font-bold uppercase hover:bg-black transition-colors shadow-sm"
           >
-            ORDER NOW
-          </button>
-          <button
-            onClick={onOpenBooking}
-            className="flex items-center gap-1.5 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full border-2 border-[#4C0016] text-xs sm:text-base font-bold uppercase text-[#4C0016] hover:bg-[#4C0016] hover:text-white transition-all cursor-pointer"
+            <Phone className="h-3.5 w-3.5" /> <span>{phoneDisplay}</span>
+          </a>
+          <a
+            href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to place an order.`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 bg-[#EF1624] text-white px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-base font-bold uppercase hover:bg-black transition-colors shadow-sm"
           >
-            <span>MENU ≡</span>
-          </button>
+            <MessageSquare className="h-3.5 w-3.5" /> <span>WhatsApp Order</span>
+          </a>
         </div>
       </nav>
 
-      {/* 2. HERO SECTION 1 */}
-      <section id="hero" className="relative min-h-[90vh] flex flex-col justify-between items-center pt-8 sm:pt-14 pb-8 px-4 text-center overflow-hidden">
-        {/* Tilted Floating Badges */}
+      {/* 2. HERO SECTION */}
+      <section id="hero" className="relative min-h-[90vh] flex flex-col justify-between items-center pt-6 sm:pt-10 pb-8 px-4 text-center overflow-hidden">
         <div className="w-full max-w-6xl mx-auto relative z-10 flex flex-col items-center">
+          {/* Rating Pill */}
+          <div className="inline-flex items-center gap-1.5 bg-[#4C0016] text-[#FFC614] px-4 py-1.5 rounded-full font-modak text-sm sm:text-lg mb-3 shadow-md border border-[#FFC614]">
+            <span>★ {lead.rating ?? 4.8} Google Rated</span>
+            <span className="text-white">({lead.reviewsCount ?? 334}+ Reviews)</span>
+            <span className="text-[#FFC614]">• {lead.city}</span>
+          </div>
+
           <motion.div
             initial={{ scale: 0.8, rotate: -12 }}
             animate={{ scale: 1, rotate: -12 }}
-            className="absolute -top-4 sm:top-2 left-2 sm:left-12 bg-[#FFC614] text-[#4C0016] font-modak text-xl sm:text-4xl px-3 sm:px-6 py-1 rounded-2xl border-2 border-[#4C0016] shadow-lg transform -rotate-12 z-20"
+            className="absolute -top-4 sm:top-4 left-2 sm:left-12 bg-[#FFC614] text-[#4C0016] font-modak text-xl sm:text-4xl px-3 sm:px-6 py-1 rounded-2xl border-2 border-[#4C0016] shadow-lg transform -rotate-12 z-20"
           >
             SMASHED FRESH
           </motion.div>
@@ -768,17 +785,18 @@ function CravArtisanWebsiteRenderer({
           <motion.div
             initial={{ scale: 0.8, rotate: 15 }}
             animate={{ scale: 1, rotate: 15 }}
-            className="absolute -top-4 sm:top-2 right-2 sm:right-12 bg-[#FFC614] text-[#4C0016] font-modak text-xl sm:text-4xl px-3 sm:px-6 py-1 rounded-2xl border-2 border-[#4C0016] shadow-lg transform rotate-15 z-20"
+            className="absolute -top-4 sm:top-4 right-2 sm:right-12 bg-[#FFC614] text-[#4C0016] font-modak text-xl sm:text-4xl px-3 sm:px-6 py-1 rounded-2xl border-2 border-[#4C0016] shadow-lg transform rotate-15 z-20"
           >
             BOLD FLAVOR
           </motion.div>
 
-          <h1 className="font-modak text-6xl sm:text-[11vw] text-[#EF1624] text-stroke-180 leading-none tracking-tight drop-shadow-md">
-            THE BURGER
+          {/* Prominent Full Business Name Header */}
+          <h1 className="font-modak text-4xl sm:text-[7vw] text-[#EF1624] text-stroke-180 leading-none tracking-tight uppercase drop-shadow-md my-2">
+            {brandName}
           </h1>
 
           {/* Center Hero Image with Animated Cartoon Eyes */}
-          <div className="relative my-4 sm:my-6 w-64 h-64 sm:w-96 sm:h-96 mx-auto group">
+          <div className="relative my-3 sm:my-5 w-64 h-64 sm:w-88 sm:h-88 mx-auto group">
             <img
               src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80"
               alt={lead.name}
@@ -795,9 +813,23 @@ function CravArtisanWebsiteRenderer({
             </div>
           </div>
 
-          <h2 className="font-modak text-5xl sm:text-[9vw] text-[#FFC614] text-stroke-dark leading-none tracking-wide">
-            {brandName}
-          </h2>
+          {/* Hero Action Buttons Bar */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
+            <a
+              href={`tel:${cleanPhone}`}
+              className="inline-flex items-center gap-2 bg-[#4C0016] hover:bg-black text-[#FFC614] font-modak text-lg sm:text-2xl px-6 py-2.5 rounded-full border-2 border-[#FFC614] shadow-xl transition-all cursor-pointer"
+            >
+              <Phone className="h-4 w-4" /> CALL DIRECT: {phoneDisplay}
+            </a>
+            <a
+              href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order or reserve a table.`)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 bg-[#EF1624] hover:bg-black text-white font-modak text-lg sm:text-2xl px-6 py-2.5 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer"
+            >
+              <MessageSquare className="h-4 w-4" /> INSTANT WHATSAPP ORDER
+            </a>
+          </div>
         </div>
 
         {/* Hero Bottom Side Descriptions */}
@@ -811,6 +843,28 @@ function CravArtisanWebsiteRenderer({
         </div>
       </section>
 
+      {/* SCRAPED CLIENT DETAILS BADGE CARD BAR */}
+      <section className="bg-[#4C0016] text-[#F5E3CD] py-6 px-4 sm:px-10 border-y-4 border-[#FFC614]">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-center font-mouse-memoirs">
+          <div className="bg-[#F5E3CD]/10 p-3 rounded-2xl border border-[#FFC614]/40">
+            <span className="text-[#FFC614] font-bold text-xs uppercase block">📍 Location & Address</span>
+            <span className="text-white text-sm sm:text-base font-bold truncate block">{lead.address || lead.city}</span>
+          </div>
+          <div className="bg-[#F5E3CD]/10 p-3 rounded-2xl border border-[#FFC614]/40">
+            <span className="text-[#FFC614] font-bold text-xs uppercase block">📞 Call Direct</span>
+            <span className="text-white text-sm sm:text-base font-bold truncate block">{phoneDisplay}</span>
+          </div>
+          <div className="bg-[#F5E3CD]/10 p-3 rounded-2xl border border-[#FFC614]/40">
+            <span className="text-[#FFC614] font-bold text-xs uppercase block">💬 WhatsApp Ordering</span>
+            <span className="text-white text-sm sm:text-base font-bold truncate block">Available 24/7</span>
+          </div>
+          <div className="bg-[#F5E3CD]/10 p-3 rounded-2xl border border-[#FFC614]/40">
+            <span className="text-[#FFC614] font-bold text-xs uppercase block">⭐ Rating & Reviews</span>
+            <span className="text-white text-sm sm:text-base font-bold truncate block">{lead.rating ?? 4.8}★ ({lead.reviewsCount ?? 334}+ Reviews)</span>
+          </div>
+        </div>
+      </section>
+
       {/* JELLY WAVE DIVIDER 1 */}
       <div className="w-full overflow-hidden leading-none z-20 relative">
         <svg className="w-full h-16 sm:h-28" viewBox="0 0 1536 300" fill="none" preserveAspectRatio="none">
@@ -818,47 +872,48 @@ function CravArtisanWebsiteRenderer({
         </svg>
       </div>
 
-      {/* 3. SECTION 2: TOP CLASSIC (RED BACKGROUND #EF1624) */}
+      {/* 3. SECTION 2: DIVERSE SIGNATURE RECIPES SHOWCASE (RED BACKGROUND #EF1624) */}
       <section className="bg-[#EF1624] text-white py-12 px-4 sm:px-10 text-center relative overflow-hidden">
-        <div className="inline-block bg-[#FFC614] text-[#4C0016] font-modak text-lg sm:text-2xl px-4 py-1 rounded-full border-2 border-white transform -rotate-5 mb-4 shadow-lg">
-          TOP CLASSIC ★
+        <div className="inline-block bg-[#FFC614] text-[#4C0016] font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-5 mb-3 shadow-lg">
+          SIGNATURE RECIPES & SPECIALTIES ★
         </div>
 
-        <h2 className="font-modak text-4xl sm:text-8xl text-white text-stroke-red leading-none mb-4 uppercase">
+        <h2 className="font-modak text-4xl sm:text-8xl text-white text-stroke-red leading-none mb-3 uppercase">
           JUICY CHEESY FULLY LOADED
         </h2>
 
         <p className="max-w-2xl mx-auto font-mouse-memoirs text-xl sm:text-3xl text-[#F5E3CD] leading-snug mb-8">
-          {lead.name} is back and bolder than ever. Honoring our rich culinary roots, we bring you the ultimate smashed experience — hot, fresh & fully loaded in {lead.city}!
+          {lead.name} is back and bolder than ever. Honoring our rich culinary roots, we bring you signature recipes — hot, fresh & fully loaded in {lead.city}!
         </p>
 
-        {/* Red Wavy Blob Order Button */}
-        <button
-          onClick={onOpenBooking}
-          className="inline-block bg-[#FFC614] hover:bg-white text-[#EF1624] font-modak text-2xl sm:text-4xl px-8 sm:px-12 py-3 sm:py-4 rounded-full border-4 border-white shadow-2xl transition-all hover:scale-105 cursor-pointer uppercase mb-12"
-        >
-          ORDER NOW →
-        </button>
+        {/* 6 Diverse Recipe Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
+          {recipes.map((rec, idx) => (
+            <div
+              key={idx}
+              className="bg-[#F5E3CD] p-4 rounded-3xl border-4 border-[#4C0016] shadow-xl flex flex-col justify-between transform hover:scale-105 transition-transform duration-300"
+            >
+              <div>
+                <div className="relative overflow-hidden rounded-2xl mb-3 h-48 sm:h-52">
+                  <img src={rec.image} alt={rec.title} className="w-full h-full object-cover" />
+                  <span className="absolute top-2 left-2 bg-[#EF1624] text-white font-modak text-xs px-3 py-1 rounded-full shadow-md">
+                    {rec.tag || rec.badge}
+                  </span>
+                </div>
+                <h3 className="font-modak text-xl text-[#EF1624] uppercase mb-1">{rec.title}</h3>
+                <p className="font-mouse-memoirs text-base text-[#4C0016] mb-3 leading-tight">{rec.desc}</p>
+              </div>
 
-        {/* 3 Tilted Showcase Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto items-center">
-          <div className="bg-[#F5E3CD] p-3 rounded-3xl border-4 border-[#4C0016] shadow-xl transform sm:-rotate-6 hover:rotate-0 transition-transform duration-300">
-            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80" alt="Artisan Smash Burger" className="w-full h-48 sm:h-56 object-cover rounded-2xl mb-3" />
-            <h3 className="font-modak text-xl text-[#EF1624] uppercase">Double Smashed Patty</h3>
-            <p className="font-mouse-memoirs text-base text-[#4C0016]">Caramelized crust & chili honey glaze</p>
-          </div>
-
-          <div className="bg-[#F5E3CD] p-3 rounded-3xl border-4 border-[#4C0016] shadow-xl transform sm:rotate-0 hover:scale-105 transition-transform duration-300 z-10">
-            <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80" alt="Cheesy Loaded" className="w-full h-48 sm:h-56 object-cover rounded-2xl mb-3" />
-            <h3 className="font-modak text-xl text-[#EF1624] uppercase">Cheesy Loaded Smash</h3>
-            <p className="font-mouse-memoirs text-base text-[#4C0016]">Extra cheddar & smoky bacon relish</p>
-          </div>
-
-          <div className="bg-[#F5E3CD] p-3 rounded-3xl border-4 border-[#4C0016] shadow-xl transform sm:rotate-6 hover:rotate-0 transition-transform duration-300">
-            <img src="https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=400&q=80" alt="Golden Fries" className="w-full h-48 sm:h-56 object-cover rounded-2xl mb-3" />
-            <h3 className="font-modak text-xl text-[#EF1624] uppercase">Peri Peri Golden Fries</h3>
-            <p className="font-mouse-memoirs text-base text-[#4C0016]">Hand-cut skin-on fries with truffle mayo</p>
-          </div>
+              <a
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order ${rec.title}.`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-2 bg-[#FFC614] hover:bg-[#4C0016] hover:text-white text-[#4C0016] font-modak text-lg rounded-2xl border-2 border-[#4C0016] transition-colors uppercase cursor-pointer block"
+              >
+                ORDER THIS RECIPE →
+              </a>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -1027,33 +1082,43 @@ function CravArtisanWebsiteRenderer({
 
         {/* 5 Location / Takeaway Cards */}
         <div className="flex flex-wrap justify-center gap-4 sm:gap-6 max-w-5xl mx-auto">
-          {["BERLIN", "LONDON", "NEW YORK", "SYDNEY", "TOKYO"].map((loc, idx) => (
+          {["CENTRAL EXPRESS", "WEST WING", "AIRPORT DRIVE", "STATION ROAD", "HERITAGE HUB"].map((loc, idx) => (
             <div
               key={idx}
-              className="bg-white/90 p-4 rounded-3xl border-3 border-[#4C0016] shadow-lg flex flex-col items-center w-36 sm:w-44 hover:scale-105 transition-transform"
+              className="bg-white/90 p-4 rounded-3xl border-3 border-[#4C0016] shadow-lg flex flex-col items-center w-40 sm:w-48 hover:scale-105 transition-transform"
             >
               <h4 className="font-modak text-lg text-[#EF1624] uppercase">{loc}</h4>
-              <p className="font-mouse-memoirs text-xs text-[#4C0016]">Smash Kitchen Express</p>
+              <p className="font-mouse-memoirs text-xs text-[#4C0016]">{lead.city} Outlet</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 7. FOOTER & EMBEDDED GOOGLE MAP */}
+      {/* 7. FOOTER & EMBEDDED GOOGLE MAP WITH DIRECT CONTACT ACTIONS */}
       <footer className="bg-[#4C0016] text-[#F5E3CD] py-12 px-4 sm:px-10 text-center relative">
-        <h2 className="font-modak text-5xl sm:text-8xl text-[#FFC614] text-stroke-dark uppercase mb-4">
-          FEEL THE CHANGE
+        <h2 className="font-modak text-4xl sm:text-8xl text-[#FFC614] text-stroke-dark uppercase mb-3">
+          {brandName}
         </h2>
         <p className="font-mouse-memoirs text-xl sm:text-2xl max-w-xl mx-auto mb-6">
           Smashed for the bold, built for the hungry. Visit us at {lead.address || lead.city}!
         </p>
 
-        <button
-          onClick={onOpenBooking}
-          className="bg-[#EF1624] hover:bg-[#FFC614] hover:text-[#4C0016] text-white font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer mb-10"
-        >
-          RESERVE TABLE / ORDER WHATSAPP →
-        </button>
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
+          <a
+            href={`tel:${cleanPhone}`}
+            className="bg-[#FFC614] hover:bg-white text-[#4C0016] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer"
+          >
+            📞 CALL: {phoneDisplay}
+          </a>
+          <a
+            href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order or reserve a table.`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="bg-[#EF1624] hover:bg-white text-white hover:text-[#EF1624] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer"
+          >
+            💬 WHATSAPP ORDER →
+          </a>
+        </div>
 
         {/* Embedded Google Map */}
         <div className="max-w-4xl mx-auto rounded-3xl overflow-hidden border-4 border-[#FFC614] shadow-2xl mb-8">
@@ -1069,7 +1134,7 @@ function CravArtisanWebsiteRenderer({
         </div>
 
         <div className="border-t border-[#F5E3CD]/20 pt-6 font-mouse-memoirs text-sm sm:text-base opacity-80">
-          © 2026 {lead.name} • All rights reserved • Powered by ClientForge Live Preview Engine
+          © 2026 {lead.name} • {lead.city} • All rights reserved • Powered by ClientForge Live Preview Engine
         </div>
       </footer>
     </div>
