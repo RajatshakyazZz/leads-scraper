@@ -760,7 +760,7 @@ function CravArtisanWebsiteRenderer({
     <div className="bg-[#F5E3CD] text-[#4C0016] font-sans relative overflow-x-hidden selection:bg-[#EF1624] selection:text-white">
       {/* 1. TOP NAVBAR (BEIGE & RED WITH PROMINENT BUSINESS DETAILS & BUTTONS) */}
       <nav className="w-full flex flex-wrap items-center justify-between px-4 sm:px-10 py-3.5 bg-[#F5E3CD] sticky top-0 z-40 border-b border-[#4C0016]/15 shadow-md gap-3">
-        <a href="#hero" className="font-modak text-2xl sm:text-4xl text-[#EF1624] text-stroke-180 hover:scale-105 transition-transform tracking-wider uppercase truncate">
+        <a href="#hero" className="font-modak text-2xl sm:text-4xl text-[#EF1624] hover:scale-105 transition-transform tracking-wide uppercase truncate">
           {lead.name}
         </a>
         <div className="flex items-center gap-2 sm:gap-3 font-mouse-memoirs">
@@ -785,7 +785,7 @@ function CravArtisanWebsiteRenderer({
       <section id="hero" className="relative min-h-[90vh] flex flex-col justify-between items-center pt-6 sm:pt-10 pb-8 px-4 text-center overflow-hidden">
         <div className="w-full max-w-6xl mx-auto relative z-10 flex flex-col items-center">
           {/* Rating Pill */}
-          <div className="inline-flex items-center gap-1.5 bg-[#4C0016] text-[#FFC614] px-4 py-1.5 rounded-full font-modak text-sm sm:text-lg mb-3 shadow-md border border-[#FFC614]">
+          <div className="inline-flex items-center gap-1.5 bg-[#4C0016] text-[#FFC614] px-4 py-1.5 rounded-full font-modak text-sm sm:text-lg mb-3 shadow-md border border-[#FFC614] tracking-wide">
             <span>★ {lead.rating ?? 4.8} Google Rated</span>
             <span className="text-white">({lead.reviewsCount ?? 334}+ Reviews)</span>
             <span className="text-[#FFC614]">• {lead.city}</span>
@@ -794,7 +794,7 @@ function CravArtisanWebsiteRenderer({
           <motion.div
             initial={{ scale: 0.8, rotate: -12 }}
             animate={{ scale: 1, rotate: -12 }}
-            className="absolute -top-4 sm:top-4 left-2 sm:left-12 bg-[#FFC614] text-[#4C0016] font-modak text-xl sm:text-4xl px-3 sm:px-6 py-1 rounded-2xl border-2 border-[#4C0016] shadow-lg transform -rotate-12 z-20"
+            className="absolute -top-4 sm:top-4 left-2 sm:left-12 bg-[#FFC614] text-[#4C0016] font-modak text-xl sm:text-4xl px-3 sm:px-6 py-1 rounded-2xl border-2 border-[#4C0016] shadow-lg transform -rotate-12 z-20 tracking-wide"
           >
             SMASHED FRESH
           </motion.div>
@@ -802,13 +802,13 @@ function CravArtisanWebsiteRenderer({
           <motion.div
             initial={{ scale: 0.8, rotate: 15 }}
             animate={{ scale: 1, rotate: 15 }}
-            className="absolute -top-4 sm:top-4 right-2 sm:right-12 bg-[#FFC614] text-[#4C0016] font-modak text-xl sm:text-4xl px-3 sm:px-6 py-1 rounded-2xl border-2 border-[#4C0016] shadow-lg transform rotate-15 z-20"
+            className="absolute -top-4 sm:top-4 right-2 sm:right-12 bg-[#FFC614] text-[#4C0016] font-modak text-xl sm:text-4xl px-3 sm:px-6 py-1 rounded-2xl border-2 border-[#4C0016] shadow-lg transform rotate-15 z-20 tracking-wide"
           >
             BOLD FLAVOR
           </motion.div>
 
           {/* Prominent Full Business Name Header */}
-          <h1 className="font-modak text-4xl sm:text-[7vw] text-[#EF1624] text-stroke-180 leading-none tracking-tight uppercase drop-shadow-md my-2">
+          <h1 className="font-modak text-4xl sm:text-[6vw] text-[#EF1624] leading-none tracking-wider uppercase drop-shadow-[0_4px_6px_rgba(0,0,0,0.15)] my-2">
             {brandName}
           </h1>
 
@@ -834,7 +834,7 @@ function CravArtisanWebsiteRenderer({
           <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
             <a
               href={`tel:${cleanPhone}`}
-              className="inline-flex items-center gap-2 bg-[#4C0016] hover:bg-black text-[#FFC614] font-modak text-lg sm:text-2xl px-6 py-2.5 rounded-full border-2 border-[#FFC614] shadow-xl transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 bg-[#4C0016] hover:bg-black text-[#FFC614] font-modak text-lg sm:text-2xl px-6 py-2.5 rounded-full border-2 border-[#FFC614] shadow-xl transition-all cursor-pointer tracking-wide"
             >
               <Phone className="h-4 w-4" /> CALL DIRECT: {phoneDisplay}
             </a>
@@ -842,7 +842,7 @@ function CravArtisanWebsiteRenderer({
               href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order or reserve a table.`)}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 bg-[#EF1624] hover:bg-black text-white font-modak text-lg sm:text-2xl px-6 py-2.5 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 bg-[#EF1624] hover:bg-black text-white font-modak text-lg sm:text-2xl px-6 py-2.5 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer tracking-wide"
             >
               <MessageSquare className="h-4 w-4" /> INSTANT WHATSAPP ORDER
             </a>
@@ -891,11 +891,11 @@ function CravArtisanWebsiteRenderer({
 
       {/* 3. SECTION 2: DIVERSE SIGNATURE RECIPES SHOWCASE (RED BACKGROUND #EF1624) */}
       <section className="bg-[#EF1624] text-white py-12 px-4 sm:px-10 text-center relative overflow-hidden">
-        <div className="inline-block bg-[#FFC614] text-[#4C0016] font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-5 mb-3 shadow-lg">
+        <div className="inline-block bg-[#FFC614] text-[#4C0016] font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-5 mb-3 shadow-lg tracking-wide">
           SIGNATURE RECIPES & SPECIALTIES ★
         </div>
 
-        <h2 className="font-modak text-4xl sm:text-8xl text-white text-stroke-red leading-none mb-3 uppercase">
+        <h2 className="font-modak text-4xl sm:text-7xl text-white leading-none mb-3 uppercase tracking-wide drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]">
           JUICY CHEESY FULLY LOADED
         </h2>
 
@@ -913,11 +913,11 @@ function CravArtisanWebsiteRenderer({
               <div>
                 <div className="relative overflow-hidden rounded-2xl mb-3 h-48 sm:h-52">
                   <img src={rec.image} alt={rec.title} className="w-full h-full object-cover" />
-                  <span className="absolute top-2 left-2 bg-[#EF1624] text-white font-modak text-xs px-3 py-1 rounded-full shadow-md">
+                  <span className="absolute top-2 left-2 bg-[#EF1624] text-white font-modak text-xs px-3 py-1 rounded-full shadow-md tracking-wide">
                     {rec.tag || rec.badge}
                   </span>
                 </div>
-                <h3 className="font-modak text-xl text-[#EF1624] uppercase mb-1">{rec.title}</h3>
+                <h3 className="font-modak text-xl text-[#EF1624] uppercase mb-1 tracking-wide">{rec.title}</h3>
                 <p className="font-mouse-memoirs text-base text-[#4C0016] mb-3 leading-tight">{rec.desc}</p>
               </div>
 
@@ -925,7 +925,7 @@ function CravArtisanWebsiteRenderer({
                 href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order ${rec.title}.`)}`}
                 target="_blank"
                 rel="noreferrer"
-                className="w-full py-2 bg-[#FFC614] hover:bg-[#4C0016] hover:text-white text-[#4C0016] font-modak text-lg rounded-2xl border-2 border-[#4C0016] transition-colors uppercase cursor-pointer block"
+                className="w-full py-2 bg-[#FFC614] hover:bg-[#4C0016] hover:text-white text-[#4C0016] font-modak text-lg rounded-2xl border-2 border-[#4C0016] transition-colors uppercase cursor-pointer block tracking-wide"
               >
                 ORDER THIS RECIPE →
               </a>
@@ -943,30 +943,30 @@ function CravArtisanWebsiteRenderer({
 
       {/* 4. SECTION 3: FOOD THAT FEELS GOOD (#f91814 Crimson Red Background) */}
       <section className="bg-[#f91814] text-white py-14 px-4 sm:px-10 text-center relative overflow-hidden">
-        <div className="inline-block bg-[#FFC614] text-[#4C0016] font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-8 mb-4 shadow-lg">
+        <div className="inline-block bg-[#FFC614] text-[#4C0016] font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-8 mb-4 shadow-lg tracking-wide">
           EXPERIENCE
         </div>
 
-        <h2 className="font-modak text-4xl sm:text-8xl text-[#F5E3CD] text-stroke-dark leading-none uppercase mb-6">
+        <h2 className="font-modak text-4xl sm:text-7xl text-[#F5E3CD] leading-none uppercase mb-6 tracking-wide drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]">
           FOOD THAT FEELS GOOD
         </h2>
 
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 my-8">
           <div className="bg-[#4C0016]/40 backdrop-blur-md p-4 rounded-2xl border-2 border-[#FFC614] text-left sm:w-64">
-            <span className="font-modak text-2xl text-[#FFC614] block">450 kcal</span>
+            <span className="font-modak text-2xl text-[#FFC614] block tracking-wide">450 kcal</span>
             <span className="font-mouse-memoirs text-lg text-white">High Protein • 100% Fresh Organic Ingredients</span>
           </div>
 
           <div className="relative w-64 h-64 sm:w-80 sm:h-80 mx-auto">
             <img
               src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80"
-              alt="Artisan Smashed Dish"
-              className="w-full h-full object-cover rounded-full border-4 border-[#FFC614] shadow-2xl"
+              alt="Gourmet Dish"
+              className="w-full h-full object-cover rounded-3xl border-4 border-[#FFC614] shadow-2xl"
             />
           </div>
 
           <div className="bg-[#4C0016]/40 backdrop-blur-md p-4 rounded-2xl border-2 border-[#FFC614] text-right sm:w-64">
-            <span className="font-modak text-2xl text-[#FFC614] block">100% ORGANIC</span>
+            <span className="font-modak text-2xl text-[#FFC614] block tracking-wide">100% ORGANIC</span>
             <span className="font-mouse-memoirs text-lg text-white">Zero Guilt • True Artisanal Taste</span>
           </div>
         </div>
@@ -981,11 +981,11 @@ function CravArtisanWebsiteRenderer({
 
       {/* 5. SECTION 4: PURE QUALITY & INGREDIENTS (#F5E3CD Cream Background) */}
       <section className="bg-[#F5E3CD] text-[#4C0016] py-14 px-4 sm:px-10 text-center relative overflow-hidden">
-        <div className="inline-block bg-[#EF1624] text-white font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-[#4C0016] transform -rotate-6 mb-4 shadow-lg">
+        <div className="inline-block bg-[#EF1624] text-white font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-[#4C0016] transform -rotate-6 mb-4 shadow-lg tracking-wide">
           PURE QUALITY
         </div>
 
-        <h2 className="font-modak text-4xl sm:text-7xl text-[#EF1624] text-stroke-180 leading-tight uppercase max-w-4xl mx-auto mb-10">
+        <h2 className="font-modak text-4xl sm:text-6xl text-[#EF1624] leading-tight uppercase max-w-4xl mx-auto mb-10 tracking-wide drop-shadow-sm">
           EVERY LAYER PACKED WITH SIGNATURE FLAVOR
         </h2>
 
@@ -993,25 +993,25 @@ function CravArtisanWebsiteRenderer({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
           <div className="bg-white/80 backdrop-blur-md p-4 rounded-3xl border-2 border-[#4C0016] shadow-md flex flex-col items-center hover:scale-105 transition-transform">
             <span className="text-4xl mb-2">🥬</span>
-            <h4 className="font-modak text-lg text-[#EF1624]">Garden Lettuce</h4>
+            <h4 className="font-modak text-lg text-[#EF1624] tracking-wide">Garden Lettuce</h4>
             <p className="font-mouse-memoirs text-xs sm:text-sm text-[#4C0016]">Crispy & Farm Fresh</p>
           </div>
 
           <div className="bg-white/80 backdrop-blur-md p-4 rounded-3xl border-2 border-[#4C0016] shadow-md flex flex-col items-center hover:scale-105 transition-transform">
             <span className="text-4xl mb-2">🍅</span>
-            <h4 className="font-modak text-lg text-[#EF1624]">Vine Tomatoes</h4>
+            <h4 className="font-modak text-lg text-[#EF1624] tracking-wide">Vine Tomatoes</h4>
             <p className="font-mouse-memoirs text-xs sm:text-sm text-[#4C0016]">Sun-Ripened Sweetness</p>
           </div>
 
           <div className="bg-white/80 backdrop-blur-md p-4 rounded-3xl border-2 border-[#4C0016] shadow-md flex flex-col items-center hover:scale-105 transition-transform">
             <span className="text-4xl mb-2">🧀</span>
-            <h4 className="font-modak text-lg text-[#EF1624]">Melted Cheddar</h4>
+            <h4 className="font-modak text-lg text-[#EF1624] tracking-wide">Melted Cheddar</h4>
             <p className="font-mouse-memoirs text-xs sm:text-sm text-[#4C0016]">Rich Aged Cheese</p>
           </div>
 
           <div className="bg-white/80 backdrop-blur-md p-4 rounded-3xl border-2 border-[#4C0016] shadow-md flex flex-col items-center hover:scale-105 transition-transform">
             <span className="text-4xl mb-2">🥩</span>
-            <h4 className="font-modak text-lg text-[#EF1624]">Prime Patty</h4>
+            <h4 className="font-modak text-lg text-[#EF1624] tracking-wide">Prime Patty</h4>
             <p className="font-mouse-memoirs text-xs sm:text-sm text-[#4C0016]">Smashed Flat-Top 400°F</p>
           </div>
         </div>
@@ -1027,10 +1027,10 @@ function CravArtisanWebsiteRenderer({
       {/* 5.5. INDIAN CUSTOMER REVIEWS MARQUEE LOOP */}
       <section className="bg-[#4C0016] text-[#F5E3CD] py-12 overflow-hidden relative border-y-4 border-[#FFC614]">
         <div className="text-center mb-6">
-          <div className="inline-block bg-[#EF1624] text-white font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-3 shadow-lg">
+          <div className="inline-block bg-[#EF1624] text-white font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-3 shadow-lg tracking-wide">
             WHAT FOODIES SAY ★
           </div>
-          <h3 className="font-modak text-4xl sm:text-7xl text-[#FFC614] text-stroke-dark uppercase mt-2">
+          <h3 className="font-modak text-4xl sm:text-7xl text-[#FFC614] uppercase mt-2 tracking-wide drop-shadow-md">
             GUEST REVIEWS & LOVE
           </h3>
         </div>
@@ -1061,7 +1061,7 @@ function CravArtisanWebsiteRenderer({
                 className="bg-[#F5E3CD] text-[#4C0016] p-5 rounded-3xl border-4 border-[#FFC614] shadow-2xl w-80 sm:w-96 shrink-0 transform hover:scale-105 transition-transform"
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-modak text-xl text-[#EF1624]">{rev.author}</span>
+                  <span className="font-modak text-xl text-[#EF1624] tracking-wide">{rev.author}</span>
                   <span className="text-amber-600 font-bold text-sm tracking-widest">{rev.rating}</span>
                 </div>
                 <div className="font-mouse-memoirs text-xs text-[#EF1624] font-bold mb-2 uppercase tracking-wide">
@@ -1085,11 +1085,11 @@ function CravArtisanWebsiteRenderer({
 
       {/* 6. SECTION 5: TAKE AWAY (#FFC614 Mustard Yellow Background) */}
       <section className="bg-[#FFC614] text-[#4C0016] py-14 px-4 sm:px-10 text-center relative overflow-hidden">
-        <div className="inline-block bg-[#EF1624] text-white font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-7 mb-4 shadow-lg">
+        <div className="inline-block bg-[#EF1624] text-white font-modak text-lg sm:text-2xl px-5 py-1 rounded-full border-2 border-white transform -rotate-7 mb-4 shadow-lg tracking-wide">
           TAKE AWAY
         </div>
 
-        <h2 className="font-modak text-4xl sm:text-8xl text-white text-stroke-mustard leading-none uppercase mb-4">
+        <h2 className="font-modak text-4xl sm:text-7xl text-white leading-none uppercase mb-4 tracking-wide drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]">
           QUALITY THAT TRAVELS WITH YOU
         </h2>
 
@@ -1104,7 +1104,7 @@ function CravArtisanWebsiteRenderer({
               key={idx}
               className="bg-white/90 p-4 rounded-3xl border-3 border-[#4C0016] shadow-lg flex flex-col items-center w-40 sm:w-48 hover:scale-105 transition-transform"
             >
-              <h4 className="font-modak text-lg text-[#EF1624] uppercase">{loc}</h4>
+              <h4 className="font-modak text-lg text-[#EF1624] uppercase tracking-wide">{loc}</h4>
               <p className="font-mouse-memoirs text-xs text-[#4C0016]">{lead.city} Outlet</p>
             </div>
           ))}
@@ -1113,7 +1113,7 @@ function CravArtisanWebsiteRenderer({
 
       {/* 7. FOOTER & EMBEDDED GOOGLE MAP WITH DIRECT CONTACT ACTIONS */}
       <footer className="bg-[#4C0016] text-[#F5E3CD] py-12 px-4 sm:px-10 text-center relative">
-        <h2 className="font-modak text-4xl sm:text-8xl text-[#FFC614] text-stroke-dark uppercase mb-3">
+        <h2 className="font-modak text-4xl sm:text-8xl text-[#FFC614] uppercase mb-3 tracking-wide drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]">
           {brandName}
         </h2>
         <p className="font-mouse-memoirs text-xl sm:text-2xl max-w-xl mx-auto mb-6">
@@ -1123,7 +1123,7 @@ function CravArtisanWebsiteRenderer({
         <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
           <a
             href={`tel:${cleanPhone}`}
-            className="bg-[#FFC614] hover:bg-white text-[#4C0016] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer"
+            className="bg-[#FFC614] hover:bg-white text-[#4C0016] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer tracking-wide"
           >
             📞 CALL: {phoneDisplay}
           </a>
@@ -1131,7 +1131,7 @@ function CravArtisanWebsiteRenderer({
             href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order or reserve a table.`)}`}
             target="_blank"
             rel="noreferrer"
-            className="bg-[#EF1624] hover:bg-white text-white hover:text-[#EF1624] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer"
+            className="bg-[#EF1624] hover:bg-white text-white hover:text-[#EF1624] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer tracking-wide"
           >
             💬 WHATSAPP ORDER →
           </a>
@@ -1192,13 +1192,13 @@ function BurritoMadreWebsiteRenderer({
 
   return (
     <div className="bg-[#FAE8DF] text-[#5F0E00] font-sans relative overflow-x-hidden selection:bg-[#F83E1C] selection:text-white">
-      {/* 1. TOP NAVBAR (CREAM & EMERALD WITH DIRECT CALL & WHATSAPP BUTTONS) */}
+      {/* 1. TOP NAVBAR */}
       <nav className="w-full flex flex-wrap items-center justify-between px-4 sm:px-10 py-3.5 bg-[#FAE8DF] sticky top-0 z-40 border-b border-[#5F0E00]/15 shadow-sm gap-3">
         <a href="#hero" className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-full bg-[#053626] text-[#FFC042] flex items-center justify-center font-bold text-lg shadow-md border-2 border-[#F83E1C]">
             🌮
           </div>
-          <span className="font-modak text-xl sm:text-3xl text-[#F83E1C] font-extrabold uppercase tracking-wide truncate">
+          <span className="font-modak text-xl sm:text-3xl text-[#F83E1C] uppercase tracking-wide truncate">
             {lead.name}
           </span>
         </a>
@@ -1231,7 +1231,7 @@ function BurritoMadreWebsiteRenderer({
             <span className="text-[#FFC042]">• {lead.city}</span>
           </div>
 
-          <h1 className="font-modak text-4xl sm:text-8xl text-[#F83E1C] font-extrabold uppercase tracking-tight leading-none drop-shadow-md my-2">
+          <h1 className="font-modak text-4xl sm:text-7xl text-[#F83E1C] uppercase tracking-wide leading-tight drop-shadow-[0_4px_6px_rgba(0,0,0,0.15)] my-3">
             WELCOME TO {brandName}
           </h1>
 
@@ -1246,7 +1246,7 @@ function BurritoMadreWebsiteRenderer({
                 🌮
               </div>
               <div className="text-left">
-                <h4 className="font-modak text-xl text-[#053626] uppercase font-extrabold">REAL DEAL TEX-MEX</h4>
+                <h4 className="font-modak text-xl text-[#053626] uppercase tracking-wide">REAL DEAL TEX-MEX</h4>
                 <p className="text-xs text-[#5F0E00] font-bold">Gold-Wrapped Burritos, Queso Nachos & Craft Salsa</p>
               </div>
             </div>
@@ -1264,7 +1264,7 @@ function BurritoMadreWebsiteRenderer({
           <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
             <a
               href={`tel:${cleanPhone}`}
-              className="inline-flex items-center gap-2 bg-[#053626] hover:bg-black text-[#FFC042] font-modak text-base sm:text-xl font-extrabold px-6 py-3 rounded-full border-2 border-[#FFC042] shadow-xl transition-all"
+              className="inline-flex items-center gap-2 bg-[#053626] hover:bg-black text-[#FFC042] font-modak text-base sm:text-xl px-6 py-3 rounded-full border-2 border-[#FFC042] shadow-xl transition-all tracking-wide"
             >
               <Phone className="h-4 w-4" /> CALL DIRECT: {phoneDisplay}
             </a>
@@ -1272,7 +1272,7 @@ function BurritoMadreWebsiteRenderer({
               href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order Burrito Madre.`)}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 bg-[#F83E1C] hover:bg-black text-white font-modak text-base sm:text-xl font-extrabold px-6 py-3 rounded-full border-2 border-white shadow-xl transition-all"
+              className="inline-flex items-center gap-2 bg-[#F83E1C] hover:bg-black text-white font-modak text-base sm:text-xl px-6 py-3 rounded-full border-2 border-white shadow-xl transition-all tracking-wide"
             >
               <MessageSquare className="h-4 w-4" /> INSTANT WHATSAPP ORDER
             </a>
@@ -1305,10 +1305,10 @@ function BurritoMadreWebsiteRenderer({
       {/* 4. 8-ITEM TEX-MEX STREET FOOD MENU SHOWCASE GRID */}
       <section className="py-14 px-4 sm:px-10 bg-[#FAE8DF]">
         <div className="max-w-6xl mx-auto text-center mb-10">
-          <span className="bg-[#F83E1C] text-white font-modak text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">
+          <span className="bg-[#F83E1C] text-white font-modak text-xs sm:text-sm px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">
             BURRITO MADRE MENU ★
           </span>
-          <h2 className="font-modak text-4xl sm:text-7xl text-[#5F0E00] font-extrabold uppercase mt-3 tracking-tight">
+          <h2 className="font-modak text-4xl sm:text-6xl text-[#5F0E00] uppercase mt-3 tracking-wide drop-shadow-xs">
             CRAFT TEX-MEX FIESTA
           </h2>
           <p className="text-base sm:text-xl text-[#5F0E00] font-bold max-w-xl mx-auto mt-2">
@@ -1326,11 +1326,11 @@ function BurritoMadreWebsiteRenderer({
               <div>
                 <div className="relative overflow-hidden rounded-2xl mb-3 h-44">
                   <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-                  <span className="absolute top-2 left-2 bg-[#F83E1C] text-white font-modak text-[11px] px-3 py-1 rounded-full shadow-md uppercase font-bold">
+                  <span className="absolute top-2 left-2 bg-[#F83E1C] text-white font-modak text-[11px] px-3 py-1 rounded-full shadow-md uppercase tracking-wide">
                     {item.badge}
                   </span>
                 </div>
-                <h3 className="font-modak text-lg text-[#F83E1C] uppercase font-extrabold mb-1">{item.title}</h3>
+                <h3 className="font-modak text-lg text-[#F83E1C] uppercase tracking-wide mb-1">{item.title}</h3>
                 <p className="text-xs text-[#5F0E00] font-semibold leading-relaxed mb-3">{item.desc}</p>
               </div>
 
@@ -1338,7 +1338,7 @@ function BurritoMadreWebsiteRenderer({
                 href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order ${item.title}.`)}`}
                 target="_blank"
                 rel="noreferrer"
-                className="w-full py-2 bg-[#FFC042] hover:bg-[#053626] hover:text-white text-[#053626] font-modak text-sm font-extrabold rounded-2xl border-2 border-[#053626] transition-colors uppercase text-center block"
+                className="w-full py-2 bg-[#FFC042] hover:bg-[#053626] hover:text-white text-[#053626] font-modak text-sm tracking-wide rounded-2xl border-2 border-[#053626] transition-colors uppercase text-center block"
               >
                 ORDER ON WHATSAPP →
               </a>
@@ -1350,7 +1350,7 @@ function BurritoMadreWebsiteRenderer({
       {/* 5. "ROLL WITH THE REAL" BANNER SECTION */}
       <section className="bg-[#F83E1C] text-white py-14 px-4 sm:px-10 text-center relative overflow-hidden">
         <div className="max-w-5xl mx-auto">
-          <h2 className="font-modak text-5xl sm:text-9xl text-white font-extrabold uppercase leading-none tracking-tight drop-shadow-lg mb-4">
+          <h2 className="font-modak text-4xl sm:text-8xl text-white uppercase leading-none tracking-wide drop-shadow-[0_6px_12px_rgba(0,0,0,0.3)] mb-4">
             ROLL WITH THE REAL
           </h2>
           <p className="text-lg sm:text-3xl font-extrabold text-[#FFC042] max-w-2xl mx-auto mb-8">
@@ -1360,20 +1360,72 @@ function BurritoMadreWebsiteRenderer({
             href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to reserve a table.`)}`}
             target="_blank"
             rel="noreferrer"
-            className="inline-block bg-[#053626] hover:bg-white hover:text-[#053626] text-[#FFC042] font-modak text-xl sm:text-3xl font-extrabold px-10 py-4 rounded-full border-4 border-white shadow-2xl transition-all uppercase cursor-pointer"
+            className="inline-block bg-[#053626] hover:bg-white hover:text-[#053626] text-[#FFC042] font-modak text-xl sm:text-3xl px-10 py-4 rounded-full border-4 border-white shadow-2xl transition-all uppercase cursor-pointer tracking-wide"
           >
             ORDER / RESERVE TABLE →
           </a>
         </div>
       </section>
 
-      {/* 6. LOYALTY SECTION ("PROVE HOW LOYAL YOU ARE") */}
+      {/* 6. INDIAN GUEST REVIEWS MARQUEE LOOP (RIGHT TO LEFT) */}
+      <section className="bg-[#053626] py-14 border-t-4 border-[#FFC042] overflow-hidden relative">
+        <div className="text-center mb-8 px-4">
+          <span className="bg-[#F83E1C] text-white font-modak text-xs sm:text-sm px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">
+            REAL REVIEWS FROM GUESTS ★
+          </span>
+          <h2 className="font-modak text-3xl sm:text-6xl text-[#FFC042] uppercase mt-2 tracking-wide drop-shadow-md">
+            WHAT OUR FOODIES SAY IN {lead.city.toUpperCase()}
+          </h2>
+        </div>
+
+        {/* Continuous Horizontal Marquee Loop (Right to Left) */}
+        <div className="flex overflow-hidden">
+          <motion.div
+            animate={{ x: [0, -1400] }}
+            transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+            className="flex gap-6 shrink-0"
+          >
+            {[
+              { author: "Rajesh Sharma", location: "Delhi • Local Guide", text: "The Burrito Supreme is incredible! Loaded with juicy steak & melted queso. 5★ Tex-Mex in India!", rating: "★★★★★" },
+              { author: "Ananya Verma", location: "Mumbai • Food Blogger", text: "Best loaded queso nachos & street tacos! Fast WhatsApp ordering and super fresh ingredients.", rating: "★★★★★" },
+              { author: "Vikramaditya Singh", location: "Jaipur • Gourmet Diner", text: "Gold-wrapped burritos packed with flavor! We ordered for our family party and loved every bite.", rating: "★★★★★" },
+              { author: "Priya Patel", location: "Ahmedabad • Verified Guest", text: "Crispy chips, fresh salsa verde & amazing quesadillas. 100% authentic fiesta vibes!", rating: "★★★★★" },
+              { author: "Kabir Mehta", location: "Bengaluru • Tech Lead", text: "Loved the street taco trio and horchata shake! Easily the best Tex-Mex joint in town.", rating: "★★★★★" },
+              { author: "Sneha Kulkarni", location: "Pune • Foodie", text: "Super fast delivery, hot & fresh burritos! Will definitely order again every weekend!", rating: "★★★★★" },
+              { author: "Rajesh Sharma", location: "Delhi • Local Guide", text: "The Burrito Supreme is incredible! Loaded with juicy steak & melted queso. 5★ Tex-Mex in India!", rating: "★★★★★" },
+              { author: "Ananya Verma", location: "Mumbai • Food Blogger", text: "Best loaded queso nachos & street tacos! Fast WhatsApp ordering and super fresh ingredients.", rating: "★★★★★" },
+              { author: "Vikramaditya Singh", location: "Jaipur • Gourmet Diner", text: "Gold-wrapped burritos packed with flavor! We ordered for our family party and loved every bite.", rating: "★★★★★" },
+              { author: "Priya Patel", location: "Ahmedabad • Verified Guest", text: "Crispy chips, fresh salsa verde & amazing quesadillas. 100% authentic fiesta vibes!", rating: "★★★★★" },
+              { author: "Kabir Mehta", location: "Bengaluru • Tech Lead", text: "Loved the street taco trio and horchata shake! Easily the best Tex-Mex joint in town.", rating: "★★★★★" },
+              { author: "Sneha Kulkarni", location: "Pune • Foodie", text: "Super fast delivery, hot & fresh burritos! Will definitely order again every weekend!", rating: "★★★★★" }
+            ].map((rev, idx) => (
+              <div
+                key={idx}
+                className="bg-[#FAE8DF] text-[#5F0E00] p-5 rounded-3xl border-4 border-[#FFC042] shadow-2xl w-80 sm:w-96 shrink-0 transform hover:scale-105 transition-transform"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-modak text-xl text-[#F83E1C] tracking-wide">{rev.author}</span>
+                  <span className="text-[#F83E1C] font-bold text-sm tracking-widest">{rev.rating}</span>
+                </div>
+                <div className="text-xs text-[#053626] font-bold mb-2 uppercase tracking-wide">
+                  {rev.location}
+                </div>
+                <p className="text-sm text-[#5F0E00] leading-snug font-semibold">
+                  "{rev.text}"
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 7. LOYALTY SECTION ("PROVE HOW LOYAL YOU ARE") */}
       <section className="bg-[#FAE8DF] py-14 px-4 sm:px-10 text-center border-t-4 border-[#5F0E00]">
         <div className="max-w-4xl mx-auto bg-white p-8 rounded-3xl border-4 border-[#053626] shadow-2xl">
-          <span className="bg-[#053626] text-[#FFC042] font-modak text-xs font-extrabold px-4 py-1 rounded-full uppercase">
+          <span className="bg-[#053626] text-[#FFC042] font-modak text-xs px-4 py-1 rounded-full uppercase tracking-wide">
             MADRE REWARDS & LOYALTY ★
           </span>
-          <h3 className="font-modak text-3xl sm:text-6xl text-[#F83E1C] font-extrabold uppercase my-3">
+          <h3 className="font-modak text-3xl sm:text-6xl text-[#F83E1C] uppercase my-3 tracking-wide drop-shadow-xs">
             PROVE HOW LOYAL YOU ARE
           </h3>
           <p className="text-sm sm:text-lg text-[#5F0E00] font-bold mb-6">
@@ -1381,16 +1433,16 @@ function BurritoMadreWebsiteRenderer({
           </p>
           <a
             href={`tel:${cleanPhone}`}
-            className="inline-block bg-[#F83E1C] text-white font-modak text-lg sm:text-2xl px-8 py-3 rounded-full border-2 border-[#5F0E00] shadow-md hover:bg-black transition-colors uppercase font-extrabold"
+            className="inline-block bg-[#F83E1C] text-white font-modak text-lg sm:text-2xl px-8 py-3 rounded-full border-2 border-[#5F0E00] shadow-md hover:bg-black transition-colors uppercase tracking-wide"
           >
             CALL FOR LOYALTY PERKS: {phoneDisplay}
           </a>
         </div>
       </section>
 
-      {/* 7. DARK EMERALD FOOTER & EMBEDDED GOOGLE MAP */}
+      {/* 8. DARK EMERALD FOOTER & EMBEDDED GOOGLE MAP */}
       <footer className="bg-[#053626] text-[#FAE8DF] py-12 px-4 sm:px-10 text-center relative">
-        <h2 className="font-modak text-4xl sm:text-8xl text-[#FFC042] font-extrabold uppercase mb-3">
+        <h2 className="font-modak text-4xl sm:text-7xl text-[#FFC042] uppercase mb-3 tracking-wide drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]">
           {brandName}
         </h2>
         <p className="text-base sm:text-xl text-[#FAE8DF] font-bold max-w-xl mx-auto mb-6">
@@ -1400,7 +1452,7 @@ function BurritoMadreWebsiteRenderer({
         <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
           <a
             href={`tel:${cleanPhone}`}
-            className="bg-[#FFC042] hover:bg-white text-[#053626] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer"
+            className="bg-[#FFC042] hover:bg-white text-[#053626] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer tracking-wide"
           >
             📞 CALL: {phoneDisplay}
           </a>
@@ -1408,7 +1460,7 @@ function BurritoMadreWebsiteRenderer({
             href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to order Burrito Madre.`)}`}
             target="_blank"
             rel="noreferrer"
-            className="bg-[#F83E1C] hover:bg-white text-white hover:text-[#F83E1C] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer"
+            className="bg-[#F83E1C] hover:bg-white text-white hover:text-[#F83E1C] font-modak text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer tracking-wide"
           >
             💬 WHATSAPP ORDER →
           </a>
