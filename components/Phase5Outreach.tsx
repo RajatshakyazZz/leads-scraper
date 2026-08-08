@@ -249,9 +249,18 @@ export function Phase5Outreach({
 
       <div className="grid lg:grid-cols-2 gap-5">
         <Card className="rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl">
-          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-5 px-5 gap-3 border-b border-slate-800">
-            <CardTitle className="text-base tracking-tight font-black text-white uppercase">Outreach Message (with Live Preview Link)</CardTitle>
-            <div className="flex gap-2">
+          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-5 px-5 gap-3 border-b border-slate-800 flex-wrap">
+            <CardTitle className="text-base tracking-tight font-black text-white uppercase">Outreach Message (Editable)</CardTitle>
+            <div className="flex gap-2 flex-wrap items-center">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setMessage(generatePitch(selected, channel, lang, previewUrl, includeLink))}
+                className="rounded-xl h-8.5 px-3 border-slate-800 bg-slate-900 text-slate-400 text-xs font-bold hover:bg-slate-800 hover:text-white"
+                title="Reset to generated template"
+              >
+                <RefreshCw className="h-3.5 w-3.5 mr-1 text-slate-400" /> Reset
+              </Button>
               <Button size="sm" variant="outline" onClick={() => copyText(message)} className="rounded-xl h-8.5 px-3 border-slate-800 bg-slate-900 text-slate-200 text-xs font-bold hover:bg-slate-800">
                 <Copy className="h-3.5 w-3.5 mr-1 text-lime-400" /> {copied ? "Copied!" : "Copy"}
               </Button>
@@ -260,15 +269,20 @@ export function Phase5Outreach({
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="px-5 pb-5 pt-4">
+          <CardContent data-lenis-prevent className="px-5 pb-5 pt-4">
             <Textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="font-mono text-xs leading-relaxed min-h-[340px] rounded-xl border-slate-800 focus-visible:ring-1 focus-visible:ring-lime-400 p-4 bg-slate-950 text-slate-200 select-all"
+              data-lenis-prevent
+              placeholder="Type or edit your outreach pitch here..."
+              className="font-mono text-xs leading-relaxed h-[360px] min-h-[250px] max-h-[600px] overflow-y-auto overscroll-contain rounded-xl border border-slate-800 focus-visible:ring-1 focus-visible:ring-lime-400 p-4 bg-slate-950 text-slate-100 selection:bg-lime-400 selection:text-slate-950 resize-y shadow-inner"
             />
-            <div className="mt-3 text-xs text-slate-400 flex items-center gap-1.5 font-sans font-medium">
-              <Sparkles className="h-3.5 w-3.5 text-lime-400" />
-              <span>Includes live preview link + ratings, review volume, and lost revenue metrics</span>
+            <div className="mt-3 text-xs text-slate-400 flex items-center justify-between flex-wrap gap-2 font-sans font-medium">
+              <div className="flex items-center gap-1.5">
+                <Sparkles className="h-3.5 w-3.5 text-lime-400" />
+                <span>Fully editable — click inside to customize pitch before sending</span>
+              </div>
+              <span className="font-mono text-[10px] text-slate-500">{message.length} characters</span>
             </div>
           </CardContent>
         </Card>
