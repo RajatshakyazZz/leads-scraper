@@ -48,7 +48,7 @@
 }
 
 :root {
-  --background: #080B11;
+  --background: #06090F;
   --foreground: #F8FAFC;
   --card: #111726;
   --card-foreground: #F8FAFC;
@@ -110,12 +110,13 @@ html.lenis body {
   }
   body {
     @apply bg-background text-foreground;
-    background-color: #080B11;
+    background-color: #06090F;
     background-image: 
-      radial-gradient(circle at 1px 1px, rgba(132, 204, 22, 0.08) 1px, transparent 0),
-      radial-gradient(circle at 30% 0%, rgba(132, 204, 22, 0.05), transparent 40rem),
-      radial-gradient(circle at 80% 10%, rgba(239, 68, 68, 0.04), transparent 40rem);
-    background-size: 24px 24px, 100% 100%, 100% 100%;
+      linear-gradient(to right, rgba(132, 204, 22, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(132, 204, 22, 0.08) 1px, transparent 1px),
+      radial-gradient(circle at 20% 15%, rgba(132, 204, 22, 0.12), transparent 45rem),
+      radial-gradient(circle at 80% 85%, rgba(239, 68, 68, 0.05), transparent 45rem);
+    background-size: 44px 44px, 44px 44px, 100% 100%, 100% 100%;
     background-attachment: fixed;
     font-feature-settings: "ss01", "cv11";
   }
@@ -183,7 +184,9 @@ html.lenis body {
   }
 
   .bg-texture-grid {
-    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0);
-    background-size: 20px 20px;
+    background-image: 
+      linear-gradient(to right, rgba(132, 204, 22, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(132, 204, 22, 0.08) 1px, transparent 1px);
+    background-size: 44px 44px;
   }
 }
