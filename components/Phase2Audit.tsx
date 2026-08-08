@@ -161,7 +161,13 @@ export function Phase2Audit({
         <div className="text-right">
           <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Est. Total Revenue Leakage</div>
           <div className="font-mono text-xl sm:text-2xl font-black text-white flex items-center justify-end">
-            <IndianRupee className="h-5 w-5 text-red-500 mr-0.5" /> {formatTotalRevenueRange(totalLost)}<span className="text-xs text-slate-400 font-sans font-normal">/mo (est. total)</span>
+            {auditedCount > 0 ? (
+              <>
+                <IndianRupee className="h-5 w-5 text-red-500 mr-0.5" /> {formatTotalRevenueRange(totalLost)}<span className="text-xs text-slate-400 font-sans font-normal">/mo (est. total)</span>
+              </>
+            ) : (
+              <span className="text-sm font-mono text-slate-400 font-bold">Awaiting Audit</span>
+            )}
           </div>
         </div>
       </div>
@@ -177,7 +183,7 @@ export function Phase2Audit({
           <CardContent className="pt-5 pb-5 px-5">
             <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-mono font-extrabold">Offline Businesses</div>
             <div className="font-mono text-2xl font-black tabular-nums text-red-500 mt-1">
-              {Object.values(audits).filter((a) => !a.hasWebsite).length}
+              {auditedCount > 0 ? Object.values(audits).filter((a) => !a.hasWebsite).length : "—"}
             </div>
           </CardContent>
         </Card>
@@ -185,7 +191,7 @@ export function Phase2Audit({
           <CardContent className="pt-5 pb-5 px-5">
             <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-mono font-extrabold">Average PageSpeed</div>
             <div className="font-mono text-2xl font-black tabular-nums text-lime-400 mt-1">
-              {auditedCount ? Math.round(Object.values(audits).reduce((s, a) => s + a.pageSpeedScore, 0) / auditedCount) : 0}
+              {auditedCount ? Math.round(Object.values(audits).reduce((s, a) => s + a.pageSpeedScore, 0) / auditedCount) : "—"}
             </div>
           </CardContent>
         </Card>
@@ -193,7 +199,13 @@ export function Phase2Audit({
           <CardContent className="pt-5 pb-5 px-5">
             <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-mono font-extrabold">Est. Monthly Lost Revenue</div>
             <div className="font-mono text-xl font-black tabular-nums text-red-500 flex items-center mt-1">
-              <IndianRupee className="h-4 w-4 text-red-500 mr-0.5" strokeWidth={2} />{formatTotalRevenueRange(totalLost)}
+              {auditedCount > 0 ? (
+                <>
+                  <IndianRupee className="h-4 w-4 text-red-500 mr-0.5" strokeWidth={2} />{formatTotalRevenueRange(totalLost)}
+                </>
+              ) : (
+                <span className="text-sm font-mono text-slate-400 font-bold">—</span>
+              )}
             </div>
           </CardContent>
         </Card>

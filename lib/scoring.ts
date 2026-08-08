@@ -28,8 +28,9 @@ export function scoreLead(lead: Lead, audit: AuditResult): RankedLead {
 
 /** Formats single lead monthly loss as a realistic estimated assumption range (e.g. ~₹20k – ₹35k/mo) */
 export function formatRevenueRange(amount: number): string {
+  if (!amount || amount <= 0) return "—";
   // Cap single lead estimated loss between ₹15,000 and ₹45,000
-  const normalized = Math.min(45000, Math.max(15000, amount || 25000));
+  const normalized = Math.min(45000, Math.max(15000, amount));
   const minEst = Math.round((normalized * 0.8) / 1000);
   const maxEst = Math.round((normalized * 1.25) / 1000);
   return `~₹${minEst}k – ₹${maxEst}k`;
@@ -37,8 +38,8 @@ export function formatRevenueRange(amount: number): string {
 
 /** Formats total lead revenue loss sum as a realistic total assumption range in Lakhs (e.g. ~₹1.8L – ₹3.2L/mo) */
 export function formatTotalRevenueRange(totalAmount: number): string {
-  // Capped per lead to prevent multi-crore explosion
-  const numLeads = totalAmount > 0 ? Math.max(1, Math.round(totalAmount / 30000)) : 1;
+  if (!totalAmount || totalAmount <= 0) return "—";
+  const numLeads = Math.max(1, Math.round(totalAmount / 30000));
   const minLakhs = ((numLeads * 18000) / 100000).toFixed(1);
   const maxLakhs = ((numLeads * 35000) / 100000).toFixed(1);
   return `~₹${minLakhs}L – ₹${maxLakhs}L`;
