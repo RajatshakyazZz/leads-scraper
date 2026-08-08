@@ -165,7 +165,7 @@ export function Phase1Scrape({
       const urlBlob = URL.createObjectURL(csv);
       const link = document.createElement("a");
       link.href = urlBlob;
-      link.download = sessionId ? `leads-session-${sessionId}.csv` : "leadforge-leads.csv";
+      link.download = sessionId ? `leads-session-${sessionId}.csv` : "clientforge-leads.csv";
       link.click();
       URL.revokeObjectURL(urlBlob);
       toast.success("CSV exported");

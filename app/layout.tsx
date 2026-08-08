@@ -18,8 +18,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LeadForge · Cold Lead to Live Demo Engine",
-  description: "LeadForge — High-converting local business scraping, auditing, ranking, website building, and cold outreach engine.",
+  title: "ClientForge · Leads ➔ Conversion",
+  description: "ClientForge — High-converting local business scraping, auditing, ranking, website building, and cold outreach engine.",
   icons: {
     icon: "/icon.png",
     shortcut: "/icon.png",

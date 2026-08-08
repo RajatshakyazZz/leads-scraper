@@ -122,17 +122,17 @@ export function LoginPage() {
         <div className="mb-6 flex flex-col items-center text-center">
           <Image
             src="/icon.png"
-            alt="LeadForge"
+            alt="ClientForge"
             width={64}
             height={64}
             priority
             className="mx-auto h-16 w-16 object-contain rounded-2xl border border-lime-500/40 p-1 bg-slate-950 shadow-lg shadow-lime-500/20"
           />
           <div className="font-sans font-black text-3xl tracking-tight leading-none mt-4 text-white uppercase flex items-center gap-1">
-            LEAD<span className="text-lime-400 font-black">FORGE</span>
+            CLIENT<span className="text-lime-400 font-black">FORGE</span>
           </div>
           <div className="text-[10px] text-lime-400/90 leading-tight tracking-[0.2em] uppercase mt-1.5 font-mono font-bold">
-            COLD LEAD TO LIVE DEMO ENGINE
+            LEADS ➔ CONVERSION
           </div>
         </div>
 

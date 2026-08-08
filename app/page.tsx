@@ -106,7 +106,7 @@ function LeadLaunchApp() {
       <main className="min-h-screen flex items-center justify-center px-4 bg-[#080B11]">
         <div className="flex flex-col items-center gap-3 text-sm text-slate-400 font-bold">
           <Loader2 className="h-8 w-8 animate-spin text-lime-400" aria-hidden="true" />
-          <span>INITIALIZING LEADFORGE AGENT ENGINE...</span>
+          <span>INITIALIZING CLIENTFORGE AGENT ENGINE...</span>
         </div>
       </main>
     );
@@ -129,7 +129,7 @@ function LeadLaunchApp() {
           <div className="flex items-center gap-3">
             <Image
               src="/icon.png"
-              alt="LeadForge"
+              alt="ClientForge"
               width={40}
               height={40}
               priority
@@ -137,10 +137,10 @@ function LeadLaunchApp() {
             />
             <div>
               <div className="font-sans font-black text-xl tracking-tight leading-none text-white flex items-center gap-1">
-                LEAD<span className="text-lime-400 font-black">FORGE</span>
+                CLIENT<span className="text-lime-400 font-black">FORGE</span>
               </div>
               <div className="text-[9px] text-lime-400/90 leading-tight tracking-[0.18em] uppercase mt-1 font-mono font-bold">
-                LEAD → LAUNCH AI
+                LEADS ➔ CONVERSION
               </div>
             </div>
           </div>

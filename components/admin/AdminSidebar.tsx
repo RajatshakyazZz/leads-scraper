@@ -31,7 +31,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
       <div className="p-5 flex items-center gap-2.5 border-b border-sky-100/60">
         <Image
           src="/icon.png"
-          alt="LeadForge"
+          alt="ClientForge"
           width={36}
           height={36}
           priority
@@ -39,7 +39,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
         />
         <div>
           <div className="font-sans font-bold text-base tracking-tight leading-none text-slate-900 flex items-center gap-1">
-            LEAD<span className="text-lime-600 font-extrabold">FORGE</span>
+            CLIENT<span className="text-lime-600 font-extrabold">FORGE</span>
           </div>
           <div className="text-[9px] text-lime-600/90 leading-tight tracking-[0.14em] uppercase mt-0.5 font-sans font-bold">
             Admin Panel

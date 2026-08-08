@@ -30,7 +30,7 @@ export function AdminLogin() {
         <CardHeader className="text-center space-y-3 pt-6">
           <Image
             src="/icon.png"
-            alt="LeadForge"
+            alt="ClientForge"
             width={44}
             height={44}
             priority
@@ -38,7 +38,7 @@ export function AdminLogin() {
           />
           <div>
             <CardTitle className="font-sans font-bold text-2xl text-slate-900 flex items-center justify-center gap-1">
-              LEAD<span className="text-lime-600 font-black">FORGE</span>
+              CLIENT<span className="text-lime-600 font-black">FORGE</span>
             </CardTitle>
             <CardDescription className="text-xs text-lime-600/90 font-sans font-bold uppercase tracking-wider mt-1">Admin Panel</CardDescription>
           </div>

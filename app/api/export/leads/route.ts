@@ -84,7 +84,7 @@ export async function GET(req: Request) {
     return new NextResponse(csv, {
       headers: {
         "content-type": "text/csv; charset=utf-8",
-        "content-disposition": `attachment; filename="leadforge-export.csv"`,
+        "content-disposition": `attachment; filename="clientforge-export.csv"`,
         ...(storagePath ? { "x-firebase-storage-path": storagePath } : {}),
       },
     });

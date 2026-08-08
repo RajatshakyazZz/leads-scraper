@@ -1,4 +1,4 @@
-# LeadForge — Cold Lead to Live Demo Engine
+# ClientForge — Leads ➔ Conversion Engine
 
 
 Local-first dashboard + Claude Code skill that runs a 5-phase freelance website pipeline:

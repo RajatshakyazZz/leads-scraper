@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-export function LeadForgeLogo({ className = "h-10 w-10" }: { className?: string }) {
+export function ClientForgeLogo({ className = "h-10 w-10" }: { className?: string }) {
   return (
     <div className={`relative group cursor-pointer ${className}`}>
       {/* Glow aura */}
@@ -16,7 +16,7 @@ export function LeadForgeLogo({ className = "h-10 w-10" }: { className?: string 
           
           <img
             src="/icon.png"
-            alt="LeadForge Logo"
+            alt="ClientForge Logo"
             className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(132,204,22,0.8)]"
           />
 
@@ -29,5 +29,6 @@ export function LeadForgeLogo({ className = "h-10 w-10" }: { className?: string 
   );
 }
 
-// Alias export for backward compatibility
-export const DizoPulseLogo = LeadForgeLogo;
+// Alias exports for backward compatibility
+export const LeadForgeLogo = ClientForgeLogo;
+export const DizoPulseLogo = ClientForgeLogo;
