@@ -138,9 +138,8 @@ export async function POST(req: Request) {
   }
 
   try {
-    // Ultra-Fast Apify Crawl Parameters (Sub-25s sync execution)
     const runRes = await fetch(
-      `https://api.apify.com/v2/acts/${APIFY_ACTOR}/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=25`,
+      `https://api.apify.com/v2/acts/${APIFY_ACTOR}/run-sync-get-dataset-items?token=${APIFY_TOKEN}`,
       {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -148,18 +147,10 @@ export async function POST(req: Request) {
           searchStringsArray: [`${allowedInput.niche} in ${allowedInput.city}`],
           maxCrawledPlacesPerSearch: allowedInput.count,
           language: "en",
-          maxReviews: 0,
-          maxImages: 0,
-          scrapeReviewerNames: false,
-          scrapeReviewerUrls: false,
-          scrapeQuestionAndAnswers: false,
-          scrapePeopleAlsoSearch: false,
-          scrapeWebResults: false,
-          skipClosedPlaces: true,
         }),
       },
     );
-    if (!runRes.ok) throw new Error(`Apify HTTP ${runRes.status}`);
+    if (!runRes.ok) throw new Error(`Apify ${runRes.status}`);
     const items = (await runRes.json()) as Array<Record<string, unknown>>;
 
     const leads: Lead[] = items.slice(0, allowedInput.count).map((it, i) => ({
@@ -196,8 +187,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ source: "apify", sessionId: session.id, leads: savedLeads, quota: refundedQuota ?? reservation.quota });
   } catch (e) {
-    console.warn("Apify direct crawl timed out or failed, serving instant seed fallback:", (e as Error).message);
-    // Instant Seed Fallback for live demo resilience
+    // Fallback to seed
     try {
       const { leads } = await loadSeed();
       const sliced = leads.slice(0, allowedInput.count);

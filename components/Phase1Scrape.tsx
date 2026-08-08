@@ -78,20 +78,20 @@ export function Phase1Scrape({
     setCurrentLeadCount(0);
     setTotalTargetCount(nextInput.count);
 
-    // Ultra-Fast 15-25s progress interval matching optimized Apify execution
+    // Realistic continuous 30-40s progress interval while network request runs
     const progressTimer = setInterval(() => {
       setProgress((prev) => {
-        if (prev < 88) {
-          const next = prev + 2;
-          if (next === 16) setScrapeStage(`🔍 Querying live Google Maps listings for "${nextInput.niche}" in ${nextInput.city}...`);
-          if (next === 36) setScrapeStage(`📍 Resolving GPS coordinates & place IDs...`);
-          if (next === 56) setScrapeStage(`📞 Extracting direct phone numbers, WhatsApp & Google review metrics...`);
-          if (next === 76) setScrapeStage(`💾 Indexing business profiles & storing to workspace database...`);
+        if (prev < 85) {
+          const next = prev + 1;
+          if (next === 12) setScrapeStage(`🔍 Querying live Google Maps listings for "${nextInput.niche}" in ${nextInput.city}...`);
+          if (next === 30) setScrapeStage(`📍 Resolving GPS coordinates & place IDs...`);
+          if (next === 52) setScrapeStage(`📞 Extracting direct phone numbers, WhatsApp & Google review metrics...`);
+          if (next === 74) setScrapeStage(`💾 Indexing business profiles & storing to workspace database...`);
           return next;
         }
         return prev;
       });
-    }, 220); // 220ms * 44 steps = ~18 seconds smooth realistic arc
+    }, 380); // 380ms * 85 steps = ~32 seconds smooth realistic arc
 
     try {
       const token = await getIdToken();
