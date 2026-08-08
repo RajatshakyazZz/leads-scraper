@@ -582,46 +582,46 @@ function LiveWebsiteRenderer({
 function getNichePreset(category: string, name: string) {
   const cat = `${category} ${name}`.toLowerCase();
 
-  // 1. Restaurant / Cafe / Dining
-  if (cat.includes("restau") || cat.includes("cafe") || cat.includes("food") || cat.includes("dini") || cat.includes("pizz") || cat.includes("baker") || cat.includes("biryan") || cat.includes("thali") || cat.includes("veg") || cat.includes("nawaab")) {
+  // 1. Restaurant / Cafe / Dining / Fast Food
+  if (cat.includes("restau") || cat.includes("cafe") || cat.includes("burg") || cat.includes("food") || cat.includes("dini") || cat.includes("pizz") || cat.includes("baker") || cat.includes("biryan") || cat.includes("thali") || cat.includes("veg") || cat.includes("nawaab")) {
     return {
-      nicheCategory: "Restaurant & Dining",
+      nicheCategory: "Artisan Dining & Smashed Kitchen",
       icon: Utensils,
-      heroImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
-      heroTitle: "Premium Vegetarian Dining & Authentic Royal Cuisine",
-      heroSub: "Experience royal culinary traditions with authentic North Indian, South Indian, Chinese & Mughlai delicacies. Rated #1 for family & tourist dining.",
-      trustBadges: ["100% Pure Veg Kitchen", "FSSAI Certified 5★", "Instant WhatsApp Reservation"],
+      heroImage: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
+      heroTitle: "Artisan Smashed Delicacies, Bold Flavors & Zero Guilt",
+      heroSub: "Smashed fresh on the flat-top to lock in ultimate juiciness under a caramelized crust. Crafted fresh with 100% organic ingredients.",
+      trustBadges: ["100% Organic Ingredients", "FSSAI Certified 5★", "Instant WhatsApp Order"],
       theme: {
-        bodyBg: "bg-[#141414]",
-        headerBg: "bg-[#1a1a1a]/95 text-white",
-        headerBorder: "border-amber-500/30",
-        cardBorder: "border-amber-500/30",
-        badgeBg: "bg-amber-500/20 text-amber-300",
+        bodyBg: "bg-[#0F070A]",
+        headerBg: "bg-[#1C0A10]/95 text-white",
+        headerBorder: "border-red-500/40",
+        cardBorder: "border-red-500/30",
+        badgeBg: "bg-red-500/20 text-red-400",
         accentText: "text-amber-400",
-        ctaBtn: "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 shadow-amber-500/20",
-        tickerBg: "bg-black",
-        tickerText: "text-amber-300"
+        ctaBtn: "bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 hover:from-red-500 hover:to-amber-400 text-slate-950 font-black shadow-lg shadow-red-500/20",
+        tickerBg: "bg-[#4C0016]",
+        tickerText: "text-amber-300 font-mono font-bold"
       },
-      ctaPrimary: "Make Table Reservation",
-      ctaSecondary: "View Digital Menu",
+      ctaPrimary: "Order / Reserve Table",
+      ctaSecondary: "View Artisan Menu",
       services: [
-        { title: "Signature Royal Maharaja Thali", desc: "A royal platter featuring Dal Makhani, Shahi Paneer, Mix Veg, Pulao, Raita, Butter Naan, Sweet & Papad.", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80", badge: "Most Popular" },
-        { title: "Navratan Korma (Mughlai Classic)", desc: "Cooked with nine selected vegetables, dry fruits, and a silky cashew gravy — an authentic taste of royalty.", image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=400&q=80", badge: "Chef's Special" },
-        { title: "Special Paneer Teen Zayka Tikka", desc: "Tri-color marinated paneer grilled in tandoor with three signature aromatic spice marinades.", image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=400&q=80", badge: "Spicy & Hot" },
-        { title: "Crispy South Indian Dosa & Idli Platter", desc: "Golden paper butter dosas served with fresh coconut chutney and hot drumstick sambar.", image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=400&q=80", badge: "All-Day Fresh" },
-        { title: "Indo-Chinese Noodles & Crispy Manchurian", desc: "Wok-tossed Hakka noodles with crunchy vegetables and spicy Manchurian gravy.", image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=400&q=80", badge: "Kids Favorite" },
-        { title: "Authentic Confectionery & Sweet Desserts", desc: "In-house authentic sweet Petha, royal Gulab Jamun, and Rabri Falooda.", image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=400&q=80", badge: "Fresh Sweets" }
+        { title: "Signature Artisan Double Smashed Burger", desc: "Dual prime patties smashed hot on the flat-top, melted cheddar, grilled onions & signature chili honey glaze.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80", badge: "Chef's Special ★" },
+        { title: "Fully Loaded Cheesy Bacon & Mushroom Smash", desc: "Crispy caramelized patty topped with extra melted cheese, sautéed mushrooms & smoked pepper relish.", image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80", badge: "Most Loved" },
+        { title: "Crispy Golden Fries & Spicy Dip Platter", desc: "Hand-cut skin-on fries tossed in peri-peri spices, served with truffle mayo & house dip.", image: "https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=400&q=80", badge: "Hot & Crispy" },
+        { title: "Signature Royal Maharaja Veg Thali", desc: "A royal platter featuring Dal Makhani, Shahi Paneer, Mix Veg, Pulao, Raita, Butter Naan & Sweet.", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80", badge: "Pure Veg Classic" },
+        { title: "Paneer Teen Zayka Tandoori Tikka", desc: "Tri-color marinated paneer grilled in tandoor with three signature aromatic spice marinades.", image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=400&q=80", badge: "Tandoori Special" },
+        { title: "Craft Thick Shakes & Fresh Desserts", desc: "Belgian Chocolate, Mango Alphonso & Berry Blast shakes topped with fresh cream & cherries.", image: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=400&q=80", badge: "Sweet Treats" }
       ],
       reviews: [
-        { author: "Rajesh Kumar", rating: 5, text: "Absolutely the best restaurant! The Maharaja Thali was incredible and the heritage view made our dining experience unforgettable.", source: "Local Guide · Google Review" },
-        { author: "Priya Sharma", rating: 5, text: "Exceeded all expectations! Pure vegetarian food with authentic taste. Best veg restaurant without doubt!", source: "TripAdvisor Review" },
-        { author: "Michael Thompson", rating: 5, text: "As a tourist from UK, I was looking for authentic Indian vegetarian food. Highly recommended!", source: "Tourist · Google Review" }
+        { author: "Rajesh Kumar", rating: 5, text: "The double smashed burger was out of this world! Crunchy caramelized crust with juicy flavor in every bite.", source: "Local Guide · Google Review" },
+        { author: "Priya Sharma", rating: 5, text: "Best food experience in town! Super clean kitchen, fast WhatsApp table reservation, and incredible taste.", source: "TripAdvisor Review" },
+        { author: "Michael Thompson", rating: 5, text: "As a food blogger, I've tried burgers worldwide. This smashed kitchen stands right up with top global spots!", source: "Food Critic · Google Review" }
       ],
       faqs: [
-        { q: "What makes this restaurant special?", a: "We combine prime location, 100% pure vegetarian multi-cuisine menu, 4.8/5 rating from 1200+ reviews, and dedicated family AC dining." },
-        { q: "What are the operating hours?", a: "We are open daily from 7:00 AM to 12:00 AM." },
-        { q: "Is this a pure vegetarian restaurant?", a: "Yes! We operate a 100% pure vegetarian kitchen with Jain food options available." },
-        { q: "Do you accept table reservations?", a: "Yes, reserve tables instantly via WhatsApp or phone." }
+        { q: "What makes your smashed kitchen unique?", a: "We smash prime patties hot on the flat-top at 400°F to create a caramelized crispy edge while sealing in 100% natural juices." },
+        { q: "What are your operating hours?", a: "We are open daily from 11:00 AM to 12:00 AM midnight." },
+        { q: "Do you offer pure vegetarian & Jain options?", a: "Yes! We have a dedicated 100% pure vegetarian section prepared in a separate clean kitchen station." },
+        { q: "How do I reserve a table or order takeaway?", a: "Click 'Order / Reserve Table' to connect directly on WhatsApp with instant confirmation!" }
       ]
     };
   }
