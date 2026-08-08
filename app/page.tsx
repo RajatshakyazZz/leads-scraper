@@ -13,12 +13,10 @@ import { Phase4Build } from "@/components/Phase4Build";
 import { Phase5Outreach } from "@/components/Phase5Outreach";
 import { scoreLead } from "@/lib/scoring";
 import type { Lead, AuditResult } from "@/lib/types";
-import { Loader2, LogOut, Sparkles, History } from "lucide-react";
+import { Loader2, LogOut, Sparkles, History, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SessionHistory } from "@/components/SessionHistory";
 import { toast } from "sonner";
-
-
 
 export default function Page() {
   return (
@@ -105,10 +103,10 @@ function LeadLaunchApp() {
 
   if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center px-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-          Loading account
+      <main className="min-h-screen flex items-center justify-center px-4 bg-[#080B11]">
+        <div className="flex flex-col items-center gap-3 text-sm text-slate-400 font-bold">
+          <Loader2 className="h-8 w-8 animate-spin text-lime-400" aria-hidden="true" />
+          <span>INITIALIZING DIZOPULSE AGENT ENGINE...</span>
         </div>
       </main>
     );
@@ -122,11 +120,11 @@ function LeadLaunchApp() {
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-foreground focus:text-background focus:px-3 focus:py-2 focus:rounded-md focus:text-sm"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-lime-400 focus:text-slate-950 focus:px-3 focus:py-2 focus:rounded-md focus:text-sm font-black"
       >
         Skip to content
       </a>
-      <header className="border-b border-sky-100 bg-white/95 backdrop-blur-md sticky top-0 z-30 shadow-xs">
+      <header className="border-b border-slate-800 bg-[#0B0F19]/95 backdrop-blur-md sticky top-0 z-30 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Image
@@ -135,42 +133,62 @@ function LeadLaunchApp() {
               width={50}
               height={50}
               priority
-              className="h-10 w-10 object-contain rounded-xl"
+              className="h-10 w-10 object-contain rounded-xl border border-lime-500/30"
             />
             <div>
-              <div className="font-sans font-bold text-xl tracking-tight leading-none text-slate-900 flex items-center gap-1">
-                Dizo<span className="text-sky-600 font-extrabold">Pulse</span>
+              <div className="font-sans font-black text-xl tracking-tight leading-none text-white flex items-center gap-1">
+                DIZO<span className="text-lime-400 font-black">PULSE</span>
               </div>
-              <div className="text-[10px] text-sky-600/90 leading-tight tracking-[0.14em] uppercase mt-1 font-sans font-bold">
-                Leads Scraper
+              <div className="text-[9px] text-lime-400/90 leading-tight tracking-[0.18em] uppercase mt-1 font-mono font-bold">
+                LEAD → LAUNCH AI
               </div>
             </div>
           </div>
 
-
-
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             {quota && (
-              <div className="hidden sm:block rounded-xl border border-sky-100 bg-sky-50/50 px-3 py-1 text-right shadow-2xs">
-                <div className="text-[9px] uppercase tracking-[0.14em] text-slate-500 font-semibold">Leads left</div>
-                <div className="font-mono text-xs tabular-nums font-bold text-sky-700">
+              <div className="hidden sm:block rounded-xl border border-lime-500/30 bg-lime-500/10 px-3 py-1 text-right">
+                <div className="text-[9px] uppercase tracking-[0.14em] text-lime-400 font-mono font-bold">Leads Available</div>
+                <div className="font-mono text-xs tabular-nums font-black text-white">
                   {quota.remaining}/{quota.leadLimit}
                 </div>
               </div>
             )}
-            <Button variant="outline" size="sm" onClick={() => setShowHistory(true)} aria-label="View Scraped History" className="h-8.5 rounded-xl border-sky-200 text-xs font-medium hover:bg-sky-50 text-slate-700">
-              <History className="h-3.5 w-3.5 mr-1 text-sky-600" aria-hidden="true" />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowHistory(true)}
+              aria-label="View Scraped History"
+              className="h-9 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white"
+            >
+              <History className="h-3.5 w-3.5 mr-1.5 text-lime-400" aria-hidden="true" />
               History
             </Button>
-            <Button variant="outline" size="sm" onClick={signOutUser} aria-label="Sign out" className="h-8.5 rounded-xl border-slate-200 text-xs font-medium hover:bg-slate-50 text-slate-700">
-              <LogOut className="h-3.5 w-3.5 mr-1 text-slate-500" aria-hidden="true" />
-              Sign out
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={signOutUser}
+              aria-label="Sign out"
+              className="h-9 rounded-xl border-slate-800 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-400 hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30"
+            >
+              <LogOut className="h-3.5 w-3.5 mr-1.5" aria-hidden="true" />
+              Exit
             </Button>
           </div>
         </div>
         <Stepper current={phase} completed={completed} onJump={(n) => setPhase(n)} />
       </header>
-      <main id="main" className="pt-8" tabIndex={-1}>
+
+      {/* High-Impact Top Banner Statement (Matching User Reference Image) */}
+      <div className="bg-[#05070B] border-b border-slate-800/80 py-3 px-4 text-center">
+        <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 flex-wrap text-xs sm:text-sm font-black tracking-tight uppercase">
+          <span className="text-white">WE DON'T RUN COLD ADS.</span>
+          <span className="text-lime-400 bg-lime-500/10 px-2 py-0.5 rounded-md border border-lime-500/30">WE PRINT REVENUE FOR YOUR BUSINESS.</span>
+          <span className="text-slate-400 font-mono text-[11px] font-normal">| 5-Min Automated Lead → Prototype Pipeline</span>
+        </div>
+      </div>
+
+      <main id="main" className="pt-6" tabIndex={-1}>
         <AnimatePresence mode="wait">
           {phase === 1 && (
             <Phase1Scrape
@@ -223,7 +241,6 @@ function LeadLaunchApp() {
               onReset={() => setPhase(1)}
             />
           )}
-
         </AnimatePresence>
       </main>
 

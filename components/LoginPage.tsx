@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { LogIn, Mail, Lock, User, Eye, EyeOff, ArrowLeft, Loader2, CheckCircle2, Sparkles } from "lucide-react";
+import { LogIn, Mail, Lock, User, Eye, EyeOff, ArrowLeft, Loader2, CheckCircle2, Sparkles, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
@@ -108,9 +108,9 @@ export function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen px-4 py-12 sm:px-6 flex items-center justify-center bg-background bg-texture-grid relative overflow-hidden">
-      {/* Background ambient light blue glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-sky-300/20 rounded-full blur-3xl pointer-events-none" />
+    <main className="min-h-screen px-4 py-12 sm:px-6 flex items-center justify-center bg-[#080B11] relative overflow-hidden">
+      {/* Background ambient light lime glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-lime-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -126,27 +126,27 @@ export function LoginPage() {
             width={160}
             height={50}
             priority
-            className="mx-auto h-auto w-[130px] sm:w-[160px]"
+            className="mx-auto h-auto w-[130px] sm:w-[150px] rounded-xl border border-lime-500/30 p-1 bg-slate-950"
           />
-          <div className="font-sans font-bold text-2.5xl tracking-tight leading-none mt-4 text-slate-900 flex items-center gap-1">
-            Dizo<span className="text-sky-600 font-extrabold">Pulse</span>
+          <div className="font-sans font-black text-3xl tracking-tight leading-none mt-4 text-white uppercase flex items-center gap-1">
+            DIZO<span className="text-lime-400 font-black">PULSE</span>
           </div>
-          <div className="text-[10px] text-sky-600/90 leading-tight tracking-[0.16em] uppercase mt-1.5 font-sans font-bold">
-            Leads Scraper
+          <div className="text-[10px] text-lime-400/90 leading-tight tracking-[0.2em] uppercase mt-1.5 font-mono font-bold">
+            LEAD → LAUNCH AI
           </div>
         </div>
 
-        <Card className="w-full rounded-2xl border border-sky-100 bg-white/95 backdrop-blur-md shadow-xl shadow-sky-500/5 overflow-hidden">
+        <Card className="w-full rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl overflow-hidden">
           {/* Mode Switcher Tabs */}
           {mode !== "forgot" && (
-            <div className="grid grid-cols-2 p-1.5 bg-slate-100/80 border-b border-sky-100">
+            <div className="grid grid-cols-2 p-1.5 bg-slate-900 border-b border-slate-800">
               <button
                 type="button"
                 onClick={() => setMode("signin")}
-                className={`py-2 text-xs font-bold rounded-xl transition-all ${
+                className={`py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all ${
                   mode === "signin"
-                    ? "bg-white text-slate-900 shadow-xs"
-                    : "text-slate-500 hover:text-slate-900"
+                    ? "bg-lime-500 text-slate-950 shadow-md shadow-lime-500/20"
+                    : "text-slate-400 hover:text-white"
                 }`}
               >
                 Sign In
@@ -154,10 +154,10 @@ export function LoginPage() {
               <button
                 type="button"
                 onClick={() => setMode("signup")}
-                className={`py-2 text-xs font-bold rounded-xl transition-all ${
+                className={`py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all ${
                   mode === "signup"
-                    ? "bg-white text-slate-900 shadow-xs"
-                    : "text-slate-500 hover:text-slate-900"
+                    ? "bg-lime-500 text-slate-950 shadow-md shadow-lime-500/20"
+                    : "text-slate-400 hover:text-white"
                 }`}
               >
                 Create Account
@@ -166,14 +166,14 @@ export function LoginPage() {
           )}
 
           <CardHeader className="text-center px-6 pt-5 pb-2">
-            <h1 className="font-sans font-bold text-xl tracking-tight text-slate-900">
+            <h1 className="font-sans font-black text-xl tracking-tight text-white uppercase">
               {mode === "signin" && "Welcome Back"}
               {mode === "signup" && "Create your Account"}
               {mode === "forgot" && "Reset Password"}
             </h1>
-            <p className="text-xs leading-relaxed text-slate-500 font-sans mt-1">
+            <p className="text-xs leading-relaxed text-slate-400 font-sans mt-1">
               {mode === "signin" && "Sign in with your email or Google account to access your lead dashboard."}
-              {mode === "signup" && "Get started with 15 free scraping credits instantly."}
+              {mode === "signup" && "Get started with free scraping credits instantly."}
               {mode === "forgot" && "Enter your registered email address to receive a password reset link."}
             </p>
           </CardHeader>
@@ -184,12 +184,12 @@ export function LoginPage() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center space-y-2"
+                  className="bg-lime-500/10 border border-lime-500/30 rounded-xl p-4 text-center space-y-2"
                 >
-                  <CheckCircle2 className="h-8 w-8 text-emerald-600 mx-auto" />
-                  <div className="font-bold text-sm text-emerald-900">Password Reset Email Sent!</div>
-                  <p className="text-xs text-emerald-700">
-                    We sent a password reset link to <strong>{email}</strong>. Check your inbox and click the link to update your password.
+                  <CheckCircle2 className="h-8 w-8 text-lime-400 mx-auto" />
+                  <div className="font-black text-sm text-white">Password Reset Email Sent!</div>
+                  <p className="text-xs text-slate-300">
+                    We sent a password reset link to <strong className="text-white">{email}</strong>. Check your inbox and click the link to update your password.
                   </p>
                   <Button
                     type="button"
@@ -198,7 +198,7 @@ export function LoginPage() {
                       setResetSent(false);
                       setMode("signin");
                     }}
-                    className="mt-2 text-xs font-bold rounded-xl border-emerald-300 text-emerald-800 hover:bg-emerald-100"
+                    className="mt-2 text-xs font-black uppercase tracking-wider rounded-xl border-slate-700 bg-slate-900 text-lime-400 hover:bg-slate-800"
                   >
                     Back to Sign In
                   </Button>
@@ -215,15 +215,15 @@ export function LoginPage() {
                   {/* Display Name field (Sign Up only) */}
                   {mode === "signup" && (
                     <div className="space-y-1">
-                      <label className="text-[11px] font-bold text-slate-600 block">Full Name</label>
+                      <label className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Full Name</label>
                       <div className="relative">
-                        <User className="h-4 w-4 absolute left-3 top-3 text-slate-400" />
+                        <User className="h-4 w-4 absolute left-3 top-3 text-slate-500" />
                         <Input
                           type="text"
                           placeholder="e.g. Rahul Sharma"
                           value={displayName}
                           onChange={(e) => setDisplayName(e.target.value)}
-                          className="pl-9 h-10 rounded-xl border-sky-200 text-xs focus:ring-1 focus:ring-sky-500"
+                          className="pl-9 h-10 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
                         />
                       </div>
                     </div>
@@ -231,16 +231,16 @@ export function LoginPage() {
 
                   {/* Email field */}
                   <div className="space-y-1">
-                    <label className="text-[11px] font-bold text-slate-600 block">Email Address</label>
+                    <label className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Email Address</label>
                     <div className="relative">
-                      <Mail className="h-4 w-4 absolute left-3 top-3 text-slate-400" />
+                      <Mail className="h-4 w-4 absolute left-3 top-3 text-slate-500" />
                       <Input
                         type="email"
                         required
                         placeholder="you@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="pl-9 h-10 rounded-xl border-sky-200 text-xs focus:ring-1 focus:ring-sky-500"
+                        className="pl-9 h-10 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
                       />
                     </div>
                   </div>
@@ -249,31 +249,31 @@ export function LoginPage() {
                   {mode !== "forgot" && (
                     <div className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-bold text-slate-600 block">Password</label>
+                        <label className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Password</label>
                         {mode === "signin" && (
                           <button
                             type="button"
                             onClick={() => setMode("forgot")}
-                            className="text-[11px] font-semibold text-sky-600 hover:underline"
+                            className="text-[11px] font-bold text-lime-400 hover:underline"
                           >
                             Forgot Password?
                           </button>
                         )}
                       </div>
                       <div className="relative">
-                        <Lock className="h-4 w-4 absolute left-3 top-3 text-slate-400" />
+                        <Lock className="h-4 w-4 absolute left-3 top-3 text-slate-500" />
                         <Input
                           type={showPassword ? "text" : "password"}
                           required
                           placeholder="••••••••"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="pl-9 pr-9 h-10 rounded-xl border-sky-200 text-xs focus:ring-1 focus:ring-sky-500"
+                          className="pl-9 pr-9 h-10 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
+                          className="absolute right-3 top-3 text-slate-500 hover:text-slate-300"
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
@@ -284,16 +284,16 @@ export function LoginPage() {
                   {/* Confirm Password field (Sign Up only) */}
                   {mode === "signup" && (
                     <div className="space-y-1">
-                      <label className="text-[11px] font-bold text-slate-600 block">Confirm Password</label>
+                      <label className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Confirm Password</label>
                       <div className="relative">
-                        <Lock className="h-4 w-4 absolute left-3 top-3 text-slate-400" />
+                        <Lock className="h-4 w-4 absolute left-3 top-3 text-slate-500" />
                         <Input
                           type={showPassword ? "text" : "password"}
                           required
                           placeholder="••••••••"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="pl-9 h-10 rounded-xl border-sky-200 text-xs focus:ring-1 focus:ring-sky-500"
+                          className="pl-9 h-10 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
                         />
                       </div>
                     </div>
@@ -303,14 +303,14 @@ export function LoginPage() {
                   <Button
                     type="submit"
                     disabled={submitting || loading || !firebaseConfigured}
-                    className="w-full h-10.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-md shadow-sky-600/20 cursor-pointer transition-all mt-2"
+                    className="w-full h-11 rounded-xl bg-lime-500 hover:bg-lime-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer transition-all mt-2"
                   >
                     {submitting ? (
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      <Loader2 className="h-4 w-4 animate-spin mr-2 text-slate-950" />
                     ) : mode === "signin" ? (
                       <LogIn className="h-4 w-4 mr-2" />
                     ) : mode === "signup" ? (
-                      <Sparkles className="h-4 w-4 mr-2" />
+                      <Zap className="h-4 w-4 mr-2" />
                     ) : (
                       <Mail className="h-4 w-4 mr-2" />
                     )}
@@ -324,7 +324,7 @@ export function LoginPage() {
                     <button
                       type="button"
                       onClick={() => setMode("signin")}
-                      className="w-full text-center text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 pt-1"
+                      className="w-full text-center text-xs font-bold text-slate-400 hover:text-white flex items-center justify-center gap-1.5 pt-1 uppercase tracking-wider font-mono"
                     >
                       <ArrowLeft className="h-3.5 w-3.5" /> Back to Sign In
                     </button>
@@ -338,10 +338,10 @@ export function LoginPage() {
               <>
                 <div className="relative my-4">
                   <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-slate-200" />
+                    <span className="w-full border-t border-slate-800" />
                   </div>
-                  <div className="relative flex justify-center text-[10px] uppercase font-mono tracking-wider">
-                    <span className="bg-white px-2 text-slate-400">OR</span>
+                  <div className="relative flex justify-center text-[10px] uppercase font-mono tracking-widest font-extrabold">
+                    <span className="bg-[#111726] px-2.5 text-slate-500">OR</span>
                   </div>
                 </div>
 
@@ -350,7 +350,7 @@ export function LoginPage() {
                   onClick={handleGoogleLogin}
                   disabled={loading || !firebaseConfigured}
                   variant="outline"
-                  className="w-full h-10 rounded-xl border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-all flex items-center justify-center gap-2"
+                  className="w-full h-10 rounded-xl border-slate-800 bg-slate-900 hover:bg-slate-800 text-slate-200 font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
                 >
                   <svg className="h-4 w-4" viewBox="0 0 24 24">
                     <path
@@ -375,7 +375,7 @@ export function LoginPage() {
               </>
             )}
 
-            {statusMessage && <p className="text-center text-xs leading-relaxed text-rose-600 font-mono mt-2">{statusMessage}</p>}
+            {statusMessage && <p className="text-center text-xs leading-relaxed text-red-400 font-mono mt-2 font-bold">{statusMessage}</p>}
           </CardContent>
         </Card>
       </motion.div>

@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PhaseShell } from "./PhaseShell";
 import { IncompleteState } from "./IncompleteState";
-import { Loader2, AlertTriangle, IndianRupee, Gauge, Star, Phone, MessageCircle, Globe } from "lucide-react";
+import { Loader2, AlertTriangle, IndianRupee, Gauge, Star, Phone, MessageCircle, Globe, Flame } from "lucide-react";
 import type { Lead, AuditResult } from "@/lib/types";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
@@ -131,7 +131,6 @@ export function Phase2Audit({
           actionLabel="Go to Scrape"
           onAction={onPrev}
         />
-
       </PhaseShell>
     );
   }
@@ -145,34 +144,55 @@ export function Phase2Audit({
       nextDisabled={auditedCount === 0}
       nextLabel="Rank prospects"
     >
+      {/* High Impact Coral Red Warning Banner (Matching Reference Image) */}
+      <div className="mb-6 rounded-2xl border border-red-500/30 bg-gradient-to-r from-red-950/40 via-red-900/20 to-slate-950 p-4 sm:p-5 flex items-center justify-between gap-4 flex-wrap shadow-xl">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-xl bg-red-500/20 text-red-500 flex items-center justify-center font-black shrink-0 border border-red-500/40">
+            <Flame className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-red-400">THE REVENUE PROBLEM</div>
+            <h2 className="font-sans font-black text-xl sm:text-2.5xl tracking-tight text-white uppercase leading-none">
+              IS THIS <span className="text-red-500">YOUR REALITY?</span>
+            </h2>
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Total Revenue Leakage</div>
+          <div className="font-mono text-xl sm:text-2xl font-black text-white flex items-center justify-end">
+            <IndianRupee className="h-5 w-5 text-red-500 mr-0.5" /> {totalLost.toLocaleString("en-IN")}<span className="text-xs text-slate-400 font-sans font-normal">/mo</span>
+          </div>
+        </div>
+      </div>
+
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5">
+        <Card className="rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-xl">
           <CardContent className="pt-5 pb-5 px-5">
-            <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-bold">Audited Prospect Ratio</div>
-            <div className="font-mono text-2xl font-bold tabular-nums text-slate-900 mt-1">{auditedCount}<span className="text-slate-400 text-lg font-sans font-normal"> / {leads.length}</span></div>
+            <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-mono font-extrabold">Audited Ratio</div>
+            <div className="font-mono text-2xl font-black tabular-nums text-white mt-1">{auditedCount}<span className="text-slate-500 text-lg font-sans font-normal"> / {leads.length}</span></div>
           </CardContent>
         </Card>
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5">
+        <Card className="rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-xl">
           <CardContent className="pt-5 pb-5 px-5">
-            <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-bold">Offline Businesses</div>
-            <div className="font-mono text-2xl font-bold tabular-nums text-rose-600 mt-1">
+            <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-mono font-extrabold">Offline Businesses</div>
+            <div className="font-mono text-2xl font-black tabular-nums text-red-500 mt-1">
               {Object.values(audits).filter((a) => !a.hasWebsite).length}
             </div>
           </CardContent>
         </Card>
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5">
+        <Card className="rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-xl">
           <CardContent className="pt-5 pb-5 px-5">
-            <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-bold">Average PageSpeed</div>
-            <div className="font-mono text-2xl font-bold tabular-nums text-sky-700 mt-1">
+            <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-mono font-extrabold">Average PageSpeed</div>
+            <div className="font-mono text-2xl font-black tabular-nums text-lime-400 mt-1">
               {auditedCount ? Math.round(Object.values(audits).reduce((s, a) => s + a.pageSpeedScore, 0) / auditedCount) : 0}
             </div>
           </CardContent>
         </Card>
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5">
+        <Card className="rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-xl">
           <CardContent className="pt-5 pb-5 px-5">
-            <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-bold">Est. monthly lost revenue</div>
-            <div className="font-mono text-2xl font-bold tabular-nums text-slate-900 flex items-center mt-1">
-              <IndianRupee className="h-5 w-5 text-slate-400 mr-0.5" strokeWidth={1.75} />{totalLost.toLocaleString("en-IN")}
+            <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-mono font-extrabold">Est. Monthly Lost Revenue</div>
+            <div className="font-mono text-2xl font-black tabular-nums text-red-500 flex items-center mt-1">
+              <IndianRupee className="h-5 w-5 text-red-500 mr-0.5" strokeWidth={2} />{totalLost.toLocaleString("en-IN")}
             </div>
           </CardContent>
         </Card>
@@ -180,14 +200,14 @@ export function Phase2Audit({
 
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2.5 cursor-pointer select-none font-sans text-sm text-slate-900">
+          <label className="flex items-center gap-2.5 cursor-pointer select-none font-sans text-sm text-white">
             <Checkbox
               checked={allSelected}
               onCheckedChange={toggleAll}
               aria-label={allSelected ? "Deselect all leads" : "Select all leads"}
-              className="rounded-md border-sky-300 text-sky-600"
+              className="rounded-md border-slate-700 text-lime-500 bg-slate-900"
             />
-            <span className="font-semibold">
+            <span className="font-extrabold text-xs uppercase tracking-wider">
               {selectedIds.size === 0
                 ? "Select leads to audit"
                 : someSelected
@@ -197,14 +217,14 @@ export function Phase2Audit({
           </label>
         </div>
         <div className="flex items-center gap-3">
-          {running && <div className="w-48"><Progress value={progress} className="h-1.5 bg-sky-100" /></div>}
+          {running && <div className="w-48"><Progress value={progress} className="h-1.5 bg-slate-800" /></div>}
           <Button
             onClick={runAudit}
             disabled={running || selectedIds.size === 0}
-            className="h-10 px-5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-md shadow-sky-600/20 cursor-pointer transition-all"
+            className="h-10 px-5 rounded-xl bg-lime-500 hover:bg-lime-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer transition-all"
           >
             {running ? (
-              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Auditing...</>
+              <><Loader2 className="h-4 w-4 mr-2 animate-spin text-slate-950" /> Auditing...</>
             ) : (
               <>Run audit{selectedIds.size === leads.length ? " on all leads" : ` on ${selectedIds.size} selected`}</>
             )}
@@ -223,45 +243,45 @@ export function Phase2Audit({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.02, duration: 0.25 }}
             >
-              <Card className={`h-full rounded-2xl border bg-white shadow-lg shadow-sky-500/5 transition-all duration-200 ${isSelected ? "ring-2 ring-sky-500 border-sky-300 bg-sky-50/10" : "border-sky-100 hover:border-sky-300"}`}>
-                <CardHeader className="pb-3 pt-5 px-5">
+              <Card className={`h-full rounded-2xl border bg-[#111726]/90 backdrop-blur-md shadow-xl transition-all duration-200 ${isSelected ? "ring-2 ring-lime-400 border-lime-500/50" : "border-slate-800 hover:border-slate-700"}`}>
+                <CardHeader className="pb-3 pt-5 px-5 border-b border-slate-800/80">
                   <div className="flex items-start gap-3">
                     <Checkbox
                       checked={isSelected}
                       onCheckedChange={() => toggleOne(lead.id)}
                       aria-label={`Select ${lead.name} for audit`}
-                      className="mt-0.5 rounded-md border-sky-300 text-sky-600"
+                      className="mt-0.5 rounded-md border-slate-700 text-lime-500 bg-slate-900"
                     />
                     <div className="flex-1 min-w-0">
-                      <CardTitle className="text-sm font-bold leading-snug text-slate-900 truncate">{lead.name}</CardTitle>
-                      <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500 mt-0.5 font-bold">{lead.category}</p>
+                      <CardTitle className="text-sm font-black leading-snug text-white truncate font-serif">{lead.name}</CardTitle>
+                      <p className="text-[10px] uppercase tracking-[0.14em] text-slate-400 mt-0.5 font-mono font-extrabold">{lead.category}</p>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-3 px-5 pb-5 pt-0">
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-slate-600 font-sans">
+                <CardContent className="space-y-3 px-5 pb-5 pt-4">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-slate-300 font-sans">
                     <span className="flex items-center gap-1 font-mono tabular-nums">
                       <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" strokeWidth={1.5} />
-                      <span className="font-bold text-slate-900">{lead.rating?.toFixed(1) ?? "—"}</span>
+                      <span className="font-bold text-white">{lead.rating?.toFixed(1) ?? "—"}</span>
                       <span className="text-slate-400 font-sans">({lead.reviewsCount ?? 0})</span>
                     </span>
                     {lead.phone && (
                       <span className="flex items-center gap-1">
-                        <Phone className="h-3 w-3 text-slate-400" strokeWidth={1.5} />
-                        <span className="font-mono text-[11px] text-slate-800">{lead.phone.replace(/^\+91 /, "")}</span>
+                        <Phone className="h-3 w-3 text-lime-400" strokeWidth={1.5} />
+                        <span className="font-mono text-[11px] text-slate-300">{lead.phone.replace(/^\+91 /, "")}</span>
                       </span>
                     )}
                     {lead.whatsapp && (
-                      <span className="flex items-center gap-1 text-sky-600 font-semibold">
+                      <span className="flex items-center gap-1 text-lime-400 font-extrabold font-mono">
                         <MessageCircle className="h-3.5 w-3.5" strokeWidth={1.5} /> WA
                       </span>
                     )}
                     {lead.website ? (
-                      <Badge variant="secondary" className="text-[10px] font-semibold h-5 px-2 bg-sky-50 text-sky-700 border border-sky-200">
-                        <Globe className="h-2.5 w-2.5 mr-1 text-sky-600" strokeWidth={1.5} /> Has site
+                      <Badge variant="secondary" className="text-[10px] font-extrabold h-5 px-2 bg-slate-900 text-lime-400 border border-lime-500/30">
+                        <Globe className="h-2.5 w-2.5 mr-1 text-lime-400" strokeWidth={1.5} /> Has site
                       </Badge>
                     ) : (
-                      <Badge variant="outline" className="text-[10px] font-semibold h-5 px-2 text-rose-600 border-rose-200 bg-rose-50">
+                      <Badge variant="outline" className="text-[10px] font-extrabold h-5 px-2 text-red-400 border-red-500/40 bg-red-500/10 font-mono">
                         No site
                       </Badge>
                     )}
@@ -269,30 +289,30 @@ export function Phase2Audit({
 
                   {a ? (
                     <>
-                      <div className="flex items-center gap-4 pt-3 border-t border-sky-100">
+                      <div className="flex items-center gap-4 pt-3 border-t border-slate-800">
                         <PageSpeedGauge score={a.pageSpeedScore} />
                         <div className="flex-1 min-w-0">
-                          <div className="text-[9px] uppercase tracking-[0.12em] text-slate-500 font-bold">Est. monthly lost revenue</div>
-                          <div className="font-mono text-base font-bold tabular-nums text-slate-900 flex items-center mt-0.5">
-                            <IndianRupee className="h-4 w-4 text-slate-400 mr-0.5" strokeWidth={1.75} />{a.estLostRevenuePerMonth.toLocaleString("en-IN")}
+                          <div className="text-[9px] uppercase tracking-[0.14em] text-slate-400 font-mono font-extrabold">Est. Monthly Lost Revenue</div>
+                          <div className="font-mono text-base font-black tabular-nums text-red-500 flex items-center mt-0.5">
+                            <IndianRupee className="h-4 w-4 text-red-500 mr-0.5" strokeWidth={2} />{a.estLostRevenuePerMonth.toLocaleString("en-IN")}
                           </div>
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-1.5 pt-1">
                         {a.gaps.slice(0, 3).map((g) => (
-                          <Badge key={g} variant="outline" className="text-[10px] font-semibold h-5 px-2 text-rose-600 border-rose-200 bg-rose-50/50">{g}</Badge>
+                          <Badge key={g} variant="outline" className="text-[10px] font-extrabold h-5 px-2 text-red-400 border-red-500/30 bg-red-500/10 font-mono">{g}</Badge>
                         ))}
                       </div>
-                      <div className="rounded-xl bg-amber-50/80 p-2.5 text-xs border border-amber-200/60">
+                      <div className="rounded-xl bg-red-500/10 p-2.5 text-xs border border-red-500/30">
                         <div className="flex items-start gap-2">
-                          <AlertTriangle className="h-3.5 w-3.5 text-amber-600 shrink-0 mt-0.5" strokeWidth={1.75} />
-                          <span className="text-slate-600 leading-relaxed italic">&ldquo;{a.biggestGap}&rdquo;</span>
+                          <AlertTriangle className="h-3.5 w-3.5 text-red-400 shrink-0 mt-0.5" strokeWidth={2} />
+                          <span className="text-slate-300 leading-relaxed italic">&ldquo;{a.biggestGap}&rdquo;</span>
                         </div>
                       </div>
                     </>
                   ) : (
-                    <div className="flex items-center gap-2 text-xs text-slate-400 py-3 justify-center border-t border-sky-100 pt-3 font-sans">
-                      <Gauge className="h-4 w-4 text-slate-400" strokeWidth={1.5} /> Awaiting performance audit
+                    <div className="flex items-center gap-2 text-xs text-slate-500 py-3 justify-center border-t border-slate-800 pt-3 font-mono font-bold">
+                      <Gauge className="h-4 w-4 text-slate-500" strokeWidth={1.5} /> Awaiting performance audit
                     </div>
                   )}
                 </CardContent>
@@ -310,27 +330,27 @@ function PageSpeedGauge({ score }: { score: number }) {
   const isMed = score >= 50 && score < 70;
   
   const colorClass = score === 0 
-    ? "text-rose-600" 
+    ? "text-red-500" 
     : isGood 
-      ? "text-sky-600" 
+      ? "text-lime-400" 
       : isMed 
-        ? "text-amber-600" 
-        : "text-rose-600";
+        ? "text-amber-400" 
+        : "text-red-500";
         
   const ringClass = score === 0 
-    ? "stroke-rose-600" 
+    ? "stroke-red-500" 
     : isGood 
-      ? "stroke-sky-500" 
+      ? "stroke-lime-400" 
       : isMed 
-        ? "stroke-amber-500" 
-        : "stroke-rose-600";
+        ? "stroke-amber-400" 
+        : "stroke-red-500";
 
   const circumference = 2 * Math.PI * 22;
   const offset = circumference - (score / 100) * circumference;
   return (
     <div className="relative h-13 w-13 shrink-0">
       <svg viewBox="0 0 56 56" className="h-full w-full -rotate-90">
-        <circle cx="28" cy="28" r="22" className="stroke-sky-100 fill-none" strokeWidth="4" />
+        <circle cx="28" cy="28" r="22" className="stroke-slate-800 fill-none" strokeWidth="4" />
         <motion.circle
           cx="28"
           cy="28"
@@ -345,11 +365,9 @@ function PageSpeedGauge({ score }: { score: number }) {
           transition={{ duration: 0.6, ease: "easeOut" }}
         />
       </svg>
-      <div className={`absolute inset-0 flex items-center justify-center text-xs font-bold font-mono tabular-nums ${colorClass}`}>
+      <div className={`absolute inset-0 flex items-center justify-center text-xs font-black font-mono tabular-nums ${colorClass}`}>
         {score || "—"}
       </div>
     </div>
   );
 }
-
-

@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PhaseShell } from "./PhaseShell";
-import { Download, Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail, ShieldCheck } from "lucide-react";
+import { Download, Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail, ShieldCheck, Zap } from "lucide-react";
 import type { Lead, ScrapeInput } from "@/lib/types";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
@@ -126,41 +126,43 @@ export function Phase1Scrape({
   return (
     <PhaseShell
       title="Phase 1 — Scrape leads"
-      subtitle="Pull local businesses from Google Maps. We capture contact, reviews, photos, and location to score conversion potential."
+      subtitle="Pull real-time business data directly from Google Maps. We capture contact info, rating, reviews, location, and web presence."
       onPrev={onPrev}
       onNext={onNext}
       nextDisabled={leads.length === 0}
       nextLabel="Audit these leads"
     >
       <div className="grid md:grid-cols-3 gap-6">
-        <Card className="md:col-span-1 rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-sky-200/20 rounded-full blur-2xl pointer-events-none" />
-          <CardHeader className="pb-3 pt-5 px-5">
-            <CardTitle className="text-base tracking-tight font-bold text-slate-900">Target Search</CardTitle>
+        <Card className="md:col-span-1 rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-lime-500/10 rounded-full blur-2xl pointer-events-none" />
+          <CardHeader className="pb-3 pt-5 px-5 border-b border-slate-800">
+            <CardTitle className="text-base tracking-tight font-black text-white uppercase flex items-center gap-2">
+              <Zap className="h-4 w-4 text-lime-400" /> Target Search Filters
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 px-5 pb-5">
+          <CardContent className="space-y-4 px-5 pt-4 pb-5">
             <div className="space-y-1.5">
-              <Label htmlFor="niche" className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-bold">Niche</Label>
-              <Input id="niche" autoComplete="off" value={input.niche} onChange={(e) => setInput({ ...input, niche: e.target.value })} placeholder="e.g. Dentist" className="h-9.5 text-sm rounded-xl border-sky-100 focus-visible:ring-1 focus-visible:ring-sky-500 bg-sky-50/20" />
+              <Label htmlFor="niche" className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-extrabold font-mono">Niche Category</Label>
+              <Input id="niche" autoComplete="off" value={input.niche} onChange={(e) => setInput({ ...input, niche: e.target.value })} placeholder="e.g. Dentist, Restaurant, Realtor" className="h-10 text-sm rounded-xl border-slate-800 bg-slate-900 text-white focus-visible:ring-1 focus-visible:ring-lime-400 font-bold" />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="city" className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-bold">Location</Label>
-              <Input id="city" autoComplete="off" value={input.city} onChange={(e) => setInput({ ...input, city: e.target.value })} placeholder="e.g. Bandra, Mumbai" className="h-9.5 text-sm rounded-xl border-sky-100 focus-visible:ring-1 focus-visible:ring-sky-500 bg-sky-50/20" />
+              <Label htmlFor="city" className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-extrabold font-mono">City / Target Area</Label>
+              <Input id="city" autoComplete="off" value={input.city} onChange={(e) => setInput({ ...input, city: e.target.value })} placeholder="e.g. Bandra, Mumbai" className="h-10 text-sm rounded-xl border-slate-800 bg-slate-900 text-white focus-visible:ring-1 focus-visible:ring-lime-400 font-bold" />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="count" className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-bold">Count</Label>
-              <Input id="count" type="number" inputMode="numeric" min={1} max={maxCount} value={input.count} onChange={(e) => setInput({ ...input, count: Number(e.target.value) })} className="h-9.5 text-sm rounded-xl border-sky-100 focus-visible:ring-1 focus-visible:ring-sky-500 font-mono tabular-nums bg-sky-50/20" />
-              <p className="text-[10px] text-slate-500 mt-1">Maximum {maxCount} credits available in current quota.</p>
+              <Label htmlFor="count" className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-extrabold font-mono">Lead Quantity</Label>
+              <Input id="count" type="number" inputMode="numeric" min={1} max={maxCount} value={input.count} onChange={(e) => setInput({ ...input, count: Number(e.target.value) })} className="h-10 text-sm rounded-xl border-slate-800 bg-slate-900 text-white focus-visible:ring-1 focus-visible:ring-lime-400 font-mono font-bold tabular-nums" />
+              <p className="text-[10px] text-slate-400 font-mono mt-1">Maximum {maxCount} credits available in current account.</p>
             </div>
-            <div className="rounded-xl border border-sky-200 bg-sky-50/60 px-3.5 py-2.5 flex items-center justify-between gap-3 shadow-2xs">
+            <div className="rounded-xl border border-lime-500/30 bg-lime-500/10 px-3.5 py-2.5 flex items-center justify-between gap-3 shadow-xs">
               <div>
-                <div className="text-[9px] uppercase tracking-[0.14em] text-sky-700 font-bold">Account Balance</div>
-                <div className="font-mono text-xs tabular-nums font-bold text-slate-900 mt-0.5">{quota ? remaining : DEFAULT_LEAD_LIMIT}/{quota?.leadLimit ?? DEFAULT_LEAD_LIMIT} leads remaining</div>
+                <div className="text-[9px] uppercase tracking-[0.14em] text-lime-400 font-mono font-extrabold">Account Quota Balance</div>
+                <div className="font-mono text-xs tabular-nums font-black text-white mt-0.5">{quota ? remaining : DEFAULT_LEAD_LIMIT}/{quota?.leadLimit ?? DEFAULT_LEAD_LIMIT} leads remaining</div>
               </div>
-              <ShieldCheck className="h-4.5 w-4.5 text-sky-600" aria-hidden="true" />
+              <ShieldCheck className="h-5 w-5 text-lime-400" aria-hidden="true" />
             </div>
-            <Button onClick={runScrape} disabled={loading} className="w-full h-10.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold shadow-md shadow-sky-600/20 cursor-pointer transition-all">
-              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Scraping...</> : (quota && quota.remaining <= 0) ? "Increase lead limit" : "Scrape leads"}
+            <Button onClick={runScrape} disabled={loading} className="w-full h-11 rounded-xl bg-lime-500 hover:bg-lime-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer transition-all">
+              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin text-slate-950" /> Scraping Google Maps...</> : (quota && quota.remaining <= 0) ? "Increase lead limit" : "Scrape Leads Now →"}
             </Button>
             <div className="grid grid-cols-3 gap-2 pt-1">
               <Stat label="Found" value={leads.length} />
@@ -170,11 +172,13 @@ export function Phase1Scrape({
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-2 rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 overflow-hidden">
-          <CardHeader className="pb-3 pt-5 px-5">
-            <CardTitle className="text-base tracking-tight font-bold text-slate-900">Live Map</CardTitle>
+        <Card className="md:col-span-2 rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl overflow-hidden flex flex-col">
+          <CardHeader className="pb-3 pt-5 px-5 border-b border-slate-800">
+            <CardTitle className="text-base tracking-tight font-black text-white uppercase flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-lime-400" /> Realtime Scraped Google Map Radar
+            </CardTitle>
           </CardHeader>
-          <CardContent className="h-[360px] md:h-[400px] p-0 relative">
+          <CardContent className="h-[360px] md:h-full min-h-[380px] p-0 relative">
             <div className="absolute inset-0 z-0">
               <LeadMap leads={leads} />
             </div>
@@ -182,24 +186,26 @@ export function Phase1Scrape({
         </Card>
       </div>
 
-      <Card className="mt-6 rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5">
-        <CardHeader className="flex flex-row items-center justify-between gap-3 pb-3 pt-5 px-5">
-          <CardTitle className="text-base tracking-tight font-bold text-slate-900">Saved Leads</CardTitle>
-          <Button size="sm" variant="outline" onClick={exportCsv} disabled={exporting || leads.length === 0} className="h-8.5 px-3.5 rounded-xl border-sky-200 hover:bg-sky-50 text-xs font-semibold text-sky-700 transition-colors">
-            {exporting ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin text-sky-600" /> : <Download className="h-3.5 w-3.5 mr-1.5 text-sky-600" />}
-            Export CSV
+      <Card className="mt-6 rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl">
+        <CardHeader className="flex flex-row items-center justify-between gap-3 pb-3 pt-5 px-5 border-b border-slate-800">
+          <CardTitle className="text-base tracking-tight font-black text-white uppercase flex items-center gap-2">
+            Scraped Businesses Table ({leads.length})
+          </CardTitle>
+          <Button size="sm" variant="outline" onClick={exportCsv} disabled={exporting || leads.length === 0} className="h-9 px-4 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+            {exporting ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin text-lime-400" /> : <Download className="h-3.5 w-3.5 mr-1.5 text-lime-400" />}
+            Export CSV / Excel
           </Button>
         </CardHeader>
-        <CardContent className="pb-5 px-5">
-          <div className="overflow-x-auto rounded-xl border border-sky-100 bg-white">
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-sky-50/60">
-                <TableRow className="border-b border-sky-100 hover:bg-transparent">
-                  <TableHead className="w-12 text-center text-xs font-bold text-slate-500 py-2.5">#</TableHead>
-                  <TableHead className="text-xs font-bold text-slate-500 py-2.5">Business</TableHead>
-                  <TableHead className="text-xs font-bold text-slate-500 py-2.5">Contact</TableHead>
-                  <TableHead className="text-xs font-bold text-slate-500 py-2.5">Reviews</TableHead>
-                  <TableHead className="text-xs font-bold text-slate-500 py-2.5">Site Presence</TableHead>
+              <TableHeader className="bg-slate-900/80 border-b border-slate-800">
+                <TableRow className="border-b border-slate-800 hover:bg-transparent">
+                  <TableHead className="w-12 text-center text-xs font-black text-slate-400 py-3 uppercase font-mono">#</TableHead>
+                  <TableHead className="text-xs font-black text-slate-400 py-3 uppercase font-mono">Business Name</TableHead>
+                  <TableHead className="text-xs font-black text-slate-400 py-3 uppercase font-mono">Contact Details</TableHead>
+                  <TableHead className="text-xs font-black text-slate-400 py-3 uppercase font-mono">Rating & Reviews</TableHead>
+                  <TableHead className="text-xs font-black text-slate-400 py-3 uppercase font-mono">Site Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -210,34 +216,34 @@ export function Phase1Scrape({
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2, delay: i * 0.02 }}
-                      className="border-b border-sky-100/60 hover:bg-sky-50/30 transition-colors"
+                      className="border-b border-slate-800/60 hover:bg-slate-800/40 transition-colors"
                     >
-                      <TableCell className="text-center font-mono text-xs text-slate-400 py-3 tabular-nums">{i + 1}</TableCell>
-                      <TableCell className="py-3">
-                        <div className="font-bold text-sm text-slate-900">{l.name}</div>
-                        <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5 font-sans">
-                          <MapPin className="h-3 w-3 text-slate-400" /> {l.address}
+                      <TableCell className="text-center font-mono text-xs text-slate-500 py-3.5 tabular-nums font-bold">{i + 1}</TableCell>
+                      <TableCell className="py-3.5">
+                        <div className="font-black text-sm text-white font-serif">{l.name}</div>
+                        <div className="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5 font-sans">
+                          <MapPin className="h-3 w-3 text-slate-500" /> {l.address}
                         </div>
                       </TableCell>
-                      <TableCell className="py-3">
+                      <TableCell className="py-3.5">
                         <div className="flex flex-col gap-1 text-xs">
-                          {l.phone && <span className="flex items-center gap-1.5 text-slate-800 font-mono tabular-nums"><Phone className="h-3 w-3 text-slate-400" /> {l.phone}</span>}
-                          {l.whatsapp && <span className="flex items-center gap-1.5 text-sky-600 font-semibold"><MessageCircle className="h-3 w-3 text-sky-500" /> WhatsApp</span>}
-                          {l.email && <span className="flex items-center gap-1.5 text-slate-800 font-mono tabular-nums"><Mail className="h-3 w-3 text-slate-400" /> {l.email}</span>}
+                          {l.phone && <span className="flex items-center gap-1.5 text-slate-300 font-mono tabular-nums"><Phone className="h-3 w-3 text-lime-400" /> {l.phone}</span>}
+                          {l.whatsapp && <span className="flex items-center gap-1.5 text-lime-400 font-extrabold font-mono"><MessageCircle className="h-3 w-3 text-lime-400" /> WhatsApp</span>}
+                          {l.email && <span className="flex items-center gap-1.5 text-slate-300 font-mono tabular-nums"><Mail className="h-3 w-3 text-slate-500" /> {l.email}</span>}
                         </div>
                       </TableCell>
-                      <TableCell className="py-3">
+                      <TableCell className="py-3.5">
                         <div className="flex items-center gap-1.5 font-mono tabular-nums">
                           <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                          <span className="font-bold text-sm text-slate-900">{l.rating?.toFixed(1)}</span>
+                          <span className="font-black text-sm text-white">{l.rating?.toFixed(1)}</span>
                           <span className="text-slate-400 text-xs font-sans">({l.reviewsCount})</span>
                         </div>
                       </TableCell>
-                      <TableCell className="py-3">
+                      <TableCell className="py-3.5">
                         {l.website ? (
-                          <Badge variant="secondary" className="text-[10px] font-semibold h-5 px-2 bg-sky-50 text-sky-700 border border-sky-200"><Globe className="h-3 w-3 mr-1 text-sky-600" /> Yes</Badge>
+                          <Badge variant="secondary" className="text-[10px] font-extrabold h-5 px-2 bg-slate-800 text-lime-400 border border-lime-500/30 uppercase tracking-wider"><Globe className="h-3 w-3 mr-1 text-lime-400" /> Website Active</Badge>
                         ) : (
-                          <Badge variant="outline" className="text-[10px] font-semibold h-5 px-2 text-rose-600 border-rose-200 bg-rose-50">No site</Badge>
+                          <Badge variant="outline" className="text-[10px] font-extrabold h-5 px-2 text-rose-400 border-rose-500/40 bg-rose-500/10 uppercase tracking-wider font-mono">No Website (High Value)</Badge>
                         )}
                       </TableCell>
                     </motion.tr>
@@ -246,29 +252,29 @@ export function Phase1Scrape({
               </TableBody>
             </Table>
             {leads.length === 0 && !loading && (
-              <div className="text-center py-12 text-sm text-slate-500 font-sans">Run a search to find and save leads to your workspace</div>
+              <div className="text-center py-12 text-sm text-slate-400 font-sans font-medium">Run a search to find and save leads to your workspace</div>
             )}
           </div>
         </CardContent>
       </Card>
       <Dialog open={limitDialogOpen} onOpenChange={setLimitDialogOpen}>
-        <DialogContent className="rounded-2xl border border-sky-100 shadow-2xl max-w-md bg-white">
+        <DialogContent className="rounded-2xl border border-slate-800 shadow-2xl max-w-md bg-[#0F172A] text-white">
           <DialogHeader>
-            <DialogTitle className="text-lg font-sans font-bold text-slate-900">Free leads limit reached</DialogTitle>
-            <DialogDescription className="text-sm text-slate-500 font-sans mt-1.5">
-              Aapka 15 free leads quota complete ho gaya hai. Limit increase karne ke liye WhatsApp par message bhejo.
+            <DialogTitle className="text-lg font-black text-white uppercase">Free leads limit reached</DialogTitle>
+            <DialogDescription className="text-xs text-slate-400 mt-1.5 leading-relaxed font-sans">
+              Aapka free leads quota complete ho gaya hai. Limit increase karne ke liye WhatsApp par contact karein.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0 mt-4">
-            <DialogClose render={<Button variant="outline" className="rounded-xl h-9.5 text-xs font-semibold" />}>Close</DialogClose>
+            <DialogClose render={<Button variant="outline" className="rounded-xl h-9.5 text-xs font-bold border-slate-700 text-slate-300" />}>Close</DialogClose>
             <a
               href={WHATSAPP_LIMIT_URL}
               target="_blank"
               rel="noreferrer"
-              className={buttonVariants({ className: "h-9.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-md shadow-sky-600/20" })}
+              className={buttonVariants({ className: "h-9.5 rounded-xl bg-lime-500 hover:bg-lime-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-500/20" })}
             >
               <MessageCircle className="h-4 w-4 mr-1.5" aria-hidden="true" />
-              WhatsApp
+              WhatsApp Support
             </a>
           </DialogFooter>
         </DialogContent>
@@ -279,9 +285,9 @@ export function Phase1Scrape({
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-xl border border-sky-100 bg-sky-50/40 px-3 py-2 flex flex-col justify-between">
-      <div className="text-[9px] uppercase tracking-[0.14em] text-slate-500 font-bold">{label}</div>
-      <div className="font-mono text-lg font-bold tabular-nums text-sky-900 mt-0.5">{value}</div>
+    <div className="rounded-xl border border-slate-800 bg-slate-900/80 px-3 py-2 flex flex-col justify-between">
+      <div className="text-[9px] uppercase tracking-[0.14em] text-slate-400 font-extrabold font-mono">{label}</div>
+      <div className="font-mono text-lg font-black tabular-nums text-lime-400 mt-0.5">{value}</div>
     </div>
   );
 }

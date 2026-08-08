@@ -159,22 +159,22 @@ export function Phase5Outreach({
       nextLabel="Start new search"
     >
       {/* Target Prospect & Live Preview Link Bar */}
-      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap bg-white border border-sky-100 rounded-2xl p-5 shadow-lg shadow-sky-500/5">
+      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap bg-[#111726]/90 border border-slate-800 rounded-2xl p-5 shadow-2xl backdrop-blur-md">
         <div>
-          <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500 font-bold">Target Prospect</div>
-          <div className="font-sans font-bold text-xl text-slate-900 mt-0.5">{selected.name}</div>
-          <div className="text-xs text-slate-500 mt-0.5 font-mono tabular-nums">{selected.phone || selected.email || "No direct phone"}</div>
+          <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-mono font-extrabold">Target Prospect</div>
+          <div className="font-sans font-black text-xl text-white font-serif mt-0.5">{selected.name}</div>
+          <div className="text-xs text-slate-400 mt-0.5 font-mono tabular-nums">{selected.phone || selected.email || "No direct phone"}</div>
         </div>
 
         {/* Live Preview Link Badge */}
         {previewUrl && (
-          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold shrink-0">
+          <div className="bg-slate-900 border border-lime-500/30 rounded-xl p-3 flex items-center gap-3">
+            <div className="h-8 w-8 rounded-lg bg-lime-500 text-slate-950 flex items-center justify-center font-bold shrink-0">
               <Globe className="h-4 w-4" />
             </div>
             <div>
-              <div className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">Live Prospect Preview Link</div>
-              <div className="text-xs font-mono text-emerald-700 font-semibold truncate max-w-[200px] sm:max-w-[300px]">{previewUrl}</div>
+              <div className="text-[10px] font-extrabold text-lime-400 uppercase tracking-wider font-mono">Live Prospect Preview Link</div>
+              <div className="text-xs font-mono text-slate-200 font-bold truncate max-w-[200px] sm:max-w-[300px]">{previewUrl}</div>
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
               <Button
@@ -184,7 +184,7 @@ export function Phase5Outreach({
                   navigator.clipboard.writeText(previewUrl);
                   toast.success("Live preview link copied!");
                 }}
-                className="h-7 px-2 text-[11px] font-bold border-emerald-300 text-emerald-800 hover:bg-emerald-100 rounded-lg"
+                className="h-7 px-2.5 text-[11px] font-black border-slate-700 bg-slate-800 text-lime-400 hover:bg-slate-700 rounded-lg uppercase tracking-wider"
               >
                 <Copy className="h-3 w-3 mr-1" /> Copy Link
               </Button>
@@ -192,7 +192,7 @@ export function Phase5Outreach({
                 size="sm"
                 variant="ghost"
                 onClick={() => window.open(previewUrl, "_blank")}
-                className="h-7 px-2 text-[11px] font-bold text-emerald-800 hover:bg-emerald-100 rounded-lg"
+                className="h-7 px-2.5 text-[11px] font-black text-slate-300 hover:bg-slate-800 rounded-lg uppercase tracking-wider"
               >
                 <ExternalLink className="h-3 w-3 mr-1" /> Test
               </Button>
@@ -201,16 +201,16 @@ export function Phase5Outreach({
         )}
 
         <div className="flex items-center gap-3">
-          <div className="flex rounded-xl bg-sky-50 border border-sky-200 p-1">
+          <div className="flex rounded-xl bg-slate-900 border border-slate-800 p-1">
             <button
               onClick={() => setLang("hinglish")}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${lang === "hinglish" ? "bg-sky-600 text-white shadow-xs" : "text-slate-600 hover:text-slate-900"}`}
+              className={`px-3 py-1 rounded-lg text-xs font-extrabold cursor-pointer uppercase tracking-wider ${lang === "hinglish" ? "bg-lime-500 text-slate-950 shadow-md shadow-lime-500/20" : "text-slate-400 hover:text-white"}`}
             >
               Hinglish
             </button>
             <button
               onClick={() => setLang("english")}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${lang === "english" ? "bg-sky-600 text-white shadow-xs" : "text-slate-600 hover:text-slate-900"}`}
+              className={`px-3 py-1 rounded-lg text-xs font-extrabold cursor-pointer uppercase tracking-wider ${lang === "english" ? "bg-lime-500 text-slate-950 shadow-md shadow-lime-500/20" : "text-slate-400 hover:text-white"}`}
             >
               English
             </button>
@@ -227,7 +227,7 @@ export function Phase5Outreach({
               variant={channel === id ? "default" : "outline"}
               size="sm"
               onClick={() => setChannel(id)}
-              className={`rounded-xl h-9 px-4 text-xs font-semibold cursor-pointer ${channel === id ? "bg-sky-600 hover:bg-sky-700 text-white shadow-md shadow-sky-600/20" : "border-sky-200 text-slate-700 hover:bg-sky-50"}`}
+              className={`rounded-xl h-9 px-4 text-xs font-black uppercase tracking-wider cursor-pointer ${channel === id ? "bg-lime-500 hover:bg-lime-400 text-slate-950 shadow-lg shadow-lime-500/20" : "border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800"}`}
             >
               <Icon className="h-3.5 w-3.5 mr-1.5" /> {label}
             </Button>
@@ -235,65 +235,65 @@ export function Phase5Outreach({
         </div>
 
         {/* Toggle Include Preview Link */}
-        <label className="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer bg-white px-3 py-1.5 rounded-xl border border-sky-100 shadow-2xs">
+        <label className="flex items-center gap-2 text-xs font-extrabold text-slate-200 cursor-pointer bg-slate-900 px-3.5 py-2 rounded-xl border border-slate-800">
           <input
             type="checkbox"
             checked={includeLink}
             onChange={(e) => setIncludeLink(e.target.checked)}
-            className="rounded text-sky-600 focus:ring-sky-500 h-4 w-4"
+            className="rounded text-lime-500 focus:ring-lime-400 h-4 w-4 bg-slate-950 border-slate-700"
           />
-          <LinkIcon className="h-3.5 w-3.5 text-sky-600" /> Include Live Website Preview Link in Pitch
+          <LinkIcon className="h-3.5 w-3.5 text-lime-400" /> Include Live Website Preview Link in Pitch
         </label>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-5">
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5">
-          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-5 px-5 gap-3">
-            <CardTitle className="text-base tracking-tight font-bold text-slate-900">Outreach Message (with Live Preview Link)</CardTitle>
+        <Card className="rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl">
+          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-5 px-5 gap-3 border-b border-slate-800">
+            <CardTitle className="text-base tracking-tight font-black text-white uppercase">Outreach Message (with Live Preview Link)</CardTitle>
             <div className="flex gap-2">
-              <Button size="sm" variant="outline" onClick={() => copyText(message)} className="rounded-xl h-8.5 px-3 border-sky-200 text-slate-700 text-xs font-semibold hover:bg-sky-50">
-                <Copy className="h-3.5 w-3.5 mr-1" /> {copied ? "Copied!" : "Copy"}
+              <Button size="sm" variant="outline" onClick={() => copyText(message)} className="rounded-xl h-8.5 px-3 border-slate-800 bg-slate-900 text-slate-200 text-xs font-bold hover:bg-slate-800">
+                <Copy className="h-3.5 w-3.5 mr-1 text-lime-400" /> {copied ? "Copied!" : "Copy"}
               </Button>
-              <Button size="sm" onClick={openChannel} disabled={sending} className="rounded-xl h-8.5 px-3.5 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold shadow-md shadow-sky-600/20 cursor-pointer">
+              <Button size="sm" onClick={openChannel} disabled={sending} className="rounded-xl h-8.5 px-4 bg-lime-500 hover:bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer">
                 <Send className="h-3.5 w-3.5 mr-1" /> Send via {channel === "whatsapp" ? "WhatsApp" : channel === "email" ? "Email" : "DM"}
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="px-5 pb-5 pt-0">
+          <CardContent className="px-5 pb-5 pt-4">
             <Textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="font-mono text-xs leading-relaxed min-h-[340px] rounded-xl border-sky-100 focus-visible:ring-1 focus-visible:ring-sky-500 p-4 bg-sky-50/20 text-slate-800 select-all"
+              className="font-mono text-xs leading-relaxed min-h-[340px] rounded-xl border-slate-800 focus-visible:ring-1 focus-visible:ring-lime-400 p-4 bg-slate-950 text-slate-200 select-all"
             />
-            <div className="mt-3 text-xs text-slate-500 flex items-center gap-1.5 font-sans">
-              <Sparkles className="h-3.5 w-3.5 text-sky-600" />
+            <div className="mt-3 text-xs text-slate-400 flex items-center gap-1.5 font-sans font-medium">
+              <Sparkles className="h-3.5 w-3.5 text-lime-400" />
               <span>Includes live preview link + ratings, review volume, and lost revenue metrics</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border border-sky-200 bg-gradient-to-br from-sky-50/80 via-white to-white p-6 shadow-lg shadow-sky-500/5 flex flex-col items-center justify-center text-center">
-          <div className="h-12 w-12 rounded-2xl bg-sky-100 flex items-center justify-center text-sky-600 mb-3 shadow-xs">
+        <Card className="rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md p-6 shadow-2xl flex flex-col items-center justify-center text-center">
+          <div className="h-12 w-12 rounded-2xl bg-lime-500/10 border border-lime-500/30 flex items-center justify-center text-lime-400 mb-3">
             <Sparkles className="h-6 w-6" />
           </div>
-          <Badge className="bg-sky-100 text-sky-700 border-sky-300 font-mono text-xs px-3 py-1 font-bold">
+          <Badge className="bg-lime-500/10 text-lime-400 border-lime-500/30 font-mono text-xs px-3 py-1 font-black uppercase tracking-widest">
             PIPELINE COMPLETE
           </Badge>
-          <h3 className="text-xl font-bold text-slate-900 pt-3">Ready to Convert!</h3>
-          <p className="text-xs text-slate-500 max-w-sm mt-1.5 leading-relaxed font-sans">
-            You scraped, audited, ranked, and generated a live website preview link + pitch message for <strong>{selected.name}</strong>. Send the message now to close the deal!
+          <h3 className="text-2xl font-black text-white pt-3 uppercase tracking-tight">Ready to Convert!</h3>
+          <p className="text-xs text-slate-400 max-w-sm mt-1.5 leading-relaxed font-sans font-medium">
+            You scraped, audited, ranked, and generated a live website preview link + pitch message for <strong className="text-white">{selected.name}</strong>. Send the message now to close the deal!
           </p>
 
           {previewUrl && (
-            <div className="mt-5 w-full bg-white p-4 rounded-2xl border border-emerald-200 shadow-sm text-left space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-800">
-                <Globe className="h-4 w-4 text-emerald-600" /> Live Client Website Preview
+            <div className="mt-5 w-full bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-sm text-left space-y-2">
+              <div className="flex items-center gap-2 text-xs font-black text-lime-400 uppercase font-mono">
+                <Globe className="h-4 w-4 text-lime-400" /> Live Client Website Preview
               </div>
-              <div className="text-xs font-mono text-slate-600 bg-slate-50 p-2 rounded-lg break-all select-all border border-slate-200">
+              <div className="text-xs font-mono text-slate-300 bg-slate-950 p-2.5 rounded-xl break-all select-all border border-slate-800">
                 {previewUrl}
               </div>
               <div className="flex justify-end pt-1">
-                <Button size="sm" onClick={() => window.open(previewUrl, "_blank")} className="h-7 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg">
+                <Button size="sm" onClick={() => window.open(previewUrl, "_blank")} className="h-8 text-xs bg-lime-500 hover:bg-lime-400 text-slate-950 font-black uppercase tracking-wider rounded-xl shadow-md shadow-lime-500/20">
                   Open Client Preview →
                 </Button>
               </div>

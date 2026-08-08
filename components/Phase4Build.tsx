@@ -203,22 +203,22 @@ export function Phase4Build({
       nextLabel="Draft outreach"
     >
       {/* Selected Prospect Header Card */}
-      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap bg-white border border-sky-100 rounded-2xl p-5 shadow-lg shadow-sky-500/5">
+      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap bg-[#111726]/90 border border-slate-800 rounded-2xl p-5 shadow-2xl backdrop-blur-md">
         <div className="flex items-center gap-3.5">
-          <div className="h-11 w-11 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-600 font-bold shrink-0">
-            {nichePreset?.icon ? <nichePreset.icon className="h-5 w-5 text-sky-600" /> : <Sparkles className="h-5 w-5 text-sky-600" />}
+          <div className="h-11 w-11 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-lime-400 font-bold shrink-0">
+            {nichePreset?.icon ? <nichePreset.icon className="h-5 w-5 text-lime-400" /> : <Sparkles className="h-5 w-5 text-lime-400" />}
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="font-sans font-bold text-xl text-slate-900">{selected.name}</div>
-              <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 border border-sky-200 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-700">
+              <div className="font-sans font-black text-xl text-white font-serif">{selected.name}</div>
+              <span className="inline-flex items-center gap-1 rounded-full bg-slate-900 border border-lime-500/30 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-lime-400 font-mono">
                 {nichePreset?.nicheCategory ?? selected.category}
               </span>
             </div>
-            <div className="text-xs text-slate-500 mt-0.5 font-sans flex items-center gap-2">
+            <div className="text-xs text-slate-400 mt-0.5 font-sans flex items-center gap-2">
               <span>{selected.address}</span>
               <span>•</span>
-              <span className="text-sky-700 font-semibold">{selected.rating ?? 4.8}★ ({selected.reviewsCount ?? 0} reviews)</span>
+              <span className="text-lime-400 font-bold font-mono">{selected.rating ?? 4.8}★ ({selected.reviewsCount ?? 0} reviews)</span>
             </div>
           </div>
         </div>
@@ -229,24 +229,24 @@ export function Phase4Build({
             size="sm"
             onClick={generateShareableLink}
             disabled={sharingLink}
-            className="rounded-xl h-9 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 cursor-pointer"
+            className="rounded-xl h-9 px-4 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black uppercase tracking-wider shadow-lg shadow-emerald-600/20 cursor-pointer"
           >
             {sharingLink ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" /> : <Share2 className="h-3.5 w-3.5 mr-1.5" />}
             Share Client Preview
           </Button>
 
           <Select value={platform} onValueChange={(v) => v && setPlatform(v)}>
-            <SelectTrigger className="w-[130px] rounded-xl border-sky-200 bg-white text-xs h-9 font-medium focus:ring-1 focus:ring-sky-500">
+            <SelectTrigger className="w-[130px] rounded-xl border-slate-800 bg-slate-900 text-white text-xs h-9 font-bold focus:ring-1 focus:ring-lime-400">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="rounded-xl border-sky-100 shadow-xl bg-white">
+            <SelectContent className="rounded-xl border-slate-800 shadow-2xl bg-[#0F172A] text-white">
               {PLATFORMS.map((p) => (
-                <SelectItem key={p.id} value={p.id} className="text-xs rounded-lg font-medium">{p.label}</SelectItem>
+                <SelectItem key={p.id} value={p.id} className="text-xs rounded-lg font-bold hover:bg-slate-800">{p.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
 
-          <Button variant="outline" size="sm" onClick={openPlatform} className="rounded-xl h-9 px-3 border-sky-200 text-slate-700 text-xs font-semibold hover:bg-sky-50">
+          <Button variant="outline" size="sm" onClick={openPlatform} className="rounded-xl h-9 px-3 border-slate-800 bg-slate-900 text-slate-300 text-xs font-extrabold hover:bg-slate-800 hover:text-white">
             <ExternalLink className="h-3.5 w-3.5 mr-1 text-slate-400" /> Open
           </Button>
 
@@ -255,13 +255,13 @@ export function Phase4Build({
             size="sm"
             onClick={savePrompt}
             disabled={saving || savedKey === `${selected.id}:${platform}`}
-            className="rounded-xl h-9 px-3 border-sky-200 text-slate-700 text-xs font-semibold hover:bg-sky-50"
+            className="rounded-xl h-9 px-3 border-slate-800 bg-slate-900 text-slate-300 text-xs font-extrabold hover:bg-slate-800 hover:text-white"
           >
-            {saving ? <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> : savedKey === `${selected.id}:${platform}` ? <Check className="h-3.5 w-3.5 mr-1 text-emerald-600" /> : <Save className="h-3.5 w-3.5 mr-1 text-slate-400" />}
+            {saving ? <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> : savedKey === `${selected.id}:${platform}` ? <Check className="h-3.5 w-3.5 mr-1 text-lime-400" /> : <Save className="h-3.5 w-3.5 mr-1 text-slate-400" />}
             {savedKey === `${selected.id}:${platform}` ? "Saved" : "Save Prompt"}
           </Button>
 
-          <Button size="sm" onClick={copyPrompt} className="rounded-xl h-9 px-4 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold shadow-md shadow-sky-600/20 cursor-pointer">
+          <Button size="sm" onClick={copyPrompt} className="rounded-xl h-9 px-4 bg-lime-500 hover:bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer">
             <Copy className="h-3.5 w-3.5 mr-1.5" /> Copy Prompt
           </Button>
         </div>
@@ -270,18 +270,18 @@ export function Phase4Build({
       {/* Main Grid: Prompt Code vs Live Preview */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Left Card: Tailored Niche Prompt (FULLY SCROLLABLE) */}
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 flex flex-col h-[740px] overflow-hidden">
-          <CardHeader className="pb-3 pt-5 px-5 flex flex-row items-center justify-between border-b border-sky-100 shrink-0">
+        <Card className="rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl flex flex-col h-[740px] overflow-hidden">
+          <CardHeader className="pb-3 pt-5 px-5 flex flex-row items-center justify-between border-b border-slate-800 shrink-0">
             <div>
-              <CardTitle className="text-base tracking-tight font-bold text-slate-900 flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-sky-600" />
+              <CardTitle className="text-base tracking-tight font-black text-white uppercase flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-lime-400" />
                 Tailored AI Prompt ({PLATFORMS.find((p) => p.id === platform)?.label})
               </CardTitle>
-              <div className="text-[11px] text-slate-500 font-sans mt-0.5">
-                Niche: <span className="font-semibold text-slate-700">{nichePreset?.nicheCategory}</span> • {selected.city}
+              <div className="text-[11px] text-slate-400 font-sans mt-0.5 font-mono">
+                Niche: <span className="font-bold text-white">{nichePreset?.nicheCategory}</span> • {selected.city}
               </div>
             </div>
-            <Button size="sm" variant="ghost" onClick={copyPrompt} className="h-7 px-2 text-xs text-sky-600 hover:bg-sky-50 rounded-lg">
+            <Button size="sm" variant="ghost" onClick={copyPrompt} className="h-7 px-2 text-xs text-lime-400 hover:bg-slate-800 rounded-lg font-bold">
               <Copy className="h-3 w-3 mr-1" /> Copy
             </Button>
           </CardHeader>
@@ -293,13 +293,13 @@ export function Phase4Build({
         </Card>
 
         {/* Right Card: High Quality Interactive Animated Preview */}
-        <Card className="rounded-2xl border border-sky-100 bg-white/95 shadow-lg shadow-sky-500/5 overflow-hidden flex flex-col h-[740px]">
+        <Card className="rounded-2xl border border-slate-800 bg-[#111726]/90 backdrop-blur-md shadow-2xl overflow-hidden flex flex-col h-[740px]">
           {/* Preview Toolbar Header */}
-          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-4 px-5 gap-3 border-b border-sky-100 bg-slate-50/50 shrink-0">
+          <CardHeader className="flex flex-row items-center justify-between pb-3 pt-4 px-5 gap-3 border-b border-slate-800 bg-slate-900/80 shrink-0">
             <div className="flex items-center gap-2">
-              <CardTitle className="text-base tracking-tight font-bold text-slate-900">Live Website Preview</CardTitle>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" /> Realtime Scraped Data
+              <CardTitle className="text-base tracking-tight font-black text-white uppercase">Live Website Preview</CardTitle>
+              <span className="inline-flex items-center gap-1 rounded-full bg-slate-800 border border-lime-500/30 px-2.5 py-0.5 text-[10px] font-extrabold text-lime-400 font-mono">
+                <span className="h-1.5 w-1.5 rounded-full bg-lime-400 animate-ping" /> Realtime Scraped Data
               </span>
             </div>
 
