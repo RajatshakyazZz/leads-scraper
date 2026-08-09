@@ -72,7 +72,7 @@ export function Phase4Build({
   const [saving, setSaving] = useState(false);
   const [savedKey, setSavedKey] = useState("");
   const [restaurantStyle, setRestaurantStyle] = useState<"crav" | "madre" | "classic">("crav");
-  const [gymStyle, setGymStyle] = useState<"phive" | "classic">("phive");
+  const [gymStyle, setGymStyle] = useState<"phive" | "buckler" | "classic">("phive");
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
   const [previewTab, setPreviewTab] = useState<"all" | "hero" | "services" | "reviews" | "faq" | "contact">("all");
   const [fullModal, setFullModal] = useState(false);
@@ -409,6 +409,14 @@ export function Phase4Build({
                     ⚡ Phive
                   </button>
                   <button
+                    onClick={() => setGymStyle("buckler")}
+                    className={`px-2 py-0.5 rounded text-[10px] font-extrabold transition-all ${
+                      gymStyle === "buckler" ? "bg-[#cdc2b1] text-slate-950 shadow-xs" : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    🦾 Buckler
+                  </button>
+                  <button
                     onClick={() => setGymStyle("classic")}
                     className={`px-2 py-0.5 rounded text-[10px] font-extrabold transition-all ${
                       gymStyle === "classic" ? "bg-amber-500 text-slate-950 shadow-xs" : "text-slate-600 hover:text-slate-900"
@@ -527,6 +535,15 @@ export function Phase4Build({
                 />
               ) : isGym && gymStyle === "phive" && nichePreset ? (
                 <PhiveGymWebsiteRenderer
+                  lead={selected}
+                  preset={nichePreset}
+                  isMobile={viewMode === "mobile"}
+                  waNumber={waNumber}
+                  cleanPhone={cleanPhone}
+                  onOpenBooking={() => setShowBookingModal(true)}
+                />
+              ) : isGym && gymStyle === "buckler" && nichePreset ? (
+                <BucklerGymWebsiteRenderer
                   lead={selected}
                   preset={nichePreset}
                   isMobile={viewMode === "mobile"}
@@ -750,6 +767,15 @@ export function Phase4Build({
                     />
                   ) : isGym && gymStyle === "phive" && nichePreset ? (
                     <PhiveGymWebsiteRenderer
+                      lead={selected}
+                      preset={nichePreset}
+                      isMobile={false}
+                      waNumber={waNumber}
+                      cleanPhone={cleanPhone}
+                      onOpenBooking={() => setShowBookingModal(true)}
+                    />
+                  ) : isGym && gymStyle === "buckler" && nichePreset ? (
+                    <BucklerGymWebsiteRenderer
                       lead={selected}
                       preset={nichePreset}
                       isMobile={false}
@@ -1510,7 +1536,7 @@ function buildPrompt(
   platform: string,
   preset: ReturnType<typeof getNichePreset>,
   style: "crav" | "madre" | "classic" = "crav",
-  gymStyle: "phive" | "classic" = "phive"
+  gymStyle: "phive" | "buckler" | "classic" = "phive"
 ): string {
   const name = l.name;
   const niche = l.category;
@@ -1524,6 +1550,71 @@ function buildPrompt(
 
   const isRest = `${niche} ${name}`.toLowerCase().match(/restau|cafe|burg|food|dini|pizz|baker|biryan|thali|veg/);
   const isGym = `${niche} ${name}`.toLowerCase().match(/gym|fitn|crossfit|workout|health club|training|pilates|physique|muscle|iron/);
+
+  if (isGym && gymStyle === "buckler") {
+    return `You are crafting a world-class, ultra-luxury, commercial Buckler Fitness Gym Ecosystem landing page for "${name}", located in ${l.city}.
+
+# CLIENT BUSINESS PROFILE
+- Business Name: ${name}
+- Industry Niche: ${niche} (Commercial Gym & Fitness Ecosystem)
+- Address: ${addr}
+- City: ${l.city}
+- Direct Phone: ${phone}
+- WhatsApp Catalog & Equipment Portal: ${whatsapp}
+- Google Reputation: ${rating}★ Stars (${reviews}+ Verified Reviews)
+- Audit Gap Solved: ${gap} (Est. Revenue Impact: ₹${(l.audit.estLostRevenuePerMonth || 45000).toLocaleString()}/month)
+
+# BUCKLER GYM DESIGN SYSTEM (EXACT SOURCE CODE THEME)
+- Color Palette:
+  - Dark Charcoal / Espresso Background: #1a1918 / #121110
+  - Luxury Gold & Bronze Accent: #cdc2b1 / #D4AF37
+  - Crisp Off-White: #f8f8f8 / #ffffff
+  - Pure Black Contrast: #000000
+- Typography: Clean, modern sans-serif display headers with bold all-caps tags ("NOVO Catálogo 2025!", "BUCKLER 360", "NOSSAS SÉRIES", "NOSSAS MÁQUISNAS").
+- Micro-Animations & Interactions: 3D card tilt & flip hover effects, infinite horizontal partner gym ticker ("BEYOND THE MACHINES"), interactive category filter tabs, continuous right-to-left verified member reviews marquee loop.
+
+# HIGH-CONVERTING PAGE SECTIONS (BUCKLER FITNESS ECOSYSTEM LAYOUT)
+1. Top Sticky Nav Bar (#121110 Dark Charcoal):
+   - Gold Brand Badge "🦾 ${name.toUpperCase()}".
+   - Status Badge: "⚡ REALLEADER USA PARTNER • ${l.city.toUpperCase()}".
+   - Quick Action Buttons: Direct Call Button "📞 ${phone}" + WhatsApp Catalog Button.
+2. Hero Section (#121110 Dark Charcoal):
+   - Tagline Pill: "NOVO | Buckler Commercial Gym & Fitness Ecosystem 2025".
+   - Display XL Headline: "TORNE SUA ACADEMIA INCOMPARÁVEL IN ${l.city.toUpperCase()}".
+   - Subtitle: "Somos um ecossistema completo de soluções fitness de alta qualidade para ${name} em ${l.city}. Oferecemos equipamentos de alto padrão e suporte de montagem do zero."
+   - Reputation Pill: "★ ${rating} Google Rated (${reviews}+ Verified Reviews) • ${l.city}".
+   - Center Commercial Gym Showcase Video/Banner Container with "SOLICITAR ORÇAMENTO →" CTA overlay.
+   - Dual CTAs: "📞 CALL DIRECT: ${phone}" and "💬 WHATSAPP CATALOG & PRICES".
+3. Section 2 - Client Partner Logos Ticker (#121110 Dark Charcoal):
+   - Continuous horizontal scrolling ticker of top partner logos ("BEYOND THE MACHINES • WORLD GYM • BODYTECH • IRONWORKS PRIME • FÁBRICA DE MONSTROS • WELLNESS CLUB").
+4. Section 3 - BUCKLER 360 Ecosystem (#1a1918 Background):
+   - Headline: "UMA EXPERIÊNCIA COMPLETA".
+   - 5 Interactive Feature Pillar Cards: BUCKLER MACHINES, BUCKLER CARE, BUCKLER GAAS, BUCKLER TRACKING, BUCKLER CHECK-UP.
+5. Section 4 - NOSSAS SÉRIES (01-04 High-Tech Equipment Series Showcase):
+   - 01 SÉRIE CARDIO (Touch Screen Treadmills, Ellipticals, Rowers, Airbikes)
+   - 02 SÉRIE DUET (Dual-function space-saving pin loaded strength machines)
+   - 03 SÉRIE PRIME (Biomechanical plate loaded strength series with gold accents)
+   - 04 SÉRIE INFINITE (Super Power Cages, Olympic Bench Racks & Urethane Plates)
+6. Section 5 - NOSSAS MÁQUINAS (Filterable Product Catalog Grid):
+   - Interactive Category Tabs: "Todos", "Cardio", "Pin Loaded", "Plate Loaded", "Benches & Racks", "Cable Cross".
+   - Commercial Equipment Cards with Unsplash images, tag, category, and "SOLICITAR COTAÇÃO NO WHATSAPP →" button.
+7. Section 6 - Verified Member Reviews Marquee Loop (#121110 Dark):
+   - Continuous horizontal scrolling marquee loop (motion.div animate={{ x: [0, -1400] }}).
+   - Review Cards from local gym owners & athletes praising equipment biomechanics, durability, and WhatsApp quick setup.
+8. Section 7 - Dark Charcoal Footer & Live Map (#121110):
+   - Embedded Google Maps Iframe for "${name}, ${addr}, ${l.city}".
+   - Direct Call & WhatsApp Action Buttons.
+
+${
+  platform === "lovable" || platform === "bolt"
+    ? `OUTPUT FORMAT: Single React + Tailwind CSS landing page component with full smooth interactivity. Use Unsplash photo URLs.`
+    : platform === "claude-code"
+      ? "OUTPUT FORMAT: Next.js 15 App Router page with Tailwind CSS and shadcn components."
+      : "OUTPUT FORMAT: Self-contained index.html file with inline CSS and JS for slideshow."
+}
+
+Generate the complete production-ready code now.`;
+  }
 
   if (isGym && gymStyle === "phive") {
     return `You are crafting a world-class, high-energy, ultra-bold Phive Fitness & Wellness Gym landing page for "${name}", located in ${l.city}.
@@ -3045,6 +3136,503 @@ function PhiveGymWebsiteRenderer({
 
         {/* Embedded Google Map */}
         <div className="max-w-4xl mx-auto rounded-3xl overflow-hidden border-4 border-[#ffe000] shadow-2xl mb-8">
+          <iframe
+            title={`Map for ${lead.name}`}
+            width="100%"
+            height="260"
+            style={{ border: 0 }}
+            loading="lazy"
+            allowFullScreen
+            src={`https://www.google.com/maps?q=${encodeURIComponent(`${lead.name}, ${lead.address || ""}, ${lead.city}`)}&output=embed`}
+          />
+        </div>
+
+        <div className="border-t border-slate-800 pt-6 text-xs sm:text-sm font-semibold opacity-80">
+          © 2026 {lead.name} • {lead.city} • All rights reserved • Powered by ClientForge Live Preview Engine
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+/* ============================================================================
+   BUCKLER ULTRA-LUXURY COMMERCIAL GYM WEBSITE RENDERER
+   ============================================================================ */
+function BucklerGymWebsiteRenderer({
+  lead,
+  preset,
+  isMobile,
+  waNumber,
+  cleanPhone,
+  onOpenBooking
+}: {
+  lead: RankedLead;
+  preset: ReturnType<typeof getNichePreset>;
+  isMobile?: boolean;
+  waNumber: string;
+  cleanPhone: string;
+  onOpenBooking: () => void;
+}) {
+  const brandName = lead.name.toUpperCase();
+  const phoneDisplay = lead.phone || "+91 95577 30531";
+  const [activeTab, setActiveTab] = useState("Todos");
+
+  const equipmentList = [
+    {
+      title: "Commercial Touch Screen Treadmill & Cardio",
+      category: "Cardio",
+      image: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80",
+      tag: "SÉRIE CARDIO"
+    },
+    {
+      title: "Pin Loaded Dual Chest & Shoulder Press",
+      category: "Pin Loaded",
+      image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
+      tag: "SÉRIE DUET"
+    },
+    {
+      title: "Plate Loaded 45° Leg Press & Hack Squat",
+      category: "Plate Loaded",
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80",
+      tag: "SÉRIE PRIME"
+    },
+    {
+      title: "Full Power Cage & Functional Cross Cable Rig",
+      category: "Cable Cross",
+      image: "https://images.unsplash.com/photo-1549060279-7e168fcee0c2?auto=format&fit=crop&w=600&q=80",
+      tag: "SÉRIE INFINITE"
+    },
+    {
+      title: "Adjustable Incline Benches & Dumbbell Racks",
+      category: "Benches & Racks",
+      image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80",
+      tag: "PRIME BENCHES"
+    },
+    {
+      title: "Urethane CPU Barbells & Olympic Bumper Plates",
+      category: "Plate Loaded",
+      image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80",
+      tag: "TITANIUM GOLD"
+    }
+  ];
+
+  const filteredEquipment = activeTab === "Todos"
+    ? equipmentList
+    : equipmentList.filter(item => item.category === activeTab);
+
+  return (
+    <div className="bg-[#1a1918] text-[#f8f8f8] font-sans relative overflow-x-hidden selection:bg-[#cdc2b1] selection:text-[#1a1918]">
+      {/* 1. TOP NAVBAR */}
+      <nav className="w-full flex flex-wrap items-center justify-between px-4 sm:px-10 py-3 bg-[#121110] sticky top-0 z-40 border-b border-[#cdc2b1]/20 shadow-xl gap-3">
+        <a href="#hero" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-[#cdc2b1] text-[#1a1918] flex items-center justify-center font-black text-xl shadow-md border border-white">
+            🦾
+          </div>
+          <span className="font-extrabold text-xl sm:text-3xl text-white tracking-tight uppercase truncate font-serif">
+            {lead.name}
+          </span>
+        </a>
+
+        <div className="flex items-center gap-2 sm:gap-4 font-sans text-xs">
+          <span className="hidden sm:inline-flex items-center gap-1.5 bg-[#cdc2b1]/10 text-[#cdc2b1] px-3.5 py-1 rounded-full text-xs font-bold border border-[#cdc2b1]/30">
+            <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" /> REALLEADER USA PARTNER • {lead.city.toUpperCase()}
+          </span>
+          <a
+            href={`tel:${cleanPhone}`}
+            className="flex items-center gap-1.5 bg-[#cdc2b1] text-[#1a1918] px-4 py-2 rounded-full text-xs font-black uppercase hover:bg-white transition-colors shadow-md"
+          >
+            <Phone className="h-3.5 w-3.5" /> <span>{phoneDisplay}</span>
+          </a>
+          <a
+            href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to request the 2025 Buckler Gym Equipment Catalog.`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 bg-emerald-500 text-slate-950 px-4 py-2 rounded-full text-xs font-black uppercase hover:bg-emerald-400 transition-colors shadow-md"
+          >
+            <MessageSquare className="h-3.5 w-3.5" /> <span>WhatsApp Catalog</span>
+          </a>
+        </div>
+      </nav>
+
+      {/* 2. HERO SECTION */}
+      <section id="hero" className="relative bg-[#121110] pt-8 sm:pt-14 pb-16 px-4 text-center border-b-4 border-[#cdc2b1]/30 overflow-hidden">
+        <div className="max-w-6xl mx-auto flex flex-col items-center relative z-10">
+          {/* Tagline Badge */}
+          <div className="inline-flex items-center gap-2.5 bg-[#cdc2b1]/15 text-[#cdc2b1] px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold mb-6 border border-[#cdc2b1]/30 shadow-lg">
+            <span className="bg-[#cdc2b1] text-[#1a1918] font-black px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">NOVO</span>
+            <span>Buckler Commercial Gym & Fitness Ecosystem 2025</span>
+          </div>
+
+          {/* Display XL Headline */}
+          <h1 className="font-black text-4xl sm:text-8xl text-white uppercase tracking-tighter leading-none mb-6 drop-shadow-lg">
+            TORNE SUA ACADEMIA <span className="text-[#cdc2b1] underline decoration-[#cdc2b1]/40 decoration-4">INCOMPARÁVEL</span>
+          </h1>
+
+          <p className="font-sans text-base sm:text-2xl text-slate-300 font-medium max-w-3xl mx-auto mb-8 leading-relaxed">
+            Somos um ecossistema completo de soluções fitness de alta qualidade para <span className="text-[#cdc2b1] font-bold">{lead.name}</span> em {lead.city}. Oferecemos equipamentos de alto padrão e suporte de montagem do zero.
+          </p>
+
+          {/* Rating Badge */}
+          <div className="inline-flex items-center gap-2 bg-[#1a1918] text-white px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold border border-[#cdc2b1]/30 mb-8 shadow-md">
+            <span className="text-amber-400">★ {lead.rating ?? 4.9} Google Rated</span>
+            <span className="text-slate-400">({lead.reviewsCount ?? 420}+ Verified Reviews)</span>
+            <span className="text-[#cdc2b1]">• {lead.city}</span>
+          </div>
+
+          {/* Hero Video/Image Container */}
+          <div className="relative w-full max-w-5xl rounded-3xl overflow-hidden border-4 border-[#cdc2b1]/40 shadow-2xl group mb-10">
+            <div className="relative h-72 sm:h-[480px] w-full">
+              <img
+                src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80"
+                alt={lead.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#121110] via-[#121110]/40 to-transparent" />
+            </div>
+
+            {/* Overlays */}
+            <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row items-center justify-between gap-4 z-20">
+              <div className="text-left max-sm:text-center">
+                <span className="bg-[#cdc2b1] text-[#1a1918] font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">
+                  PARCEIRO EXCLUSIVO REALLEADER USA ★
+                </span>
+                <h3 className="font-black text-2xl sm:text-4xl text-white uppercase tracking-tight">
+                  EXCELÊNCIA, DESIGN E DURABILIDADE
+                </h3>
+                <p className="text-xs sm:text-base text-slate-300 font-medium">
+                  Ergonomia de precisão, estruturas biomecânicas e acabamentos de alto padrão em {lead.city}.
+                </p>
+              </div>
+
+              <a
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to request a free equipment quote.`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="bg-[#cdc2b1] hover:bg-white text-[#1a1918] font-black text-sm sm:text-base px-6 py-3 rounded-full border-2 border-white shadow-xl transition-all uppercase whitespace-nowrap cursor-pointer"
+              >
+                SOLICITAR ORÇAMENTO →
+              </a>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <a
+              href={`tel:${cleanPhone}`}
+              className="inline-flex items-center gap-2 bg-[#cdc2b1] hover:bg-white text-[#1a1918] font-black text-base sm:text-xl px-8 py-3.5 rounded-full border-2 border-white shadow-xl transition-all uppercase cursor-pointer"
+            >
+              <Phone className="h-4 w-4" /> CALL DIRECT: {phoneDisplay}
+            </a>
+            <a
+              href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to explore equipment for my gym.`)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-base sm:text-xl px-8 py-3.5 rounded-full border-2 border-white shadow-xl transition-all uppercase cursor-pointer"
+            >
+              <MessageSquare className="h-4 w-4" /> WHATSAPP CATALOG & PRICES
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. SECTION 2: CLIENT PARTNER LOGOS TICKER */}
+      <section className="bg-[#121110] py-5 overflow-hidden border-b border-[#cdc2b1]/20">
+        <div className="text-center text-xs font-bold text-[#cdc2b1] uppercase tracking-widest mb-3">
+          BEYOND THE MACHINES • TRUSTED BY TOP COMMERCIAL GYMS
+        </div>
+        <motion.div
+          animate={{ x: [0, -1000] }}
+          transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+          className="flex gap-12 whitespace-nowrap text-lg sm:text-2xl font-black text-slate-400 uppercase tracking-tighter opacity-80"
+        >
+          <span>🏆 WORLD GYM</span>
+          <span>⚡ BODYTECH</span>
+          <span>🥊 IRONWORKS PRIME</span>
+          <span>🔥 FÁBRICA DE MONSTROS</span>
+          <span>⭐ WELLNESS CLUB</span>
+          <span>💪 HOPE FITNESS</span>
+          <span>🏆 WORLD GYM</span>
+          <span>⚡ BODYTECH</span>
+          <span>🥊 IRONWORKS PRIME</span>
+          <span>🔥 FÁBRICA DE MONSTROS</span>
+        </motion.div>
+      </section>
+
+      {/* 4. SECTION 3: BUCKLER 360 - UMA EXPERIÊNCIA COMPLETA (5 ECOSYSTEM PILLARS) */}
+      <section className="py-16 px-4 sm:px-10 bg-[#1a1918] border-b-4 border-[#cdc2b1]/30">
+        <div className="max-w-6xl mx-auto text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-[#cdc2b1]/15 text-[#cdc2b1] px-4 py-1 rounded-full text-xs font-extrabold uppercase mb-3 border border-[#cdc2b1]/30">
+            BUCKLER 360 ECOSYSTEM
+          </div>
+          <h2 className="font-black text-3xl sm:text-6xl text-white uppercase tracking-tight">
+            UMA EXPERIÊNCIA COMPLETA
+          </h2>
+          <p className="text-base sm:text-xl text-slate-300 font-medium max-w-2xl mx-auto mt-2">
+            Soluções completas de equipamentos, manutenção preditiva e suporte para {lead.name} em {lead.city}!
+          </p>
+        </div>
+
+        {/* 5 Card Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
+          {[
+            {
+              title: "BUCKLER MACHINES",
+              desc: "Equipamentos biomecânicos de alta durabilidade e ergonomia superior para sua academia do zero.",
+              icon: "🏋️‍♂️",
+              img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80"
+            },
+            {
+              title: "BUCKLER CARE",
+              desc: "Suporte VIP contínuo, manutenção preventiva mensal e relatórios detalhados de alta performance.",
+              icon: "🛠️",
+              img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80"
+            },
+            {
+              title: "BUCKLER GAAS",
+              desc: "Gym-as-a-Service: consultoria de marca, arquitetura de espaço, marketing e treinamento de equipe.",
+              icon: "🚀",
+              img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80"
+            },
+            {
+              title: "BUCKLER TRACKING",
+              desc: "Acompanhamento em tempo real de pedidos, transporte e instalação na sua academia.",
+              icon: "📦",
+              img: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=400&q=80"
+            },
+            {
+              title: "BUCKLER CHECK-UP",
+              desc: "Auditoria operacional preditiva mensal realizada por nossos engenheiros de Customer Success.",
+              icon: "📊",
+              img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80"
+            }
+          ].map((pillar, idx) => (
+            <div
+              key={idx}
+              className="bg-[#121110] rounded-3xl p-5 border-2 border-[#cdc2b1]/30 hover:border-[#cdc2b1] transition-all flex flex-col justify-between group hover:scale-105 shadow-xl"
+            >
+              <div>
+                <div className="relative overflow-hidden rounded-2xl mb-4 h-36">
+                  <img src={pillar.img} alt={pillar.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <span className="absolute top-2 left-2 bg-[#cdc2b1] text-[#1a1918] font-black text-xs p-1.5 rounded-full shadow-md">
+                    {pillar.icon}
+                  </span>
+                </div>
+                <h3 className="font-black text-base text-[#cdc2b1] uppercase tracking-tight mb-2">{pillar.title}</h3>
+                <p className="text-xs text-slate-300 font-normal leading-relaxed">{pillar.desc}</p>
+              </div>
+
+              <a
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to know more about ${pillar.title}.`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 w-full py-2 bg-[#cdc2b1] hover:bg-white text-[#1a1918] font-extrabold text-xs tracking-wider rounded-xl transition-colors uppercase text-center block"
+              >
+                SAIBA MAIS →
+              </a>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 5. SECTION 4: NOSSAS SÉRIES (01-04 SERIES SHOWCASE) */}
+      <section className="py-16 px-4 sm:px-10 bg-[#121110] border-b-4 border-[#cdc2b1]/30">
+        <div className="max-w-6xl mx-auto text-center mb-12">
+          <span className="bg-[#cdc2b1] text-[#1a1918] font-black text-xs px-4 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">
+            NOSSAS SÉRIES DE EQUIPAMENTOS
+          </span>
+          <h2 className="font-black text-3xl sm:text-6xl text-[#cdc2b1] uppercase tracking-tight">
+            TRANSFORME SUA ACADEMIA NO ESPAÇO DOS SONHOS
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {[
+            {
+              num: "01",
+              title: "SÉRIE CARDIO",
+              desc: "Esteiras Touch Screen, Elípticos LED, Remos e Airbikes comerciais de alta resistência.",
+              img: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+              num: "02",
+              title: "SÉRIE DUET",
+              desc: "Máquinas pin loaded duplas de alta eficiência que otimizam o espaço da sua academia.",
+              img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+              num: "03",
+              title: "SÉRIE PRIME",
+              desc: "Elegância e biometria de nível mundial com acabamentos em titanium gold e preto fosco.",
+              img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+              num: "04",
+              title: "SÉRIE INFINITE",
+              desc: "Gaiolas de agachamento Super Power Cage, supino horizontal e anilhas de uretano CPU.",
+              img: "https://images.unsplash.com/photo-1549060279-7e168fcee0c2?auto=format&fit=crop&w=600&q=80"
+            }
+          ].map((serie, idx) => (
+            <div
+              key={idx}
+              className="bg-[#1a1918] rounded-3xl p-6 border-2 border-[#cdc2b1]/30 flex flex-col sm:flex-row items-center gap-6 shadow-xl hover:border-[#cdc2b1] transition-all"
+            >
+              <div className="w-full sm:w-1/2 h-52 rounded-2xl overflow-hidden">
+                <img src={serie.img} alt={serie.title} className="w-full h-full object-cover" />
+              </div>
+              <div className="w-full sm:w-1/2 flex flex-col justify-between">
+                <div>
+                  <span className="font-mono text-3xl font-black text-[#cdc2b1] block mb-1">{serie.num}</span>
+                  <h3 className="font-black text-xl text-white uppercase tracking-tight mb-2">{serie.title}</h3>
+                  <p className="text-xs text-slate-300 font-medium leading-relaxed mb-4">{serie.desc}</p>
+                </div>
+                <a
+                  href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want pricing details for ${serie.title}.`)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block py-2 px-4 bg-[#cdc2b1] hover:bg-white text-[#1a1918] font-bold text-xs rounded-xl uppercase transition-colors text-center"
+                >
+                  CONHECER A {serie.title} →
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 6. SECTION 5: NOSSAS MÁQUINAS (CATALOG TABS & GRID) */}
+      <section className="py-16 px-4 sm:px-10 bg-[#1a1918] border-b-4 border-[#cdc2b1]/30">
+        <div className="max-w-6xl mx-auto text-center mb-8">
+          <span className="bg-[#cdc2b1] text-[#1a1918] font-black text-xs px-4 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">
+            CATÁLOGO OFICIAL 2025
+          </span>
+          <h2 className="font-black text-3xl sm:text-6xl text-white uppercase tracking-tight mb-8">
+            NOSSAS MÁQUINAS
+          </h2>
+
+          {/* Category Tabs */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+            {["Todos", "Cardio", "Pin Loaded", "Plate Loaded", "Benches & Racks", "Cable Cross"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2 rounded-full text-xs font-black uppercase transition-all ${
+                  activeTab === tab
+                    ? "bg-[#cdc2b1] text-[#1a1918] shadow-md"
+                    : "bg-[#121110] text-slate-400 hover:text-white border border-[#cdc2b1]/20"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Machine Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {filteredEquipment.map((eq, idx) => (
+            <div
+              key={idx}
+              className="bg-[#121110] p-4 rounded-3xl border-2 border-[#cdc2b1]/30 shadow-xl flex flex-col justify-between hover:scale-105 transition-transform duration-300"
+            >
+              <div>
+                <div className="relative overflow-hidden rounded-2xl mb-4 h-48">
+                  <img src={eq.image} alt={eq.title} className="w-full h-full object-cover" />
+                  <span className="absolute top-2 left-2 bg-[#cdc2b1] text-[#1a1918] font-black text-[10px] px-3 py-1 rounded-full shadow-md uppercase">
+                    {eq.tag}
+                  </span>
+                </div>
+                <h3 className="font-black text-base text-[#cdc2b1] uppercase tracking-tight mb-2 leading-snug">{eq.title}</h3>
+                <p className="text-xs text-slate-400 font-semibold mb-4">Categoria: {eq.category} • Garantia Comercial 5 Anos</p>
+              </div>
+
+              <a
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to add ${eq.title} to my gym floor.`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-2.5 bg-[#cdc2b1] hover:bg-white text-[#1a1918] font-black text-xs tracking-wider rounded-2xl transition-colors uppercase text-center block"
+              >
+                SOLICITAR COTAÇÃO NO WHATSAPP →
+              </a>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 7. SECTION 6: VERIFIED MEMBER REVIEWS MARQUEE LOOP */}
+      <section className="bg-[#121110] py-16 overflow-hidden relative border-b-4 border-[#cdc2b1]/30">
+        <div className="text-center mb-10 px-4">
+          <span className="bg-[#cdc2b1] text-[#1a1918] font-black text-xs px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">
+            TESTEMUNHOS REAIS ★
+          </span>
+          <h2 className="font-black text-3xl sm:text-6xl text-[#cdc2b1] uppercase mt-3 tracking-tight">
+            O QUE DIZEM PROPRIETÁRIOS E MEMBROS EM {lead.city.toUpperCase()}
+          </h2>
+        </div>
+
+        {/* Continuous Horizontal Marquee Loop */}
+        <div className="flex overflow-hidden">
+          <motion.div
+            animate={{ x: [0, -1400] }}
+            transition={{ repeat: Infinity, duration: 24, ease: "linear" }}
+            className="flex gap-6 shrink-0"
+          >
+            {[
+              { author: "Vikram Singhania", location: "Delhi • Gym Owner", text: "Buckler equipment transformed our 5000 sqft facility. Biomechanics & finish are unmatched!", rating: "★★★★★" },
+              { author: "Ananya Iyer", location: "Bengaluru • Fitness Director", text: "The Buckler Care monthly checkups keep our machine downtime at 0%. World-class service!", rating: "★★★★★" },
+              { author: "Kabir Deshmukh", location: "Mumbai • Head Coach", text: "Dumbbells and plate-loaded leg press are bulletproof. Best investment we made this year.", rating: "★★★★★" },
+              { author: "Meera Patel", location: "Ahmedabad • Studio Owner", text: "Super smooth delivery and fast installation via WhatsApp tracking. Highly recommended!", rating: "★★★★★" },
+              { author: "Rajesh Sharma", location: "Jaipur • Powerlifter", text: "The Power Cage and Urethane CPU plates are competition grade. 5 Stars for durability!", rating: "★★★★★" },
+              { author: "Vikram Singhania", location: "Delhi • Gym Owner", text: "Buckler equipment transformed our 5000 sqft facility. Biomechanics & finish are unmatched!", rating: "★★★★★" },
+              { author: "Ananya Iyer", location: "Bengaluru • Fitness Director", text: "The Buckler Care monthly checkups keep our machine downtime at 0%. World-class service!", rating: "★★★★★" }
+            ].map((rev, idx) => (
+              <div
+                key={idx}
+                className="bg-[#1a1918] text-white p-5 rounded-3xl border-2 border-[#cdc2b1]/40 shadow-2xl w-80 sm:w-96 shrink-0 transform hover:scale-105 transition-transform"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-black text-xl text-[#cdc2b1] tracking-tight">{rev.author}</span>
+                  <span className="text-[#cdc2b1] font-bold text-sm tracking-widest">{rev.rating}</span>
+                </div>
+                <div className="text-xs text-amber-400 font-bold mb-2 uppercase tracking-wider">
+                  {rev.location}
+                </div>
+                <p className="text-sm text-slate-300 leading-snug font-semibold">
+                  "{rev.text}"
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 8. FOOTER & EMBEDDED GOOGLE MAP */}
+      <footer className="bg-[#121110] text-white py-14 px-4 sm:px-10 text-center relative">
+        <h2 className="font-black text-4xl sm:text-7xl text-[#cdc2b1] uppercase mb-3 tracking-tighter drop-shadow-md">
+          {brandName}
+        </h2>
+        <p className="text-base sm:text-xl text-slate-300 font-medium max-w-xl mx-auto mb-6">
+          Equipamentos Fitness Comerciais de Alto Padrão em {lead.city}. Visite-nos em {lead.address || lead.city}!
+        </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
+          <a
+            href={`tel:${cleanPhone}`}
+            className="bg-[#cdc2b1] hover:bg-white text-[#1a1918] font-black text-xl sm:text-2xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer uppercase"
+          >
+            📞 CALL: {phoneDisplay}
+          </a>
+          <a
+            href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to request gym equipment details.`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xl sm:text-2xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer uppercase"
+          >
+            💬 WHATSAPP PORTAL →
+          </a>
+        </div>
+
+        {/* Embedded Google Map */}
+        <div className="max-w-4xl mx-auto rounded-3xl overflow-hidden border-4 border-[#cdc2b1]/40 shadow-2xl mb-8">
           <iframe
             title={`Map for ${lead.name}`}
             width="100%"
