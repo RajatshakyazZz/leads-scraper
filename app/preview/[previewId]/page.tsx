@@ -46,6 +46,7 @@ export default function PreviewPage({ params }: { params: Promise<{ previewId: s
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [restaurantStyle, setRestaurantStyle] = useState<"crav" | "madre" | "classic">("crav");
+  const [gymStyle, setGymStyle] = useState<"phive" | "classic">("phive");
 
   useEffect(() => {
     async function fetchPreview() {
@@ -82,6 +83,23 @@ export default function PreviewPage({ params }: { params: Promise<{ previewId: s
       cat.includes("biryan") ||
       cat.includes("thali") ||
       cat.includes("veg")
+    );
+  }, [lead]);
+
+  const isGym = useMemo(() => {
+    if (!lead) return false;
+    const cat = `${lead.category} ${lead.name}`.toLowerCase();
+    return (
+      cat.includes("gym") ||
+      cat.includes("fitn") ||
+      cat.includes("crossfit") ||
+      cat.includes("workout") ||
+      cat.includes("health club") ||
+      cat.includes("training") ||
+      cat.includes("pilates") ||
+      cat.includes("physique") ||
+      cat.includes("muscle") ||
+      cat.includes("iron")
     );
   }, [lead]);
 
@@ -163,6 +181,27 @@ export default function PreviewPage({ params }: { params: Promise<{ previewId: s
             </div>
           )}
 
+          {isGym && (
+            <div className="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700">
+              <button
+                onClick={() => setGymStyle("phive")}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                  gymStyle === "phive" ? "bg-[#ffe000] text-slate-950 shadow-md" : "text-slate-400 hover:text-white"
+                }`}
+              >
+                <span>⚡ Phive Gym Theme</span>
+              </button>
+              <button
+                onClick={() => setGymStyle("classic")}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                  gymStyle === "classic" ? "bg-amber-500 text-slate-950 shadow-md" : "text-slate-400 hover:text-white"
+                }`}
+              >
+                <span>👑 Heritage Theme</span>
+              </button>
+            </div>
+          )}
+
           <div className="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700">
             <button
               onClick={() => setViewMode("desktop")}
@@ -213,6 +252,15 @@ export default function PreviewPage({ params }: { params: Promise<{ previewId: s
             />
           ) : isRestaurant && restaurantStyle === "madre" ? (
             <BurritoMadreWebsiteRenderer
+              lead={lead}
+              preset={nichePreset}
+              isMobile={viewMode === "mobile"}
+              waNumber={waNumber}
+              cleanPhone={cleanPhone}
+              onOpenBooking={() => setShowBookingModal(true)}
+            />
+          ) : isGym && gymStyle === "phive" ? (
+            <PhiveGymWebsiteRenderer
               lead={lead}
               preset={nichePreset}
               isMobile={viewMode === "mobile"}
@@ -1480,6 +1528,501 @@ function BurritoMadreWebsiteRenderer({
         </div>
 
         <div className="border-t border-[#FAE8DF]/20 pt-6 text-xs sm:text-sm font-semibold opacity-80">
+          © 2026 {lead.name} • {lead.city} • All rights reserved • Powered by ClientForge Live Preview Engine
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+/* ============================================================================
+   PHIVE ULTRA-FITNESS & GYM WEBSITE RENDERER
+   ============================================================================ */
+function PhiveGymWebsiteRenderer({
+  lead,
+  preset,
+  isMobile,
+  waNumber,
+  cleanPhone,
+  onOpenBooking
+}: {
+  lead: RankedLead;
+  preset: ReturnType<typeof getNichePreset>;
+  isMobile?: boolean;
+  waNumber: string;
+  cleanPhone: string;
+  onOpenBooking: () => void;
+}) {
+  const brandName = lead.name.toUpperCase();
+  const phoneDisplay = lead.phone || "+91 95577 30531";
+
+  const gymClasses = [
+    {
+      title: "HEAVY WEIGHTLIFTING & POWER ZONE",
+      desc: "Olympic barbells, prime squat racks, dumbbells up to 50kg, and dedicated deadlift platforms.",
+      image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80",
+      tag: "STRENGTH"
+    },
+    {
+      title: "HEATED INDOOR HYDROTHERAPY POOL",
+      desc: "Temperature-controlled 25m indoor pool for lap swimming, aqua aerobics & post-workout recovery.",
+      image: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=500&q=80",
+      tag: "AQUATICS"
+    },
+    {
+      title: "SAUNA, STEAM & TURKISH BATH RECOVERY",
+      desc: "Swedish cedar sauna, eucalyptus steam bath, cold plunge tubs & hydro massage relaxation suites.",
+      image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=500&q=80",
+      tag: "RECOVERY"
+    },
+    {
+      title: "PRIVATE REFORMER PILATES STUDIO",
+      desc: "Core stabilization, posture alignment, and full-body toning with certified master instructors.",
+      image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80",
+      tag: "PILATES"
+    },
+    {
+      title: "HIGH-INTENSITY FUNCTIONAL HIIT & BOXING",
+      desc: "Heavy bag cardio boxing, kettlebell circuits, air bikes, and high-energy group endurance classes.",
+      image: "https://images.unsplash.com/photo-1549060279-7e168fcee0c2?auto=format&fit=crop&w=500&q=80",
+      tag: "CARDIO HIIT"
+    },
+    {
+      title: "1-ON-1 CERTIFIED PERSONAL TRAINING",
+      desc: "Customized transformation blueprints, InBody composition analysis, and elite coaching.",
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=500&q=80",
+      tag: "VIP COACHING"
+    }
+  ];
+
+  return (
+    <div className="bg-[#161003] text-white font-sans relative overflow-x-hidden selection:bg-[#ffe000] selection:text-[#161003]">
+      {/* 1. TOP NAVBAR */}
+      <nav className="w-full flex flex-wrap items-center justify-between px-4 sm:px-10 py-3 bg-[#161003] sticky top-0 z-40 border-b border-[#ffe000]/20 shadow-md gap-3">
+        <a href="#hero" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-[#ffe000] text-[#161003] flex items-center justify-center font-black text-xl shadow-md border border-white">
+            ⚡
+          </div>
+          <span className="font-extrabold text-xl sm:text-3xl text-[#ffe000] tracking-tighter uppercase truncate font-serif">
+            {lead.name}
+          </span>
+        </a>
+
+        <div className="flex items-center gap-2 sm:gap-3 font-sans">
+          <span className="hidden sm:inline-flex items-center gap-1.5 bg-[#ffe000]/10 text-[#ffe000] px-3 py-1 rounded-full text-xs font-extrabold border border-[#ffe000]/30">
+            <span className="h-2 w-2 rounded-full bg-[#ffe000] animate-pulse" /> OPEN TODAY • {lead.city}
+          </span>
+          <a
+            href={`tel:${cleanPhone}`}
+            className="flex items-center gap-1.5 bg-[#ffe000] text-[#161003] px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-black uppercase hover:bg-white transition-colors shadow-md"
+          >
+            <Phone className="h-3.5 w-3.5" /> <span>{phoneDisplay}</span>
+          </a>
+          <a
+            href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to enquire about gym membership.`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 bg-emerald-500 text-slate-950 px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-black uppercase hover:bg-emerald-400 transition-colors shadow-md"
+          >
+            <MessageSquare className="h-3.5 w-3.5" /> <span>WhatsApp Pass</span>
+          </a>
+        </div>
+      </nav>
+
+      {/* 2. HERO SECTION WITH CONTINUOUS ROLLING TICKER & MEDIA SHOWCASE */}
+      <section id="hero" className="relative bg-[#161003] pt-6 sm:pt-10 pb-12 px-4 text-center overflow-hidden border-b-4 border-[#ffe000]">
+        {/* Continuous Rolling Header Ticker (Phive Ribbon Style) */}
+        <div className="bg-[#ffe000] text-[#161003] py-2 overflow-hidden mb-6 border-y-2 border-black">
+          <motion.div
+            animate={{ x: [0, -1200] }}
+            transition={{ repeat: Infinity, duration: 18, ease: "linear" }}
+            className="flex gap-8 whitespace-nowrap text-xl sm:text-3xl font-black uppercase tracking-tighter"
+          >
+            <span>⚡ {brandName} PORTO & LISBOA VIBES IN {lead.city.toUpperCase()} ⚡</span>
+            <span>IT'S NOT JUST FITNESS. IT'S LIVING FULLY ⚡</span>
+            <span>★ {lead.rating ?? 4.9} GOOGLE RATED ({lead.reviewsCount ?? 420}+ REVIEWS) ⚡</span>
+            <span>⚡ {brandName} PORTO & LISBOA VIBES IN {lead.city.toUpperCase()} ⚡</span>
+            <span>IT'S NOT JUST FITNESS. IT'S LIVING FULLY ⚡</span>
+          </motion.div>
+        </div>
+
+        <div className="max-w-6xl mx-auto flex flex-col items-center relative z-10">
+          {/* Rating Pill */}
+          <div className="inline-flex items-center gap-2 bg-[#ffe000]/15 text-[#ffe000] px-4 py-1.5 rounded-full text-xs sm:text-base mb-4 shadow-lg border border-[#ffe000]/40">
+            <span className="font-bold">★ {lead.rating ?? 4.9} Google Rated</span>
+            <span className="text-white">({lead.reviewsCount ?? 420}+ Reviews)</span>
+            <span className="text-[#ffe000]">• {lead.city}</span>
+          </div>
+
+          <h1 className="font-black text-4xl sm:text-8xl text-[#ffe000] uppercase tracking-tighter leading-none mb-4 drop-shadow-[0_4px_10px_rgba(255,224,0,0.25)]">
+            {brandName}
+          </h1>
+
+          <p className="font-sans text-lg sm:text-3xl text-slate-200 font-extrabold max-w-3xl mx-auto mb-8 leading-tight">
+            IT'S NOT JUST FITNESS. IT'S LIVING FULLY IN {lead.city.toUpperCase()}!
+          </p>
+
+          {/* Center High-Impact Gym Media Showcase */}
+          <div className="relative w-full max-w-4xl rounded-3xl overflow-hidden border-4 border-[#ffe000] shadow-2xl group mb-8">
+            <div className="relative h-72 sm:h-[450px] w-full">
+              <img
+                src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80"
+                alt={lead.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#161003] via-[#161003]/40 to-transparent" />
+            </div>
+
+            {/* Floating Overlays */}
+            <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row items-center justify-between gap-4 z-20">
+              <div className="text-left max-sm:text-center">
+                <span className="bg-[#ffe000] text-[#161003] font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block shadow-md">
+                  CLUB HIGHLIGHT ★
+                </span>
+                <h3 className="font-black text-2xl sm:text-4xl text-white uppercase tracking-tight">
+                  DISCOVER {brandName}
+                </h3>
+                <p className="text-xs sm:text-base text-slate-300 font-semibold">
+                  Strength Zones • Heated Hydrotherapy Pool • Sauna & Steam • Reformer Pilates
+                </p>
+              </div>
+
+              <a
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to claim a free 1-day gym pass.`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="bg-[#ffe000] hover:bg-white text-[#161003] font-black text-sm sm:text-lg px-6 py-3 rounded-full border-2 border-white shadow-xl transition-all uppercase whitespace-nowrap cursor-pointer"
+              >
+                CLAIM FREE DAY PASS →
+              </a>
+            </div>
+          </div>
+
+          {/* Action Call / WhatsApp Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <a
+              href={`tel:${cleanPhone}`}
+              className="inline-flex items-center gap-2 bg-[#ffe000] hover:bg-white text-[#161003] font-black text-base sm:text-xl px-7 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer uppercase"
+            >
+              <Phone className="h-4 w-4" /> CALL DIRECT: {phoneDisplay}
+            </a>
+            <a
+              href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to join the gym.`)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-base sm:text-xl px-7 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer uppercase"
+            >
+              <MessageSquare className="h-4 w-4" /> INSTANT WHATSAPP MEMBERSHIP
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. SCRAPED BUSINESS DATA BAR */}
+      <section className="bg-[#0f0b02] text-slate-200 py-6 px-4 sm:px-10 border-b-4 border-[#ffe000]">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-center font-sans">
+          <div className="bg-[#ffe000]/10 p-3 rounded-2xl border border-[#ffe000]/30">
+            <span className="text-[#ffe000] font-bold text-xs uppercase block">📍 Address & Location</span>
+            <span className="text-white text-sm sm:text-base font-extrabold truncate block">{lead.address || lead.city}</span>
+          </div>
+          <div className="bg-[#ffe000]/10 p-3 rounded-2xl border border-[#ffe000]/30">
+            <span className="text-[#ffe000] font-bold text-xs uppercase block">📞 Phone Helpline</span>
+            <span className="text-white text-sm sm:text-base font-extrabold truncate block">{phoneDisplay}</span>
+          </div>
+          <div className="bg-[#ffe000]/10 p-3 rounded-2xl border border-[#ffe000]/30">
+            <span className="text-[#ffe000] font-bold text-xs uppercase block">💬 WhatsApp Express</span>
+            <span className="text-white text-sm sm:text-base font-extrabold truncate block">Instant Pass & Booking</span>
+          </div>
+          <div className="bg-[#ffe000]/10 p-3 rounded-2xl border border-[#ffe000]/30">
+            <span className="text-[#ffe000] font-bold text-xs uppercase block">⭐ Member Reputation</span>
+            <span className="text-white text-sm sm:text-base font-extrabold truncate block">{lead.rating ?? 4.9}★ ({lead.reviewsCount ?? 420}+ Reviews)</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. SECTION 2: "ACTIVATE YOUR SENSES / PUSH YOUR LIMITS" BADGE BANNER */}
+      <section className="py-14 px-4 sm:px-10 bg-[#161003] text-center border-b-4 border-[#ffe000]">
+        <div className="max-w-4xl mx-auto relative bg-[#ffe000] text-[#161003] p-8 sm:p-12 rounded-3xl border-4 border-white shadow-2xl overflow-hidden">
+          <span className="bg-[#161003] text-[#ffe000] font-extrabold text-xs px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md mb-4 inline-block">
+            PHILOSOPHY & ENERGY ★
+          </span>
+
+          {/* Stacked Headline with Brush Script Overlay */}
+          <div className="relative my-4">
+            <h2 className="font-black text-4xl sm:text-7xl uppercase tracking-tighter leading-none text-[#161003]">
+              ACTIVATE YOUR SENSES
+            </h2>
+            <div className="font-serif italic text-2xl sm:text-5xl text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] -mt-2 sm:-mt-4 transform -rotate-3">
+              ~ Push Your Limits ~
+            </div>
+          </div>
+
+          <p className="text-base sm:text-2xl font-extrabold text-[#161003] max-w-2xl mx-auto my-6 leading-snug">
+            Welcome to {lead.name}. We combine state-of-the-art strength arenas, heated hydrotherapy pools, luxury saunas, and personal training under one roof in {lead.city}!
+          </p>
+
+          <a
+            href={`tel:${cleanPhone}`}
+            className="inline-block bg-[#161003] hover:bg-white text-[#ffe000] hover:text-[#161003] font-black text-base sm:text-2xl px-8 py-3.5 rounded-full border-2 border-black shadow-xl transition-all uppercase cursor-pointer"
+          >
+            BOOK YOUR CLUB TOUR: {phoneDisplay}
+          </a>
+        </div>
+      </section>
+
+      {/* 5. SECTION 3: "WHAT YOU CAN FIND AT CLUBS" & GIANT "FITNESS" GRAPHIC */}
+      <section className="py-14 px-4 sm:px-10 bg-[#0f0b02]">
+        <div className="max-w-6xl mx-auto text-center mb-8">
+          <div className="inline-block bg-[#161003] text-[#ffe000] border-2 border-[#ffe000] p-4 rounded-2xl shadow-xl w-full max-w-3xl mb-8">
+            <h3 className="font-black text-sm sm:text-xl uppercase tracking-wider text-[#ffe000] mb-3">
+              WHAT YOU CAN FIND AT {brandName} CLUBS
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center text-xs sm:text-sm font-bold text-white uppercase">
+              <div className="p-2 bg-[#ffe000]/10 rounded-xl border border-[#ffe000]/20">
+                🏊 HEATED INDOOR POOL
+              </div>
+              <div className="p-2 bg-[#ffe000]/10 rounded-xl border border-[#ffe000]/20">
+                🧖 SAUNA & JACUZZI
+              </div>
+              <div className="p-2 bg-[#ffe000]/10 rounded-xl border border-[#ffe000]/20">
+                🏋️ WEIGHT & CARDIO
+              </div>
+              <div className="p-2 bg-[#ffe000]/10 rounded-xl border border-[#ffe000]/20">
+                🧘 PRIVATE PILATES
+              </div>
+              <div className="p-2 bg-[#ffe000]/10 rounded-xl border border-[#ffe000]/20">
+                🥊 GROUP HIIT CLASSES
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Giant FITNESS Graphic Container (#ffe000 Electric Yellow) */}
+        <div className="max-w-6xl mx-auto bg-[#ffe000] p-8 sm:p-14 rounded-3xl border-4 border-white shadow-2xl relative text-center overflow-hidden">
+          <h2 className="font-black text-6xl sm:text-[11vw] text-[#161003] tracking-tighter leading-none uppercase mb-2 drop-shadow-md">
+            FITNESS
+          </h2>
+
+          {/* Floating 3D Weight Plate Graphic Badge Overlay */}
+          <div className="inline-flex items-center gap-3 bg-[#161003] text-[#ffe000] px-6 py-3 rounded-2xl border-2 border-white shadow-2xl transform -rotate-3 mb-4">
+            <span className="text-2xl">🏋️‍♂️</span>
+            <span className="font-black text-sm sm:text-xl uppercase tracking-wider">
+              25 KG PHIVE PRO PLATE • OLYMPIC GRADE
+            </span>
+          </div>
+
+          <p className="text-lg sm:text-3xl text-[#161003] font-black max-w-3xl mx-auto my-4">
+            UNLEASH YOUR ULTIMATE POTENTIAL WITH WORLD-CLASS EQUIPMENT IN {lead.city.toUpperCase()}
+          </p>
+        </div>
+      </section>
+
+      {/* 6. SECTION 4: 6 HIGH-IMPACT GYM FACILITIES & CLASSES GRID */}
+      <section className="py-14 px-4 sm:px-10 bg-[#161003]">
+        <div className="max-w-6xl mx-auto text-center mb-10">
+          <span className="bg-[#ffe000] text-[#161003] font-black text-xs sm:text-sm px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">
+            PREMIUM FACILITIES & SPECIALTIES ★
+          </span>
+          <h2 className="font-black text-4xl sm:text-6xl text-[#ffe000] uppercase mt-3 tracking-tight">
+            ENGINEERED FOR PEAK PERFORMANCE
+          </h2>
+          <p className="text-base sm:text-xl text-slate-300 font-bold max-w-xl mx-auto mt-2">
+            Explore our world-class workout zones and recovery suites in {lead.city}!
+          </p>
+        </div>
+
+        {/* 6 Product Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {gymClasses.map((item, idx) => (
+            <div
+              key={idx}
+              className="bg-[#0f0b02] p-4 rounded-3xl border-3 border-[#ffe000]/40 shadow-xl flex flex-col justify-between hover:scale-105 transition-transform duration-300"
+            >
+              <div>
+                <div className="relative overflow-hidden rounded-2xl mb-3 h-48">
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                  <span className="absolute top-2 left-2 bg-[#ffe000] text-[#161003] font-black text-[11px] px-3 py-1 rounded-full shadow-md uppercase tracking-wider">
+                    {item.tag}
+                  </span>
+                </div>
+                <h3 className="font-black text-lg text-[#ffe000] uppercase tracking-wide mb-1 leading-snug">{item.title}</h3>
+                <p className="text-xs text-slate-300 font-semibold leading-relaxed mb-4">{item.desc}</p>
+              </div>
+
+              <a
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to join ${item.title}.`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-2.5 bg-[#ffe000] hover:bg-white text-[#161003] font-black text-sm tracking-wider rounded-2xl transition-colors uppercase text-center block"
+              >
+                ENQUIRE ON WHATSAPP →
+              </a>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 7. SECTION 5: "#JOIN THE CLUBS / FOLLOW US" BADGE BANNER */}
+      <section className="bg-[#ffe000] text-[#161003] py-14 px-4 sm:px-10 text-center relative overflow-hidden">
+        <div className="max-w-5xl mx-auto">
+          <div className="bg-[#161003] text-[#ffe000] p-8 sm:p-12 rounded-3xl border-4 border-white shadow-2xl inline-block max-w-3xl">
+            <h2 className="font-black text-4xl sm:text-7xl uppercase leading-none tracking-tighter mb-2">
+              #JOIN THE {brandName} CLUBS
+            </h2>
+            <div className="font-serif italic text-2xl sm:text-5xl text-white font-bold mb-6">
+              ~ Follow Us ~
+            </div>
+            <a
+              href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to join the club membership.`)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block bg-[#ffe000] hover:bg-white text-[#161003] font-black text-lg sm:text-2xl px-10 py-3.5 rounded-full border-2 border-white shadow-2xl transition-all uppercase cursor-pointer"
+            >
+              EXPLORE MEMBERSHIP PLANS →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. SECTION 6: CIRCULAR SOCIALS & COMMUNITY GRID */}
+      <section className="bg-[#161003] text-white py-14 px-4 sm:px-10 text-center">
+        <div className="max-w-6xl mx-auto">
+          <span className="bg-[#ffe000] text-[#161003] font-black text-xs sm:text-sm px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md mb-3 inline-block">
+            COMMUNITY & SOCIALS ★
+          </span>
+          <h2 className="font-black text-3xl sm:text-6xl text-[#ffe000] uppercase tracking-tight mb-10">
+            KEEP UP WITH ALL THE LATEST ON OUR SOCIALS!
+          </h2>
+
+          {/* 4 Circular Cutout Photo Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-5xl mx-auto mb-10">
+            <div className="flex flex-col items-center">
+              <div className="w-36 h-36 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#ffe000] shadow-2xl relative mb-3 group">
+                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80" alt="Yoga IG" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                <span className="absolute inset-0 flex items-center justify-center font-black text-4xl text-white drop-shadow-lg">IG</span>
+              </div>
+              <span className="font-black text-sm text-[#ffe000]">INSTAGRAM REELS</span>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="w-36 h-36 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#ffe000] shadow-2xl relative mb-3 group">
+                <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=400&q=80" alt="Pool FB" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                <span className="absolute inset-0 flex items-center justify-center font-black text-4xl text-white drop-shadow-lg">FB</span>
+              </div>
+              <span className="font-black text-sm text-[#ffe000]">FACEBOOK COMMUNITY</span>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="w-36 h-36 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#ffe000] shadow-2xl relative mb-3 group">
+                <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80" alt="Bench YT" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                <span className="absolute inset-0 flex items-center justify-center font-black text-4xl text-white drop-shadow-lg">YT</span>
+              </div>
+              <span className="font-black text-sm text-[#ffe000]">YOUTUBE WORKOUTS</span>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="w-36 h-36 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#ffe000] shadow-2xl relative mb-3 group">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80" alt="Coach TK" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                <span className="absolute inset-0 flex items-center justify-center font-black text-4xl text-white drop-shadow-lg">TK</span>
+              </div>
+              <span className="font-black text-sm text-[#ffe000]">TIKTOK COACH TIPS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. SECTION 7: VERIFIED INDIAN MEMBER REVIEWS MARQUEE LOOP (RIGHT TO LEFT) */}
+      <section className="bg-[#0f0b02] py-14 border-t-4 border-[#ffe000] overflow-hidden relative">
+        <div className="text-center mb-8 px-4">
+          <span className="bg-[#ffe000] text-[#161003] font-black text-xs sm:text-sm px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">
+            REAL MEMBER REVIEWS ★
+          </span>
+          <h2 className="font-black text-3xl sm:text-6xl text-[#ffe000] uppercase mt-2 tracking-tight">
+            WHAT OUR MEMBERS SAY IN {lead.city.toUpperCase()}
+          </h2>
+        </div>
+
+        {/* Continuous Horizontal Marquee Loop (Right to Left) */}
+        <div className="flex overflow-hidden">
+          <motion.div
+            animate={{ x: [0, -1400] }}
+            transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+            className="flex gap-6 shrink-0"
+          >
+            {[
+              { author: "Aarav Mehta", location: "Delhi • Local Guide", text: "The weightlifting arena and sauna are top notch! Lost 12kg in 3 months.", rating: "★★★★★" },
+              { author: "Neha Sharma", location: "Mumbai • Fitness Enthusiast", text: "Best reformer pilates and heated pool in town. Cleanliness is 10/10!", rating: "★★★★★" },
+              { author: "Rohan Verma", location: "Jaipur • CrossFit Athlete", text: "World-class equipment, supportive trainers, and super easy WhatsApp membership registration.", rating: "★★★★★" },
+              { author: "Pooja Hegde", location: "Ahmedabad • Verified Member", text: "Love the personal training sessions and steam bath after leg day. Highly recommended!", rating: "★★★★★" },
+              { author: "Karan Malhotra", location: "Bengaluru • Powerlifter", text: "Heavy dumbbells up to 50kg, rogue racks, and great community vibe. 5 Stars!", rating: "★★★★★" },
+              { author: "Simran Kaur", location: "Pune • Wellness Blogger", text: "The group HIIT and jacuzzi facilities are fantastic. Best gym in town!", rating: "★★★★★" },
+              { author: "Aarav Mehta", location: "Delhi • Local Guide", text: "The weightlifting arena and sauna are top notch! Lost 12kg in 3 months.", rating: "★★★★★" },
+              { author: "Neha Sharma", location: "Mumbai • Fitness Enthusiast", text: "Best reformer pilates and heated pool in town. Cleanliness is 10/10!", rating: "★★★★★" },
+              { author: "Rohan Verma", location: "Jaipur • CrossFit Athlete", text: "World-class equipment, supportive trainers, and super easy WhatsApp membership registration.", rating: "★★★★★" },
+              { author: "Pooja Hegde", location: "Ahmedabad • Verified Member", text: "Love the personal training sessions and steam bath after leg day. Highly recommended!", rating: "★★★★★" },
+              { author: "Karan Malhotra", location: "Bengaluru • Powerlifter", text: "Heavy dumbbells up to 50kg, rogue racks, and great community vibe. 5 Stars!", rating: "★★★★★" },
+              { author: "Simran Kaur", location: "Pune • Wellness Blogger", text: "The group HIIT and jacuzzi facilities are fantastic. Best gym in town!", rating: "★★★★★" }
+            ].map((rev, idx) => (
+              <div
+                key={idx}
+                className="bg-[#161003] text-white p-5 rounded-3xl border-4 border-[#ffe000] shadow-2xl w-80 sm:w-96 shrink-0 transform hover:scale-105 transition-transform"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-black text-xl text-[#ffe000] tracking-tight">{rev.author}</span>
+                  <span className="text-[#ffe000] font-bold text-sm tracking-widest">{rev.rating}</span>
+                </div>
+                <div className="text-xs text-amber-400 font-bold mb-2 uppercase tracking-wider">
+                  {rev.location}
+                </div>
+                <p className="text-sm text-slate-200 leading-snug font-semibold">
+                  "{rev.text}"
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 10. DARK ESPRESSO FOOTER & EMBEDDED GOOGLE MAP */}
+      <footer className="bg-[#161003] text-white py-12 px-4 sm:px-10 text-center relative border-t-4 border-[#ffe000]">
+        <h2 className="font-black text-4xl sm:text-7xl text-[#ffe000] uppercase mb-3 tracking-tighter drop-shadow-md">
+          {brandName}
+        </h2>
+        <p className="text-base sm:text-xl text-slate-300 font-bold max-w-xl mx-auto mb-6">
+          Premium Fitness, Hydrotherapy Pool & Wellness Club in {lead.city}. Visit us at {lead.address || lead.city}!
+        </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
+          <a
+            href={`tel:${cleanPhone}`}
+            className="bg-[#ffe000] hover:bg-white text-[#161003] font-black text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer uppercase"
+          >
+            📞 CALL: {phoneDisplay}
+          </a>
+          <a
+            href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi ${lead.name}, I want to join the gym.`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xl sm:text-3xl px-8 py-3 rounded-full border-2 border-white shadow-xl transition-all cursor-pointer uppercase"
+          >
+            💬 WHATSAPP MEMBERSHIP →
+          </a>
+        </div>
+
+        {/* Embedded Google Map */}
+        <div className="max-w-4xl mx-auto rounded-3xl overflow-hidden border-4 border-[#ffe000] shadow-2xl mb-8">
+          <iframe
+            title={`Map for ${lead.name}`}
+            width="100%"
+            height="260"
+            style={{ border: 0 }}
+            loading="lazy"
+            allowFullScreen
+            src={`https://www.google.com/maps?q=${encodeURIComponent(`${lead.name}, ${lead.address || ""}, ${lead.city}`)}&output=embed`}
+          />
+        </div>
+
+        <div className="border-t border-slate-800 pt-6 text-xs sm:text-sm font-semibold opacity-80">
           © 2026 {lead.name} • {lead.city} • All rights reserved • Powered by ClientForge Live Preview Engine
         </div>
       </footer>
