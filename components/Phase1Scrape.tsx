@@ -78,20 +78,20 @@ export function Phase1Scrape({
     setCurrentLeadCount(0);
     setTotalTargetCount(nextInput.count);
 
-    // Realistic continuous 30-40s progress interval while network request runs
+    // Exact 10-Second Hackathon Progress Arc (1% per 95ms -> ~8.5s to reach 90%)
     const progressTimer = setInterval(() => {
       setProgress((prev) => {
-        if (prev < 85) {
+        if (prev < 90) {
           const next = prev + 1;
-          if (next === 12) setScrapeStage(`🔍 Querying live Google Maps listings for "${nextInput.niche}" in ${nextInput.city}...`);
-          if (next === 30) setScrapeStage(`📍 Resolving GPS coordinates & place IDs...`);
-          if (next === 52) setScrapeStage(`📞 Extracting direct phone numbers, WhatsApp & Google review metrics...`);
-          if (next === 74) setScrapeStage(`💾 Indexing business profiles & storing to workspace database...`);
+          if (next === 20) setScrapeStage(`🔍 Querying live Google Maps listings for "${nextInput.niche}" in ${nextInput.city}...`);
+          if (next === 45) setScrapeStage(`📍 Resolving GPS coordinates & Google Place IDs...`);
+          if (next === 65) setScrapeStage(`📞 Extracting direct phone numbers, WhatsApp & Google review metrics...`);
+          if (next === 85) setScrapeStage(`💾 Indexing business profiles & storing to workspace database...`);
           return next;
         }
         return prev;
       });
-    }, 380); // 380ms * 85 steps = ~32 seconds smooth realistic arc
+    }, 95);
 
     try {
       const token = await getIdToken();
@@ -116,12 +116,13 @@ export function Phase1Scrape({
       setLeads([]);
       const totalLeads = data.leads.length;
       setTotalTargetCount(totalLeads);
-      const startPct = Math.max(75, progress);
+      const startPct = Math.max(90, progress);
 
-      // Stagger leads into state every 300ms for a realistic 3-4s visual reveal on map and table
+      // Rapidly reveal leads into state over final 1s to reach exact 10s completion
+      const stepDelay = Math.max(40, Math.floor(1000 / totalLeads));
       for (let i = 0; i < totalLeads; i++) {
         const lead = data.leads[i];
-        await new Promise((r) => setTimeout(r, 280));
+        await new Promise((r) => setTimeout(r, stepDelay));
         setLeads(data.leads.slice(0, i + 1));
         setCurrentLeadCount(i + 1);
 

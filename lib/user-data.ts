@@ -110,6 +110,38 @@ export async function getSavedLeads(uid: string) {
   return snap.docs.map((doc) => serializeLead(doc.id, doc.data()));
 }
 
+export async function getCategoryHistoryLeads(uid: string, niche: string, city: string): Promise<Lead[]> {
+  try {
+    const userLeads = await getSavedLeads(uid);
+    const searchNiche = niche.trim().toLowerCase();
+
+    // Filter leads matching niche or category (case-insensitive fuzzy match)
+    const matched = userLeads.filter((lead) => {
+      const cat = (lead.category || "").toLowerCase();
+      const name = (lead.name || "").toLowerCase();
+      return (
+        cat.includes(searchNiche) ||
+        searchNiche.includes(cat) ||
+        name.includes(searchNiche)
+      );
+    });
+
+    // Deduplicate by lead name
+    const uniqueMap = new Map<string, Lead>();
+    for (const item of matched) {
+      const key = item.name.trim().toLowerCase();
+      if (!uniqueMap.has(key)) {
+        uniqueMap.set(key, item);
+      }
+    }
+
+    return Array.from(uniqueMap.values());
+  } catch (error) {
+    console.error("Error fetching category history leads:", error);
+    return [];
+  }
+}
+
 export async function saveWebsitePrompt(uid: string, input: { lead: Lead; platform: string; prompt: string }) {
   const db = getAdminDb();
   const ref = db.collection("users").doc(uid).collection("prompts").doc();
