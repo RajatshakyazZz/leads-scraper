@@ -143,7 +143,8 @@ export function LoginPage() {
               <button
                 type="button"
                 onClick={() => setMode("signin")}
-                className={`py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all ${
+                aria-label="Switch to Sign In mode"
+                className={`min-h-[44px] py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all flex items-center justify-center ${
                   mode === "signin"
                     ? "bg-lime-500 text-slate-950 shadow-md shadow-lime-500/20"
                     : "text-slate-400 hover:text-white"
@@ -154,7 +155,8 @@ export function LoginPage() {
               <button
                 type="button"
                 onClick={() => setMode("signup")}
-                className={`py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all ${
+                aria-label="Switch to Create Account mode"
+                className={`min-h-[44px] py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all flex items-center justify-center ${
                   mode === "signup"
                     ? "bg-lime-500 text-slate-950 shadow-md shadow-lime-500/20"
                     : "text-slate-400 hover:text-white"
@@ -210,20 +212,21 @@ export function LoginPage() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
                   onSubmit={handleSubmit}
-                  className="space-y-3"
+                  className="space-y-3.5"
                 >
                   {/* Display Name field (Sign Up only) */}
                   {mode === "signup" && (
                     <div className="space-y-1">
-                      <label className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Full Name</label>
+                      <label htmlFor="displayNameInput" className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Full Name</label>
                       <div className="relative">
-                        <User className="h-4 w-4 absolute left-3 top-3 text-slate-500" />
+                        <User className="h-4 w-4 absolute left-3 top-3.5 text-slate-500" />
                         <Input
+                          id="displayNameInput"
                           type="text"
                           placeholder="e.g. Rahul Sharma"
                           value={displayName}
                           onChange={(e) => setDisplayName(e.target.value)}
-                          className="pl-9 h-10 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
+                          className="pl-9 h-11 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
                         />
                       </div>
                     </div>
@@ -231,16 +234,17 @@ export function LoginPage() {
 
                   {/* Email field */}
                   <div className="space-y-1">
-                    <label className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Email Address</label>
+                    <label htmlFor="emailInput" className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Email Address</label>
                     <div className="relative">
-                      <Mail className="h-4 w-4 absolute left-3 top-3 text-slate-500" />
+                      <Mail className="h-4 w-4 absolute left-3 top-3.5 text-slate-500" />
                       <Input
+                        id="emailInput"
                         type="email"
                         required
                         placeholder="you@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="pl-9 h-10 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
+                        className="pl-9 h-11 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
                       />
                     </div>
                   </div>
@@ -249,31 +253,34 @@ export function LoginPage() {
                   {mode !== "forgot" && (
                     <div className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <label className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Password</label>
+                        <label htmlFor="passwordInput" className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Password</label>
                         {mode === "signin" && (
                           <button
                             type="button"
                             onClick={() => setMode("forgot")}
-                            className="text-[11px] font-bold text-lime-400 hover:underline"
+                            aria-label="Forgot Password"
+                            className="min-h-[44px] px-1 inline-flex items-center text-[11px] font-bold text-lime-400 hover:underline"
                           >
                             Forgot Password?
                           </button>
                         )}
                       </div>
-                      <div className="relative">
-                        <Lock className="h-4 w-4 absolute left-3 top-3 text-slate-500" />
+                      <div className="relative flex items-center">
+                        <Lock className="h-4 w-4 absolute left-3 top-3.5 text-slate-500 pointer-events-none" />
                         <Input
+                          id="passwordInput"
                           type={showPassword ? "text" : "password"}
                           required
                           placeholder="••••••••"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="pl-9 pr-9 h-10 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
+                          className="pl-9 pr-12 h-11 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-3 text-slate-500 hover:text-slate-300"
+                          aria-label={showPassword ? "Hide password" : "Show password"}
+                          className="absolute right-1 top-0.5 h-10 w-10 min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-500 hover:text-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-lime-400"
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
@@ -284,16 +291,17 @@ export function LoginPage() {
                   {/* Confirm Password field (Sign Up only) */}
                   {mode === "signup" && (
                     <div className="space-y-1">
-                      <label className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Confirm Password</label>
+                      <label htmlFor="confirmPasswordInput" className="text-[10px] font-mono font-extrabold uppercase text-slate-400 block">Confirm Password</label>
                       <div className="relative">
-                        <Lock className="h-4 w-4 absolute left-3 top-3 text-slate-500" />
+                        <Lock className="h-4 w-4 absolute left-3 top-3.5 text-slate-500" />
                         <Input
+                          id="confirmPasswordInput"
                           type={showPassword ? "text" : "password"}
                           required
                           placeholder="••••••••"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="pl-9 h-10 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
+                          className="pl-9 h-11 rounded-xl border-slate-800 bg-slate-900 text-white text-xs font-bold focus:ring-1 focus:ring-lime-400"
                         />
                       </div>
                     </div>
@@ -303,7 +311,8 @@ export function LoginPage() {
                   <Button
                     type="submit"
                     disabled={submitting || loading || !firebaseConfigured}
-                    className="w-full h-11 rounded-xl bg-lime-500 hover:bg-lime-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer transition-all mt-2"
+                    aria-label={mode === "signin" ? "Sign In with Email" : mode === "signup" ? "Create Account" : "Send Reset Link"}
+                    className="w-full h-11 min-h-[44px] rounded-xl bg-lime-500 hover:bg-lime-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer transition-all mt-2"
                   >
                     {submitting ? (
                       <Loader2 className="h-4 w-4 animate-spin mr-2 text-slate-950" />
@@ -324,7 +333,8 @@ export function LoginPage() {
                     <button
                       type="button"
                       onClick={() => setMode("signin")}
-                      className="w-full text-center text-xs font-bold text-slate-400 hover:text-white flex items-center justify-center gap-1.5 pt-1 uppercase tracking-wider font-mono"
+                      aria-label="Back to Sign In"
+                      className="w-full min-h-[44px] text-center text-xs font-bold text-slate-400 hover:text-white flex items-center justify-center gap-1.5 pt-1 uppercase tracking-wider font-mono"
                     >
                       <ArrowLeft className="h-3.5 w-3.5" /> Back to Sign In
                     </button>
@@ -349,8 +359,9 @@ export function LoginPage() {
                   type="button"
                   onClick={handleGoogleLogin}
                   disabled={loading || !firebaseConfigured}
+                  aria-label={mode === "signin" ? "Sign In with Google" : "Sign Up with Google"}
                   variant="outline"
-                  className="w-full h-10 rounded-xl border-slate-800 bg-slate-900 hover:bg-slate-800 text-slate-200 font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
+                  className="w-full h-11 min-h-[44px] rounded-xl border-slate-800 bg-slate-900 hover:bg-slate-800 text-slate-200 font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
                 >
                   <svg className="h-4 w-4" viewBox="0 0 24 24">
                     <path

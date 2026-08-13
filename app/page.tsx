@@ -3,21 +3,44 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
 import { LoginPage } from "@/components/LoginPage";
 import { Stepper } from "@/components/Stepper";
 import { Phase1Scrape } from "@/components/Phase1Scrape";
-import { Phase2Audit } from "@/components/Phase2Audit";
-import { Phase3Rank } from "@/components/Phase3Rank";
-import { Phase4Build } from "@/components/Phase4Build";
-import { Phase5Outreach } from "@/components/Phase5Outreach";
 import { scoreLead } from "@/lib/scoring";
 import type { Lead, AuditResult } from "@/lib/types";
 import { Loader2, LogOut, Sparkles, History, Zap, User, Database, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SessionHistory } from "@/components/SessionHistory";
-import { ProfileModal } from "@/components/ProfileModal";
 import { toast } from "sonner";
+
+const Phase2Audit = dynamic(() => import("@/components/Phase2Audit").then((m) => m.Phase2Audit), {
+  loading: () => <PhaseLoader label="LOADING AUDIT ENGINE..." />,
+});
+
+const Phase3Rank = dynamic(() => import("@/components/Phase3Rank").then((m) => m.Phase3Rank), {
+  loading: () => <PhaseLoader label="LOADING RANKING ENGINE..." />,
+});
+
+const Phase4Build = dynamic(() => import("@/components/Phase4Build").then((m) => m.Phase4Build), {
+  loading: () => <PhaseLoader label="LOADING BUILD ENGINE..." />,
+});
+
+const Phase5Outreach = dynamic(() => import("@/components/Phase5Outreach").then((m) => m.Phase5Outreach), {
+  loading: () => <PhaseLoader label="LOADING OUTREACH ENGINE..." />,
+});
+
+const SessionHistory = dynamic(() => import("@/components/SessionHistory").then((m) => m.SessionHistory));
+const ProfileModal = dynamic(() => import("@/components/ProfileModal").then((m) => m.ProfileModal));
+
+function PhaseLoader({ label }: { label: string }) {
+  return (
+    <div className="py-24 flex flex-col items-center justify-center gap-3 text-xs font-mono font-bold text-slate-400">
+      <Loader2 className="h-7 w-7 animate-spin text-lime-400" />
+      <span>{label}</span>
+    </div>
+  );
+}
 
 export default function Page() {
   return (

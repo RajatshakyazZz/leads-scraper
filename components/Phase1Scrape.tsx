@@ -280,15 +280,15 @@ export function Phase1Scrape({
           <CardContent className="space-y-4 px-5 pt-4 pb-5">
             <div className="space-y-1.5">
               <Label htmlFor="niche" className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-extrabold font-mono">Niche Category</Label>
-              <Input id="niche" autoComplete="off" value={input.niche} onChange={(e) => setInput({ ...input, niche: e.target.value })} placeholder="e.g. Dentist, Restaurant, Realtor" className="h-10 text-sm rounded-xl border-slate-800 bg-slate-900 text-white focus-visible:ring-1 focus-visible:ring-lime-400 font-bold" />
+              <Input id="niche" autoComplete="off" value={input.niche} onChange={(e) => setInput({ ...input, niche: e.target.value })} placeholder="e.g. Dentist, Restaurant, Realtor" className="h-11 min-h-[44px] text-sm rounded-xl border-slate-800 bg-slate-900 text-white focus-visible:ring-1 focus-visible:ring-lime-400 font-bold" />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="city" className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-extrabold font-mono">City / Target Area</Label>
-              <Input id="city" autoComplete="off" value={input.city} onChange={(e) => setInput({ ...input, city: e.target.value })} placeholder="e.g. Bandra, Mumbai" className="h-10 text-sm rounded-xl border-slate-800 bg-slate-900 text-white focus-visible:ring-1 focus-visible:ring-lime-400 font-bold" />
+              <Input id="city" autoComplete="off" value={input.city} onChange={(e) => setInput({ ...input, city: e.target.value })} placeholder="e.g. Bandra, Mumbai" className="h-11 min-h-[44px] text-sm rounded-xl border-slate-800 bg-slate-900 text-white focus-visible:ring-1 focus-visible:ring-lime-400 font-bold" />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="count" className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-extrabold font-mono">Lead Quantity</Label>
-              <Input id="count" type="number" inputMode="numeric" min={1} max={maxCount} value={input.count} onChange={(e) => setInput({ ...input, count: Number(e.target.value) })} className="h-10 text-sm rounded-xl border-slate-800 bg-slate-900 text-white focus-visible:ring-1 focus-visible:ring-lime-400 font-mono font-bold tabular-nums" />
+              <Input id="count" type="number" inputMode="numeric" min={1} max={maxCount} value={input.count} onChange={(e) => setInput({ ...input, count: Number(e.target.value) })} className="h-11 min-h-[44px] text-sm rounded-xl border-slate-800 bg-slate-900 text-white focus-visible:ring-1 focus-visible:ring-lime-400 font-mono font-bold tabular-nums" />
               <p className="text-[10px] text-slate-400 font-mono mt-1">Maximum {maxCount} credits available in current account.</p>
             </div>
             <div className="rounded-xl border border-lime-500/30 bg-lime-500/10 px-3.5 py-2.5 flex items-center justify-between gap-3 shadow-xs">
@@ -299,7 +299,7 @@ export function Phase1Scrape({
               <ShieldCheck className="h-5 w-5 text-lime-400" aria-hidden="true" />
             </div>
 
-            <Button onClick={runScrape} disabled={loading} className="w-full h-11 rounded-xl bg-lime-500 hover:bg-lime-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer transition-all">
+            <Button onClick={runScrape} disabled={loading} aria-label="Scrape Leads Now" className="w-full h-11 min-h-[44px] rounded-xl bg-lime-500 hover:bg-lime-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer transition-all">
               {loading ? (
                 <><Loader2 className="h-4 w-4 mr-2 animate-spin text-slate-950" /> Scraping ({progress}%)...</>
               ) : (quota && quota.remaining <= 0) ? (
@@ -341,7 +341,7 @@ export function Phase1Scrape({
           <CardTitle className="text-base tracking-tight font-black text-white uppercase flex items-center gap-2">
             Scraped Businesses Table ({leads.length})
           </CardTitle>
-          <Button size="sm" variant="outline" onClick={exportCsv} disabled={exporting || leads.length === 0} className="h-9 px-4 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+          <Button size="sm" variant="outline" onClick={exportCsv} disabled={exporting || leads.length === 0} aria-label="Export CSV or Excel" className="h-10 min-h-[44px] px-4 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
             {exporting ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin text-lime-400" /> : <Download className="h-3.5 w-3.5 mr-1.5 text-lime-400" />}
             Export CSV / Excel
           </Button>

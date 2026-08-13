@@ -30,8 +30,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${outfit.variable} ${jetbrainsMono.variable} h-full antialiased dark`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans selection:bg-lime-400 selection:text-slate-950">
-        <ReactLenis root>
+        <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true }}>
           {children}
         </ReactLenis>
         <Toaster position="bottom-right" theme="dark" />
