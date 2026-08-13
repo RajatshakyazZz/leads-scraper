@@ -13,7 +13,7 @@ import { Phase4Build } from "@/components/Phase4Build";
 import { Phase5Outreach } from "@/components/Phase5Outreach";
 import { scoreLead } from "@/lib/scoring";
 import type { Lead, AuditResult } from "@/lib/types";
-import { Loader2, LogOut, Sparkles, History, Zap, User } from "lucide-react";
+import { Loader2, LogOut, Sparkles, History, Zap, User, Database, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SessionHistory } from "@/components/SessionHistory";
 import { ProfileModal } from "@/components/ProfileModal";
@@ -37,31 +37,66 @@ function LeadLaunchApp() {
   const [showHistory, setShowHistory] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
-  useEffect(() => {
-    if (!user) return;
+  const [loadingSavedLeads, setLoadingSavedLeads] = useState(false);
+  const [exportingCsv, setExportingCsv] = useState(false);
 
-    let cancelled = false;
-
-    async function loadSavedLeads() {
-      try {
-        const token = await getIdToken();
-        const res = await fetch("/api/leads", {
-          headers: { authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "Unable to load saved leads.");
-        if (!cancelled && Array.isArray(data.leads)) setLeads(data.leads);
-      } catch {
-        // Keep local/unconfigured environments usable.
+  // Home screen starts clean with empty leads so history leads aren't auto-displayed on start.
+  const handleViewAllLeads = async () => {
+    setLoadingSavedLeads(true);
+    try {
+      const token = await getIdToken();
+      const res = await fetch("/api/leads", {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Unable to load saved leads.");
+      if (Array.isArray(data.leads)) {
+        setLeads(data.leads);
+        if (data.leads.length > 0) {
+          toast.success(`Loaded ${data.leads.length} saved leads from your workspace history.`);
+        } else {
+          toast.info("No saved leads found in workspace history.");
+        }
+        setPhase(1);
       }
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setLoadingSavedLeads(false);
     }
+  };
 
-    loadSavedLeads();
+  const handleExportCsv = async () => {
+    setExportingCsv(true);
+    try {
+      const token = await getIdToken();
+      let url = "/api/export/leads";
+      if (sessionId) {
+        url += `?sessionId=${sessionId}`;
+      }
+      const res = await fetch(url, {
+        headers: { authorization: `Bearer ${token}` },
+      });
 
-    return () => {
-      cancelled = true;
-    };
-  }, [getIdToken, user]);
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error ?? "Export failed");
+      }
+
+      const csv = await res.blob();
+      const urlBlob = URL.createObjectURL(csv);
+      const link = document.createElement("a");
+      link.href = urlBlob;
+      link.download = sessionId ? `leads-session-${sessionId}.csv` : "clientforge-leads.csv";
+      link.click();
+      URL.revokeObjectURL(urlBlob);
+      toast.success("CSV exported successfully!");
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setExportingCsv(false);
+    }
+  };
 
   const handleLoadSession = (
     loadedSessionId: string,
@@ -147,9 +182,9 @@ function LeadLaunchApp() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 flex-wrap sm:gap-2.5">
             {quota && (
-              <div className="hidden sm:block rounded-xl border border-lime-500/30 bg-lime-500/10 px-3 py-1 text-right">
+              <div className="hidden md:block rounded-xl border border-lime-500/30 bg-lime-500/10 px-3 py-1 text-right">
                 <div className="text-[9px] uppercase tracking-[0.14em] text-lime-400 font-mono font-bold">Leads Available</div>
                 <div className="font-mono text-xs tabular-nums font-black text-white">
                   {quota.remaining}/{quota.leadLimit}
@@ -166,6 +201,41 @@ function LeadLaunchApp() {
               <User className="h-3.5 w-3.5 mr-1.5 text-lime-400" aria-hidden="true" />
               Profile
             </Button>
+
+            {/* View All Leads Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleViewAllLeads}
+              disabled={loadingSavedLeads}
+              aria-label="View All Leads"
+              className="h-9 rounded-xl border-lime-500/40 bg-lime-500/10 text-xs font-extrabold uppercase tracking-wider text-lime-400 hover:bg-lime-500/20 hover:text-lime-300"
+            >
+              {loadingSavedLeads ? (
+                <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin text-lime-400" aria-hidden="true" />
+              ) : (
+                <Database className="h-3.5 w-3.5 mr-1.5 text-lime-400" aria-hidden="true" />
+              )}
+              View All Leads
+            </Button>
+
+            {/* Export CSV Button (Placed between Profile & History) */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExportCsv}
+              disabled={exportingCsv}
+              aria-label="Export CSV"
+              className="h-9 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white"
+            >
+              {exportingCsv ? (
+                <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin text-lime-400" aria-hidden="true" />
+              ) : (
+                <Download className="h-3.5 w-3.5 mr-1.5 text-lime-400" aria-hidden="true" />
+              )}
+              Export CSV
+            </Button>
+
             <Button
               variant="outline"
               size="sm"
@@ -210,6 +280,8 @@ function LeadLaunchApp() {
               sessionId={sessionId}
               setSessionId={setSessionId}
               onNext={() => setPhase(2)}
+              onViewAllLeads={handleViewAllLeads}
+              loadingSavedLeads={loadingSavedLeads}
             />
           )}
           {phase === 2 && (

@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PhaseShell } from "./PhaseShell";
-import { Download, Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail, ShieldCheck, Zap, Radio, Search, CheckCircle2, Sparkles, Navigation, Layers } from "lucide-react";
+import { Download, Loader2, MapPin, Phone, Star, Globe, MessageCircle, Mail, ShieldCheck, Zap, Radio, Search, CheckCircle2, Sparkles, Navigation, Layers, Database } from "lucide-react";
 import type { Lead, ScrapeInput } from "@/lib/types";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
@@ -33,6 +33,8 @@ export function Phase1Scrape({
   setSessionId,
   onNext,
   onPrev,
+  onViewAllLeads,
+  loadingSavedLeads,
 }: {
   leads: Lead[];
   setLeads: (l: Lead[]) => void;
@@ -40,6 +42,8 @@ export function Phase1Scrape({
   setSessionId?: (id: string | null) => void;
   onNext: () => void;
   onPrev?: () => void;
+  onViewAllLeads?: () => void;
+  loadingSavedLeads?: boolean;
 }) {
   const { getIdToken, quota, updateQuota } = useAuth();
   const [input, setInput] = useState<ScrapeInput>({ niche: "Dentist", city: "Bandra, Mumbai", count: 12 });
@@ -398,7 +402,27 @@ export function Phase1Scrape({
               </TableBody>
             </Table>
             {leads.length === 0 && !loading && (
-              <div className="text-center py-12 text-sm text-slate-400 font-sans font-medium">Run a search to find and save leads to your workspace</div>
+              <div className="text-center py-12 px-4 flex flex-col items-center justify-center gap-3">
+                <div className="h-12 w-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500 shadow-inner">
+                  <Database className="h-6 w-6 text-lime-400" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-white uppercase tracking-tight font-sans">No Active Search Leads Displayed</h3>
+                  <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 font-sans">
+                    Scrape new Google Maps leads using the search panel above, or click below to load all saved workspace leads.
+                  </p>
+                </div>
+                {onViewAllLeads && (
+                  <Button
+                    onClick={onViewAllLeads}
+                    disabled={loadingSavedLeads}
+                    className="mt-1 h-9 px-5 rounded-xl bg-lime-500 hover:bg-lime-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-500/20 cursor-pointer"
+                  >
+                    {loadingSavedLeads ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> : <Database className="h-3.5 w-3.5 mr-1.5" />}
+                    View All Leads
+                  </Button>
+                )}
+              </div>
             )}
           </div>
         </CardContent>
