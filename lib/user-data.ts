@@ -114,16 +114,33 @@ export async function getCategoryHistoryLeads(uid: string, niche: string, city: 
   try {
     const userLeads = await getSavedLeads(uid);
     const searchNiche = niche.trim().toLowerCase();
+    const searchCity = city.trim().toLowerCase();
 
-    // Filter leads matching niche or category (case-insensitive fuzzy match)
+    // Extract main city keywords (e.g. "Bandra, Mumbai" -> ["bandra", "mumbai"], "Agra, UP" -> ["agra"])
+    const cityTokens = searchCity.split(/[\s,]+/).filter((t) => t.length > 2);
+
+    // Filter leads matching BOTH niche/category AND city/location
     const matched = userLeads.filter((lead) => {
       const cat = (lead.category || "").toLowerCase();
       const name = (lead.name || "").toLowerCase();
-      return (
+      const leadCity = (lead.city || "").toLowerCase();
+      const leadAddr = (lead.address || "").toLowerCase();
+
+      // Niche match
+      const nicheMatch =
         cat.includes(searchNiche) ||
         searchNiche.includes(cat) ||
-        name.includes(searchNiche)
-      );
+        name.includes(searchNiche);
+
+      if (!nicheMatch) return false;
+
+      // City match
+      const cityMatch =
+        leadCity.includes(searchCity) ||
+        searchCity.includes(leadCity) ||
+        cityTokens.some((token) => leadCity.includes(token) || leadAddr.includes(token));
+
+      return cityMatch;
     });
 
     // Deduplicate by lead name
