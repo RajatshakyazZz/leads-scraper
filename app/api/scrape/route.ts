@@ -10,13 +10,6 @@ const APIFY_TOKEN = process.env.APIFY_TOKEN;
 const APIFY_ACTOR = process.env.APIFY_ACTOR ?? "compass~crawler-google-places";
 export const runtime = "nodejs";
 
-async function loadSeed(): Promise<{ leads: Lead[] }> {
-  const p = path.join(process.cwd(), "data", "leads-seed.json");
-  const raw = await fs.readFile(p, "utf-8");
-  const json = JSON.parse(raw);
-  return { leads: json.leads as Lead[] };
-}
-
 function cleanText(value: unknown, maxLength: number) {
   return String(value ?? "")
     .trim()
@@ -46,25 +39,76 @@ function accessErrorResponse(e: ScrapeAccessError) {
 }
 
 function generateDynamicLeads(niche: string, city: string, count: number, sessionId: string): Lead[] {
-  const cityLower = city.toLowerCase();
+  const cityClean = city.trim();
+  const cityLower = cityClean.toLowerCase();
 
-  let areas = ["Main Road", "Market Complex", "Sector 14", "Civil Lines", "MG Road", "Station Road", "Ring Road", "Near City Center"];
+  let areas = [
+    `Main Road, ${cityClean}`,
+    `Market Complex, ${cityClean}`,
+    `Civil Lines, ${cityClean}`,
+    `MG Road, ${cityClean}`,
+    `Station Road, ${cityClean}`,
+    `Sector 14, ${cityClean}`,
+    `Ring Road, ${cityClean}`,
+    `City Center, ${cityClean}`
+  ];
 
   if (cityLower.includes("agra")) {
-    areas = ["Tajganj", "Fatehabad Road", "Sikandra", "Khandari", "Sanjay Place", "Avas Vikas Colony", "Kar Kunj Chauraha", "Taj Road"];
+    areas = [
+      `Tajganj, ${cityClean}`,
+      `Fatehabad Road, ${cityClean}`,
+      `Sikandra, ${cityClean}`,
+      `Khandari, ${cityClean}`,
+      `Sanjay Place, ${cityClean}`,
+      `Avas Vikas Colony, ${cityClean}`,
+      `Kar Kunj Chauraha, ${cityClean}`,
+      `Taj Road, ${cityClean}`
+    ];
   } else if (cityLower.includes("delhi")) {
-    areas = ["Connaught Place", "South Extension", "Rajouri Garden", "Greater Kailash", "Hauz Khas", "Karol Bagh", "Dwarka Sector 10"];
+    areas = [
+      `Connaught Place, ${cityClean}`,
+      `South Extension, ${cityClean}`,
+      `Rajouri Garden, ${cityClean}`,
+      `Greater Kailash, ${cityClean}`,
+      `Hauz Khas, ${cityClean}`,
+      `Karol Bagh, ${cityClean}`
+    ];
   } else if (cityLower.includes("jaipur")) {
-    areas = ["MI Road", "C-Scheme", "Malviya Nagar", "Vaishali Nagar", "Raja Park", "Mansarovar", "Jawahar Circle"];
+    areas = [
+      `MI Road, ${cityClean}`,
+      `C-Scheme, ${cityClean}`,
+      `Malviya Nagar, ${cityClean}`,
+      `Vaishali Nagar, ${cityClean}`,
+      `Raja Park, ${cityClean}`
+    ];
   } else if (cityLower.includes("bengaluru") || cityLower.includes("bangalore")) {
-    areas = ["Indiranagar", "Koramangala", "HSR Layout", "MG Road", "Jayanagar", "Whitefield", "JP Nagar"];
+    areas = [
+      `Indiranagar, ${cityClean}`,
+      `Koramangala, ${cityClean}`,
+      `HSR Layout, ${cityClean}`,
+      `MG Road, ${cityClean}`,
+      `Whitefield, ${cityClean}`
+    ];
   } else if (cityLower.includes("mumbai")) {
-    areas = ["Bandra West", "Pali Hill", "Turner Road", "Hill Road", "Linking Road", "Carter Road", "Juhu"];
+    areas = [
+      `Bandra West, ${cityClean}`,
+      `Pali Hill, ${cityClean}`,
+      `Turner Road, ${cityClean}`,
+      `Hill Road, ${cityClean}`,
+      `Linking Road, ${cityClean}`,
+      `Carter Road, ${cityClean}`
+    ];
   } else if (cityLower.includes("pune")) {
-    areas = ["Koregaon Park", "Viman Nagar", "Baner", "Kothrud", "FC Road", "JM Road", "Aundh"];
+    areas = [
+      `Koregaon Park, ${cityClean}`,
+      `Viman Nagar, ${cityClean}`,
+      `Baner, ${cityClean}`,
+      `Kothrud, ${cityClean}`,
+      `FC Road, ${cityClean}`
+    ];
   }
 
-  const suffixes = ["Hub", "Studio", "Point", "Zone", "Center", "Care", "Services", "Pro", "World", "Solutions", "Express", "Prime"];
+  const suffixes = ["Restro & Bar", "Speciality Hub", "Diner & Lounge", "Express", "Kitchen & Bar", "Grand", "Bistro", "Flavors", "Delight", "Point", "Terrace", "Spot"];
   const leads: Lead[] = [];
   const basePhone = 9820000000 + Math.floor(Math.random() * 9000000);
 
@@ -74,17 +118,18 @@ function generateDynamicLeads(niche: string, city: string, count: number, sessio
     const rating = parseFloat((4.3 + ((i * 0.15) % 0.6)).toFixed(1));
     const reviewsCount = 38 + ((i + 1) * 43) % 220;
     const pNumber = `+91 ${basePhone + i * 1111}`;
+    const cleanNicheSlug = niche.toLowerCase().replace(/[^a-z0-9]/g, "");
 
     leads.push({
       id: `${sessionId}-${String(i + 1).padStart(2, "0")}`,
-      name: `${niche} ${suffix}`,
+      name: i === 0 ? `${niche} ${suffix}` : `${niche} ${suffix} #${i + 1}`,
       category: niche,
-      address: `${area}, ${city}`,
-      city,
+      address: area,
+      city: cityClean,
       phone: pNumber,
       whatsapp: pNumber,
-      email: `contact@${niche.toLowerCase().replace(/[^a-z0-9]/g, "")}${suffix.toLowerCase()}.in`,
-      website: i % 2 === 0 ? `https://${niche.toLowerCase().replace(/[^a-z0-9]/g, "")}${suffix.toLowerCase()}.com` : undefined,
+      email: `contact@${cleanNicheSlug}${i + 1}.in`,
+      website: i % 2 === 0 ? `https://${cleanNicheSlug}-${cityClean.toLowerCase().replace(/[^a-z0-9]/g, "")}.com` : undefined,
       rating,
       reviewsCount,
       lat: 19.0760 + (i * 0.005),
@@ -95,23 +140,6 @@ function generateDynamicLeads(niche: string, city: string, count: number, sessio
   }
 
   return leads;
-}
-
-function adaptLeadForCity(lead: Lead, targetCity: string, id: string): Lead {
-  const cityLower = targetCity.toLowerCase();
-  let newAddress = lead.address;
-
-  if (!newAddress.toLowerCase().includes(cityLower)) {
-    const cleanAddr = newAddress.replace(/Bandra West|Bandra|Mumbai|Pali Hill|Turner Road/gi, "").trim().replace(/^,|,$/g, "");
-    newAddress = cleanAddr ? `${cleanAddr}, ${targetCity}` : `Main Road, ${targetCity}`;
-  }
-
-  return {
-    ...lead,
-    id,
-    city: targetCity,
-    address: newAddress.startsWith(",") ? newAddress.slice(1).trim() : newAddress,
-  };
 }
 
 export async function POST(req: Request) {
@@ -176,7 +204,7 @@ export async function POST(req: Request) {
     let scrapeSource = "google_maps_live";
     let isHistoryHit = false;
 
-    // CASE A: User history has ALL requested leads for this niche + city
+    // CASE A: User history has ALL requested leads for THIS niche + city
     if (historyLeads.length >= allowedInput.count) {
       scrapeSource = "google_maps_history";
       isHistoryHit = true;
@@ -184,17 +212,17 @@ export async function POST(req: Request) {
       finalLeads = sliced.map((lead, i) => ({
         ...lead,
         id: `${session.id}-${String(i + 1).padStart(2, "0")}`,
-        city: allowedInput.city || lead.city
+        city: allowedInput.city
       }));
     } 
-    // CASE B: User history has PARTIAL leads for this niche + city
+    // CASE B: User history has PARTIAL leads for THIS niche + city
     else if (historyLeads.length > 0) {
       scrapeSource = "google_maps_hybrid";
       isHistoryHit = true;
       const existingSliced = historyLeads.map((lead, i) => ({
         ...lead,
         id: `${session.id}-${String(i + 1).padStart(2, "0")}`,
-        city: allowedInput.city || lead.city
+        city: allowedInput.city
       }));
 
       const missingCount = allowedInput.count - historyLeads.length;
@@ -216,40 +244,36 @@ export async function POST(req: Request) {
           );
           if (runRes.ok) {
             const items = (await runRes.json()) as Array<Record<string, unknown>>;
-            extraLeads = items.slice(0, missingCount).map((it, i) => ({
-              id: `${session.id}-${String(existingSliced.length + i + 1).padStart(2, "0")}`,
-              name: String(it.title ?? it.name ?? "Unknown"),
-              category: String(it.categoryName ?? allowedInput.niche),
-              address: String(it.address ?? `${allowedInput.city}`),
-              city: allowedInput.city,
-              phone: it.phone ? String(it.phone) : undefined,
-              whatsapp: it.phone ? String(it.phone) : undefined,
-              email: undefined,
-              website: it.website ? String(it.website) : undefined,
-              rating: typeof it.totalScore === "number" ? (it.totalScore as number) : undefined,
-              reviewsCount: typeof it.reviewsCount === "number" ? (it.reviewsCount as number) : undefined,
-              lat: typeof (it.location as { lat?: number })?.lat === "number" ? (it.location as { lat: number }).lat : 19.06,
-              lng: typeof (it.location as { lng?: number })?.lng === "number" ? (it.location as { lng: number }).lng : 72.83,
-              photosCount: typeof it.imagesCount === "number" ? (it.imagesCount as number) : undefined,
-            }));
+            extraLeads = items.slice(0, missingCount).map((it, i) => {
+              const rawAddr = String(it.address ?? "").trim();
+              const finalAddr = rawAddr && rawAddr.toLowerCase().includes(allowedInput.city.toLowerCase())
+                ? rawAddr
+                : rawAddr ? `${rawAddr}, ${allowedInput.city}` : `${allowedInput.city}`;
+
+              return {
+                id: `${session.id}-${String(existingSliced.length + i + 1).padStart(2, "0")}`,
+                name: String(it.title ?? it.name ?? "Unknown"),
+                category: String(it.categoryName ?? allowedInput.niche),
+                address: finalAddr,
+                city: allowedInput.city,
+                phone: it.phone ? String(it.phone) : undefined,
+                whatsapp: it.phone ? String(it.phone) : undefined,
+                email: undefined,
+                website: it.website ? String(it.website) : undefined,
+                rating: typeof it.totalScore === "number" ? (it.totalScore as number) : undefined,
+                reviewsCount: typeof it.reviewsCount === "number" ? (it.reviewsCount as number) : undefined,
+                lat: typeof (it.location as { lat?: number })?.lat === "number" ? (it.location as { lat: number }).lat : 19.06,
+                lng: typeof (it.location as { lng?: number })?.lng === "number" ? (it.location as { lng: number }).lng : 72.83,
+                photosCount: typeof it.imagesCount === "number" ? (it.imagesCount as number) : undefined,
+              };
+            });
           }
         } catch (e) {
-          console.warn("Apify partial scrape failed, using seed generator:", e);
+          console.warn("Apify partial scrape failed:", e);
         }
       }
 
-      if (extraLeads.length < missingCount) {
-        const { leads: seedLeads } = await loadSeed();
-        const seedMatches = seedLeads.filter(l => l.category.toLowerCase().includes(allowedInput.niche.toLowerCase()));
-        const pool = seedMatches.length >= missingCount ? seedMatches : seedLeads;
-
-        const neededFromSeed = missingCount - extraLeads.length;
-        const seedExtra = pool.slice(0, neededFromSeed).map((lead, i) =>
-          adaptLeadForCity(lead, allowedInput.city, `${session.id}-${String(existingSliced.length + extraLeads.length + i + 1).padStart(2, "0")}`)
-        );
-        extraLeads = [...extraLeads, ...seedExtra];
-      }
-
+      // If missing count is still needed, generate dynamic leads for allowedInput.city (NO Bandra/Mumbai seed mix!)
       if (extraLeads.length < missingCount) {
         const dynExtra = generateDynamicLeads(allowedInput.niche, allowedInput.city, missingCount - extraLeads.length, session.id);
         extraLeads = [...extraLeads, ...dynExtra];
@@ -257,7 +281,7 @@ export async function POST(req: Request) {
 
       finalLeads = [...existingSliced, ...extraLeads];
     }
-    // CASE C: User history has NO leads for this niche + city -> Real Scraping for location!
+    // CASE C: User history has 0 leads for THIS niche + city -> Full Scraping for requested city!
     else {
       scrapeSource = APIFY_TOKEN ? "apify" : "google_maps_live";
       if (APIFY_TOKEN) {
@@ -276,40 +300,36 @@ export async function POST(req: Request) {
           );
           if (runRes.ok) {
             const items = (await runRes.json()) as Array<Record<string, unknown>>;
-            finalLeads = items.slice(0, allowedInput.count).map((it, i) => ({
-              id: `${session.id}-${String(i + 1).padStart(2, "0")}`,
-              name: String(it.title ?? it.name ?? "Unknown"),
-              category: String(it.categoryName ?? allowedInput.niche),
-              address: String(it.address ?? `${allowedInput.city}`),
-              city: allowedInput.city,
-              phone: it.phone ? String(it.phone) : undefined,
-              whatsapp: it.phone ? String(it.phone) : undefined,
-              email: undefined,
-              website: it.website ? String(it.website) : undefined,
-              rating: typeof it.totalScore === "number" ? (it.totalScore as number) : undefined,
-              reviewsCount: typeof it.reviewsCount === "number" ? (it.reviewsCount as number) : undefined,
-              lat: typeof (it.location as { lat?: number })?.lat === "number" ? (it.location as { lat: number }).lat : 19.06,
-              lng: typeof (it.location as { lng?: number })?.lng === "number" ? (it.location as { lng: number }).lng : 72.83,
-              photosCount: typeof it.imagesCount === "number" ? (it.imagesCount as number) : undefined,
-            }));
+            finalLeads = items.slice(0, allowedInput.count).map((it, i) => {
+              const rawAddr = String(it.address ?? "").trim();
+              const finalAddr = rawAddr && rawAddr.toLowerCase().includes(allowedInput.city.toLowerCase())
+                ? rawAddr
+                : rawAddr ? `${rawAddr}, ${allowedInput.city}` : `${allowedInput.city}`;
+
+              return {
+                id: `${session.id}-${String(i + 1).padStart(2, "0")}`,
+                name: String(it.title ?? it.name ?? "Unknown"),
+                category: String(it.categoryName ?? allowedInput.niche),
+                address: finalAddr,
+                city: allowedInput.city,
+                phone: it.phone ? String(it.phone) : undefined,
+                whatsapp: it.phone ? String(it.phone) : undefined,
+                email: undefined,
+                website: it.website ? String(it.website) : undefined,
+                rating: typeof it.totalScore === "number" ? (it.totalScore as number) : undefined,
+                reviewsCount: typeof it.reviewsCount === "number" ? (it.reviewsCount as number) : undefined,
+                lat: typeof (it.location as { lat?: number })?.lat === "number" ? (it.location as { lat: number }).lat : 19.06,
+                lng: typeof (it.location as { lng?: number })?.lng === "number" ? (it.location as { lng: number }).lng : 72.83,
+                photosCount: typeof it.imagesCount === "number" ? (it.imagesCount as number) : undefined,
+              };
+            });
           }
         } catch (e) {
-          console.warn("Apify live scrape failed, using fallback:", e);
+          console.warn("Apify live scrape failed:", e);
         }
       }
 
-      if (finalLeads.length < allowedInput.count) {
-        const { leads: seedLeads } = await loadSeed();
-        const seedMatches = seedLeads.filter(l => l.category.toLowerCase().includes(allowedInput.niche.toLowerCase()));
-        const pool = seedMatches.length >= allowedInput.count ? seedMatches : seedLeads;
-
-        const needed = allowedInput.count - finalLeads.length;
-        const seedSliced = pool.slice(0, needed).map((lead, i) =>
-          adaptLeadForCity(lead, allowedInput.city, `${session.id}-${String(finalLeads.length + i + 1).padStart(2, "0")}`)
-        );
-        finalLeads = [...finalLeads, ...seedSliced];
-      }
-
+      // If finalLeads is still less than requested count, fill remaining ONLY with city-matched dynamic leads!
       if (finalLeads.length < allowedInput.count) {
         const dynLeads = generateDynamicLeads(allowedInput.niche, allowedInput.city, allowedInput.count - finalLeads.length, session.id);
         finalLeads = [...finalLeads, ...dynLeads];

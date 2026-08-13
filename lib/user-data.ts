@@ -135,6 +135,12 @@ export async function getCategoryHistoryLeads(uid: string, niche: string, city: 
       if (!nicheMatch) return false;
 
       // City match
+      const isSearchMumbai = searchCity.includes("mumbai") || searchCity.includes("bandra");
+      const isLeadBandra = leadAddr.includes("bandra") || leadAddr.includes("mumbai");
+
+      // Reject Bandra/Mumbai legacy leads if search is for a different city (e.g. Agra)
+      if (!isSearchMumbai && isLeadBandra) return false;
+
       const cityMatch =
         leadCity.includes(searchCity) ||
         searchCity.includes(leadCity) ||
