@@ -15,6 +15,8 @@ export type Lead = {
   lng: number;
   photosCount?: number;
   yearsInBusiness?: number;
+  scrapeNiche?: string;
+  scrapeCity?: string;
   createdAt?: string;
   updatedAt?: string;
 };

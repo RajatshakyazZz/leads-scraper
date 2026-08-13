@@ -53,6 +53,8 @@ function serializeLead(id: string, data: DocumentData): Lead {
     lng: typeof data.lng === "number" ? data.lng : 72.83,
     photosCount: typeof data.photosCount === "number" ? data.photosCount : undefined,
     yearsInBusiness: typeof data.yearsInBusiness === "number" ? data.yearsInBusiness : undefined,
+    scrapeNiche: typeof data.scrapeNiche === "string" ? data.scrapeNiche : undefined,
+    scrapeCity: typeof data.scrapeCity === "string" ? data.scrapeCity : undefined,
     createdAt: timestampToIso(data.createdAt),
     updatedAt: timestampToIso(data.updatedAt),
   };
@@ -91,7 +93,13 @@ export async function saveScrapedLeads(uid: string, leads: Lead[], input: Scrape
     });
 
     batch.set(ref, leadData);
-    saved.push({ ...lead, id: ref.id, sourceLeadId: lead.sourceLeadId ?? lead.id });
+    saved.push({
+      ...lead,
+      id: ref.id,
+      sourceLeadId: lead.sourceLeadId ?? lead.id,
+      scrapeNiche: input.niche,
+      scrapeCity: input.city,
+    });
   }
 
   await batch.commit();
@@ -123,37 +131,40 @@ export async function getCategoryHistoryLeads(uid: string, niche: string, city: 
     const matched = userLeads.filter((lead) => {
       const cat = (lead.category || "").toLowerCase();
       const name = (lead.name || "").toLowerCase();
+      const sNiche = (lead.scrapeNiche || "").toLowerCase();
       const leadCity = (lead.city || "").toLowerCase();
+      const sCity = (lead.scrapeCity || "").toLowerCase();
       const leadAddr = (lead.address || "").toLowerCase();
 
       // Niche match
       const nicheMatch =
+        (sNiche && (sNiche.includes(searchNiche) || searchNiche.includes(sNiche))) ||
         cat.includes(searchNiche) ||
         searchNiche.includes(cat) ||
         name.includes(searchNiche);
 
       if (!nicheMatch) return false;
 
-      // City match
+      // Reject Bandra/Mumbai legacy leads if search is for a different city (e.g. Agra)
       const isSearchMumbai = searchCity.includes("mumbai") || searchCity.includes("bandra");
       const isLeadBandra = leadAddr.includes("bandra") || leadAddr.includes("mumbai");
-
-      // Reject Bandra/Mumbai legacy leads if search is for a different city (e.g. Agra)
       if (!isSearchMumbai && isLeadBandra) return false;
 
+      // City match
       const cityMatch =
+        (sCity && (sCity.includes(searchCity) || searchCity.includes(sCity))) ||
         leadCity.includes(searchCity) ||
         searchCity.includes(leadCity) ||
-        cityTokens.some((token) => leadCity.includes(token) || leadAddr.includes(token));
+        cityTokens.some((token) => leadCity.includes(token) || leadAddr.includes(token) || sCity.includes(token));
 
       return cityMatch;
     });
 
-    // Deduplicate by lead name
+    // Deduplicate by lead name or source ID
     const uniqueMap = new Map<string, Lead>();
     for (const item of matched) {
-      const key = item.name.trim().toLowerCase();
-      if (!uniqueMap.has(key)) {
+      const key = (item.name || "").trim().toLowerCase();
+      if (key && !uniqueMap.has(key)) {
         uniqueMap.set(key, item);
       }
     }
