@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion", "recharts", "@base-ui/react"],
+  },
   serverExternalPackages: ["firebase-admin"],
 };
 

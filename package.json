@@ -49,5 +49,11 @@
     "jwks-rsa": {
       "jose": "4.15.9"
     }
-  }
+  },
+  "browserslist": [
+    "chrome >= 100",
+    "safari >= 15",
+    "edge >= 100",
+    "firefox >= 100"
+  ]
 }
