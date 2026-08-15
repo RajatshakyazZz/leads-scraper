@@ -40,6 +40,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           data-version="062024"
           strategy="afterInteractive"
         />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-NZGZDVRNM6"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-NZGZDVRNM6');
+          `}
+        </Script>
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans selection:bg-lime-400 selection:text-slate-950">
         <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true }}>
