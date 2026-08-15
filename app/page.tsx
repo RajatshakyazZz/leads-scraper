@@ -14,6 +14,8 @@ import { Loader2, LogOut, Sparkles, History, Zap, User, Database, Download } fro
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
 const Phase2Audit = dynamic(() => import("@/components/Phase2Audit").then((m) => m.Phase2Audit), {
   loading: () => <PhaseLoader label="LOADING AUDIT ENGINE..." />,
 });
@@ -59,12 +61,17 @@ function LeadLaunchApp() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const [loadingSavedLeads, setLoadingSavedLeads] = useState(false);
   const [exportingCsv, setExportingCsv] = useState(false);
 
   // Home screen starts clean with empty leads so history leads aren't auto-displayed on start.
   const handleViewAllLeads = async () => {
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
     setLoadingSavedLeads(true);
     try {
       const token = await getIdToken();
@@ -90,6 +97,10 @@ function LeadLaunchApp() {
   };
 
   const handleExportCsv = async () => {
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
     setExportingCsv(true);
     try {
       const token = await getIdToken();
@@ -172,10 +183,6 @@ function LeadLaunchApp() {
     );
   }
 
-  if (!user) {
-    return <LoginPage />;
-  }
-
   return (
     <>
       <a
@@ -203,82 +210,71 @@ function LeadLaunchApp() {
                 LEADS ➔ CONVERSION
               </div>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2 flex-wrap sm:gap-2.5">
-            {quota && (
-              <div className="hidden md:block rounded-xl border border-lime-500/30 bg-lime-500/10 px-3 py-1 text-right">
-                <div className="text-[9px] uppercase tracking-[0.14em] text-lime-400 font-mono font-bold">Leads Available</div>
-                <div className="font-mono text-xs tabular-nums font-black text-white">
-                  {quota.remaining}/{quota.leadLimit}
-                </div>
-              </div>
+          </div>          <div className="flex items-center gap-2 flex-wrap sm:gap-2.5">
+            {!user ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowLoginModal(true)}
+                aria-label="Sign in or Sign up"
+                className="h-9 rounded-xl border-lime-500/50 bg-lime-500/15 text-xs font-black uppercase tracking-wider text-lime-400 hover:bg-lime-500/25 shadow-md shadow-lime-500/10"
+              >
+                <User className="h-3.5 w-3.5 mr-1.5" aria-hidden="true" />
+                Sign In / Sign Up
+              </Button>
+            ) : (
+              <>
+                {quota && (
+                  <div className="hidden md:block rounded-xl border border-lime-500/30 bg-lime-500/10 px-3 py-1 text-right">
+                    <div className="text-[9px] uppercase tracking-[0.14em] text-lime-400 font-mono font-bold">Leads Available</div>
+                    <div className="font-mono text-xs tabular-nums font-black text-white">
+                      {quota.remaining}/{quota.leadLimit}
+                    </div>
+                  </div>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowProfile(true)}
+                  aria-label="View Profile"
+                  className="h-9 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white"
+                >
+                  <User className="h-3.5 w-3.5 mr-1.5 text-lime-400" aria-hidden="true" />
+                  Profile
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportCsv}
+                  disabled={exportingCsv}
+                  aria-label="Export Leads to CSV"
+                  className="h-9 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white"
+                >
+                  {exportingCsv ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" /> : <Download className="h-3.5 w-3.5 mr-1.5 text-cyan-400" aria-hidden="true" />}
+                  Export CSV
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowHistory(true)}
+                  aria-label="View Scraped History"
+                  className="h-9 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white"
+                >
+                  <History className="h-3.5 w-3.5 mr-1.5 text-lime-400" aria-hidden="true" />
+                  History
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={signOutUser}
+                  aria-label="Sign out"
+                  className="h-9 rounded-xl border-slate-800 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-400 hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30"
+                >
+                  <LogOut className="h-3.5 w-3.5 mr-1.5" aria-hidden="true" />
+                  Exit
+                </Button>
+              </>
             )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowProfile(true)}
-              aria-label="Manage Profile"
-              className="h-9 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white"
-            >
-              <User className="h-3.5 w-3.5 mr-1.5 text-lime-400" aria-hidden="true" />
-              Profile
-            </Button>
-
-            {/* View All Leads Button */}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleViewAllLeads}
-              disabled={loadingSavedLeads}
-              aria-label="View All Leads"
-              className="h-9 rounded-xl border-lime-500/40 bg-lime-500/10 text-xs font-extrabold uppercase tracking-wider text-lime-400 hover:bg-lime-500/20 hover:text-lime-300"
-            >
-              {loadingSavedLeads ? (
-                <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin text-lime-400" aria-hidden="true" />
-              ) : (
-                <Database className="h-3.5 w-3.5 mr-1.5 text-lime-400" aria-hidden="true" />
-              )}
-              View All Leads
-            </Button>
-
-            {/* Export CSV Button (Placed between Profile & History) */}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleExportCsv}
-              disabled={exportingCsv}
-              aria-label="Export CSV"
-              className="h-9 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white"
-            >
-              {exportingCsv ? (
-                <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin text-lime-400" aria-hidden="true" />
-              ) : (
-                <Download className="h-3.5 w-3.5 mr-1.5 text-lime-400" aria-hidden="true" />
-              )}
-              Export CSV
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowHistory(true)}
-              aria-label="View Scraped History"
-              className="h-9 rounded-xl border-slate-700 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-200 hover:bg-slate-800 hover:text-white"
-            >
-              <History className="h-3.5 w-3.5 mr-1.5 text-lime-400" aria-hidden="true" />
-              History
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={signOutUser}
-              aria-label="Sign out"
-              className="h-9 rounded-xl border-slate-800 bg-slate-900 text-xs font-extrabold uppercase tracking-wider text-slate-400 hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30"
-            >
-              <LogOut className="h-3.5 w-3.5 mr-1.5" aria-hidden="true" />
-              Exit
-            </Button>
           </div>
         </div>
         <Stepper current={phase} completed={completed} onJump={(n) => setPhase(n)} />
@@ -305,6 +301,7 @@ function LeadLaunchApp() {
               onNext={() => setPhase(2)}
               onViewAllLeads={handleViewAllLeads}
               loadingSavedLeads={loadingSavedLeads}
+              onRequireAuth={() => setShowLoginModal(true)}
             />
           )}
           {phase === 2 && (
@@ -366,6 +363,16 @@ function LeadLaunchApp() {
           />
         )}
       </AnimatePresence>
+
+      {/* Auth / Login Modal Dialog */}
+      <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+        <DialogContent className="max-w-md p-0 border-0 bg-transparent shadow-none">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Sign in to ClientForge</DialogTitle>
+          </DialogHeader>
+          <LoginPage isModal onSuccess={() => setShowLoginModal(false)} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

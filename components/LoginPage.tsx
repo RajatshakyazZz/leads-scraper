@@ -32,7 +32,7 @@ function parseFirebaseError(err: Error): string {
   return message.replace("Firebase: ", "");
 }
 
-export function LoginPage() {
+export function LoginPage({ isModal = false, onSuccess }: { isModal?: boolean; onSuccess?: () => void }) {
   const { authError, firebaseConfigured, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, sendPasswordReset } = useAuth();
   
   const [mode, setMode] = useState<AuthMode>("signin");
@@ -49,6 +49,7 @@ export function LoginPage() {
   async function handleGoogleLogin() {
     try {
       await signInWithGoogle();
+      if (onSuccess) onSuccess();
     } catch (e) {
       toast.error(parseFirebaseError(e as Error));
     }

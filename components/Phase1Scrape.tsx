@@ -35,6 +35,7 @@ export function Phase1Scrape({
   onPrev,
   onViewAllLeads,
   loadingSavedLeads,
+  onRequireAuth,
 }: {
   leads: Lead[];
   setLeads: (l: Lead[]) => void;
@@ -44,8 +45,9 @@ export function Phase1Scrape({
   onPrev?: () => void;
   onViewAllLeads?: () => void;
   loadingSavedLeads?: boolean;
+  onRequireAuth?: () => void;
 }) {
-  const { getIdToken, quota, updateQuota } = useAuth();
+  const { getIdToken, quota, updateQuota, user } = useAuth();
   const [input, setInput] = useState<ScrapeInput>({ niche: "Dentist", city: "Bandra, Mumbai", count: 12 });
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
@@ -62,6 +64,11 @@ export function Phase1Scrape({
   const maxCount = Math.max(1, Math.min(25, remaining));
 
   async function runScrape() {
+    if (!user) {
+      if (onRequireAuth) onRequireAuth();
+      return;
+    }
+
     if (quota && quota.remaining <= 0) {
       setLimitDialogOpen(true);
       return;
