@@ -70,6 +70,44 @@ function randomAugDate() {
   return new Date(randomMs);
 }
 
+function generateNaturalEmail(fn, ln, seed) {
+  const f = fn.toLowerCase().replace(/[^a-z]/g, "");
+  const l = ln.toLowerCase().replace(/[^a-z]/g, "");
+  const fInit = f.charAt(0);
+  const lInit = l.charAt(0);
+
+  const num2 = randomInt(11, 99);
+  const birthYears = ["1993", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003"];
+  const birthYear = birthYears[randomInt(0, birthYears.length - 1)];
+
+  const patternType = seed % 10;
+
+  switch (patternType) {
+    case 0:
+      return `${f}.${l}@gmail.com`;
+    case 1:
+      return `${f}${l}${num2}@gmail.com`;
+    case 2:
+      return `${f}_${l}@gmail.com`;
+    case 3:
+      return `${f}.${l}.${birthYear}@gmail.com`;
+    case 4:
+      return `${fInit}${l}${num2}@gmail.com`;
+    case 5:
+      return `${f}${lInit}${num2}@gmail.com`;
+    case 6:
+      return `${f}${l}${birthYear}@gmail.com`;
+    case 7:
+      return `${f}.${l}.work@gmail.com`;
+    case 8:
+      return `iam.${f}${l}@gmail.com`;
+    case 9:
+      return `${f}_${l}${num2}@gmail.com`;
+    default:
+      return `${f}.${l}${num2}@gmail.com`;
+  }
+}
+
 async function seed() {
   console.log("🚀 Starting seeding 3,400 Indian Gmail users into Cloud Firestore...");
   const TOTAL_USERS = 3400;
@@ -83,11 +121,10 @@ async function seed() {
     for (let i = 0; i < BATCH_SIZE; i++) {
       const fn = FIRST_NAMES[randomInt(0, FIRST_NAMES.length - 1)];
       const ln = LAST_NAMES[randomInt(0, LAST_NAMES.length - 1)];
-      const num = randomInt(10, 999);
       
-      let email = `${fn.toLowerCase()}.${ln.toLowerCase()}${num}@gmail.com`;
+      let email = generateNaturalEmail(fn, ln, i + batchIdx * 500);
       if (existingEmails.has(email)) {
-        email = `${fn.toLowerCase()}${ln.toLowerCase()}${randomInt(1000, 9999)}@gmail.com`;
+        email = `${fn.toLowerCase()}.${ln.toLowerCase()}${randomInt(1000, 9999)}@gmail.com`;
       }
       existingEmails.add(email);
 
@@ -96,7 +133,7 @@ async function seed() {
 
       const signupDate = randomAugDate();
       const leadsScraped = randomInt(3, 15);
-      const plan = randomInt(1, 100) > 95 ? "pro" : "free";
+      const plan = "free";
 
       const userData = {
         uid,
@@ -106,9 +143,9 @@ async function seed() {
         plan,
         banned: false,
         status: "Active",
-        leadLimit: plan === "pro" ? 100 : 15,
+        leadLimit: 15,
         leadsUsed: leadsScraped,
-        monthlyQuota: plan === "pro" ? 100 : 15,
+        monthlyQuota: 15,
         dailyQuota: 15,
         customCredits: 0,
         adminNotes: "Aug 1-13 Indian Gmail user",

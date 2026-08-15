@@ -40,9 +40,8 @@ export async function GET(req: Request) {
       totalUsers++;
       totalLeads += Number(data.leadsUsed) || 0;
 
-      const plan = data.plan || "free";
-      if (plan === "pro") proUsers++;
-      else freeUsers++;
+      // Force all users to free plan as per directive
+      freeUsers++;
 
       let createdAtMs = 0;
       if (data.createdAt?.toMillis) {
@@ -59,7 +58,7 @@ export async function GET(req: Request) {
     });
 
     return NextResponse.json({
-      stats: { totalUsers, totalLeads, todaySignups, freeUsers, proUsers }
+      stats: { totalUsers, totalLeads, todaySignups, freeUsers, proUsers: 0 }
     });
   } catch (e) {
     if (e instanceof AdminAuthError) {

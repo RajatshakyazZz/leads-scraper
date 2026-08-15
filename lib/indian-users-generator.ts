@@ -34,7 +34,6 @@ const LAST_NAMES = [
 ];
 
 function randomInt(seed: number, min: number, max: number): number {
-  // Deterministic pseudo-random sequence for consistent generation
   const x = Math.sin(seed * 9999 + 1) * 10000;
   const rand = x - Math.floor(x);
   return Math.floor(rand * (max - min + 1)) + min;
@@ -53,6 +52,44 @@ function randomAugDateIso(seed: number): string {
   return new Date(randomMs).toISOString();
 }
 
+function generateNaturalEmail(fn: string, ln: string, seed: number): string {
+  const f = fn.toLowerCase().replace(/[^a-z]/g, "");
+  const l = ln.toLowerCase().replace(/[^a-z]/g, "");
+  const fInit = f.charAt(0);
+  const lInit = l.charAt(0);
+
+  const num2 = randomInt(seed + 80, 11, 99);
+  const birthYears = ["1993", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003"];
+  const birthYear = birthYears[randomInt(seed + 90, 0, birthYears.length - 1)];
+
+  const patternType = seed % 10;
+
+  switch (patternType) {
+    case 0:
+      return `${f}.${l}@gmail.com`;
+    case 1:
+      return `${f}${l}${num2}@gmail.com`;
+    case 2:
+      return `${f}_${l}@gmail.com`;
+    case 3:
+      return `${f}.${l}.${birthYear}@gmail.com`;
+    case 4:
+      return `${fInit}${l}${num2}@gmail.com`;
+    case 5:
+      return `${f}${lInit}${num2}@gmail.com`;
+    case 6:
+      return `${f}${l}${birthYear}@gmail.com`;
+    case 7:
+      return `${f}.${l}.work@gmail.com`;
+    case 8:
+      return `iam.${f}${l}@gmail.com`;
+    case 9:
+      return `${f}_${l}${num2}@gmail.com`;
+    default:
+      return `${f}.${l}${num2}@gmail.com`;
+  }
+}
+
 export function generateIndianUsers(count = 3400): GeneratedUser[] {
   const users: GeneratedUser[] = [];
   const existingEmails = new Set<string>();
@@ -60,18 +97,16 @@ export function generateIndianUsers(count = 3400): GeneratedUser[] {
   for (let i = 0; i < count; i++) {
     const fn = FIRST_NAMES[randomInt(i + 1, 0, FIRST_NAMES.length - 1)];
     const ln = LAST_NAMES[randomInt(i + 100, 0, LAST_NAMES.length - 1)];
-    const num = randomInt(i + 500, 10, 999);
 
-    let email = `${fn.toLowerCase()}.${ln.toLowerCase()}${num}@gmail.com`;
+    let email = generateNaturalEmail(fn, ln, i + 500);
     if (existingEmails.has(email)) {
-      email = `${fn.toLowerCase()}${ln.toLowerCase()}${randomInt(i + 1000, 1000, 9999)}@gmail.com`;
+      email = `${fn.toLowerCase()}.${ln.toLowerCase()}${randomInt(i + 1000, 1000, 9999)}@gmail.com`;
     }
     existingEmails.add(email);
 
     const dateIso = randomAugDateIso(i + 200);
     const leadsScraped = randomInt(i + 300, 3, 15);
-    const isPro = randomInt(i + 400, 1, 100) > 95;
-    const plan = isPro ? "pro" : "free";
+    const plan = "free"; // 100% Free users (Pro = 0)
 
     users.push({
       uid: `ind_usr_${String(i + 1).padStart(4, "0")}`,
@@ -82,9 +117,9 @@ export function generateIndianUsers(count = 3400): GeneratedUser[] {
       banned: false,
       status: "Active",
       adminNotes: "Aug 1-13 Indian Gmail user",
-      leadLimit: isPro ? 100 : 15,
+      leadLimit: 15,
       leadsUsed: leadsScraped,
-      monthlyQuota: isPro ? 100 : 15,
+      monthlyQuota: 15,
       dailyQuota: 15,
       customCredits: 0,
       createdAt: dateIso,
