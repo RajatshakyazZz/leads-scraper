@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, Trash2, ShieldAlert, Edit, UserX, UserCheck, RefreshCw, Star, Info } from "lucide-react";
+import { Search, Trash2, ShieldAlert, Edit, UserX, UserCheck, RefreshCw, Star, Info, Users as UsersIcon } from "lucide-react";
 import { toast } from "sonner";
 
 export function AdminUsers() {
@@ -160,28 +160,31 @@ export function AdminUsers() {
     <div className="space-y-6 max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl">Users Database</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Monitor user registration, pipeline metrics, and manage custom quotas.</p>
+          <div className="flex items-center gap-2 text-xs font-semibold text-lime-400 uppercase tracking-widest mb-1">
+            <UsersIcon className="w-3.5 h-3.5" /> User Directory & Quotas
+          </div>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">Users Database</h1>
+          <p className="text-slate-400 text-sm mt-1">Monitor user registrations, lifetime lead generation usage, and adjust quotas.</p>
         </div>
       </div>
 
-      <Card>
+      <Card className="bg-slate-900/80 border-slate-800/90 shadow-xl backdrop-blur-xl rounded-2xl overflow-hidden">
         {/* Search & Filters */}
-        <div className="p-4 border-b border-border flex flex-col sm:flex-row gap-3">
+        <div className="p-4 border-b border-slate-800/80 flex flex-col sm:flex-row gap-3 bg-slate-950/40">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input 
               placeholder="Search by email or name..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-9 text-xs"
+              className="pl-9.5 h-10 text-xs bg-slate-950 border-slate-800 text-slate-100 placeholder:text-slate-500 focus-visible:ring-lime-500/30 focus-visible:border-lime-500/50 rounded-xl"
             />
           </div>
           <div className="flex gap-2">
             <select
               value={planFilter}
               onChange={(e) => setPlanFilter(e.target.value)}
-              className="h-9 rounded-md border border-input bg-background px-3 text-xs focus-visible:outline-none"
+              className="h-10 rounded-xl border border-slate-800 bg-slate-950 px-3 text-xs text-slate-200 focus:outline-none focus:border-lime-500/50"
             >
               <option value="all">All Plans</option>
               <option value="free">Free Plan</option>
@@ -191,7 +194,7 @@ export function AdminUsers() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="h-9 rounded-md border border-input bg-background px-3 text-xs focus-visible:outline-none"
+              className="h-10 rounded-xl border border-slate-800 bg-slate-950 px-3 text-xs text-slate-200 focus:outline-none focus:border-lime-500/50"
             >
               <option value="all">All Statuses</option>
               <option value="Active">Active</option>
@@ -204,31 +207,31 @@ export function AdminUsers() {
         {/* Users Table */}
         <CardContent className="p-0">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-xs">User Profile</TableHead>
-                <TableHead className="text-xs">Plan</TableHead>
-                <TableHead className="text-xs">Quota / Lifetime</TableHead>
-                <TableHead className="text-xs">Status</TableHead>
-                <TableHead className="text-xs">Joined</TableHead>
-                <TableHead className="text-xs text-right">Action</TableHead>
+            <TableHeader className="bg-slate-950/60 border-b border-slate-800/80">
+              <TableRow className="border-slate-800/80 hover:bg-transparent">
+                <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3">User Profile</TableHead>
+                <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3">Plan</TableHead>
+                <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3">Quota / Lifetime</TableHead>
+                <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3">Status</TableHead>
+                <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3">Joined</TableHead>
+                <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3 text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 [...Array(5)].map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell><Skeleton className="h-10 w-[200px]" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-16" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-12" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-16" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                    <TableCell className="text-right"><Skeleton className="h-8 w-16 ml-auto" /></TableCell>
+                  <TableRow key={i} className="border-slate-800/60">
+                    <TableCell><Skeleton className="h-10 w-[200px] bg-slate-800" /></TableCell>
+                    <TableCell><Skeleton className="h-6 w-16 bg-slate-800" /></TableCell>
+                    <TableCell><Skeleton className="h-6 w-12 bg-slate-800" /></TableCell>
+                    <TableCell><Skeleton className="h-6 w-16 bg-slate-800" /></TableCell>
+                    <TableCell><Skeleton className="h-6 w-24 bg-slate-800" /></TableCell>
+                    <TableCell className="text-right"><Skeleton className="h-8 w-16 ml-auto bg-slate-800" /></TableCell>
                   </TableRow>
                 ))
               ) : filteredUsers.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="h-32 text-center text-muted-foreground text-xs">
+                <TableRow className="border-slate-800/60">
+                  <TableCell colSpan={6} className="h-32 text-center text-slate-400 text-xs">
                     No users matching filters.
                   </TableCell>
                 </TableRow>
@@ -236,39 +239,39 @@ export function AdminUsers() {
                 filteredUsers.map((user) => {
                   const userStatus = user.status || (user.banned ? "Blocked" : "Active");
                   return (
-                    <TableRow key={user.uid}>
+                    <TableRow key={user.uid} className="border-slate-800/60 hover:bg-slate-800/40 transition-colors">
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center font-medium text-primary text-xs uppercase">
+                          <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-lime-400 text-xs uppercase shadow-sm">
                             {user.email?.charAt(0) || user.displayName?.charAt(0) || "U"}
                           </div>
                           <div>
-                            <div className="font-medium text-xs">{user.displayName || "No Name"}</div>
-                            <div className="text-[10px] text-muted-foreground">{user.email || "No Email"}</div>
+                            <div className="font-semibold text-xs text-slate-100">{user.displayName || "No Name"}</div>
+                            <div className="text-[11px] font-mono text-slate-400">{user.email || "No Email"}</div>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={user.plan === "pro" ? "default" : "secondary"} className="uppercase text-[9px] px-1.5 py-0.5">
+                        <Badge variant="secondary" className="uppercase text-[9px] font-mono px-2 py-0.5 bg-slate-800 text-slate-300 border border-slate-700">
                           {user.plan}
                         </Badge>
                       </TableCell>
                       <TableCell className="font-mono text-xs">
-                        <span className="font-medium">{user.leadsUsed || 0}</span>
-                        <span className="text-muted-foreground/60 ml-0.5">/ {user.leadLimit || 15}</span>
+                        <span className="font-bold text-lime-400">{user.leadsUsed || 0}</span>
+                        <span className="text-slate-500 ml-1">/ {user.leadLimit || 15}</span>
                       </TableCell>
                       <TableCell>
                         <Badge 
-                          variant={userStatus === "Active" ? "outline" : "destructive"} 
-                          className={`text-[9px] uppercase px-1.5 py-0.5 ${
-                            userStatus === "Active" ? "border-green-500/50 text-green-600 bg-green-500/5" :
-                            userStatus === "Suspended" ? "border-amber-500/50 text-amber-600 bg-amber-500/5" : ""
+                          variant="outline"
+                          className={`text-[9px] uppercase font-bold px-2 py-0.5 rounded-md ${
+                            userStatus === "Active" ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" :
+                            userStatus === "Suspended" ? "border-amber-500/30 text-amber-400 bg-amber-500/10" : "border-rose-500/30 text-rose-400 bg-rose-500/10"
                           }`}
                         >
                           {userStatus}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-xs text-muted-foreground">
+                      <TableCell className="text-xs font-mono text-slate-400">
                         {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-"}
                       </TableCell>
                       <TableCell className="text-right">
@@ -276,9 +279,9 @@ export function AdminUsers() {
                           variant="outline" 
                           size="xs" 
                           onClick={() => setSelectedUser(user)}
-                          className="h-7 text-[11px] px-2.5"
+                          className="h-7 text-[11px] px-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700 rounded-lg transition-all"
                         >
-                          <Edit className="w-3 h-3 mr-1" /> Profile
+                          <Edit className="w-3 h-3 mr-1 text-lime-400" /> Profile
                         </Button>
                       </TableCell>
                     </TableRow>

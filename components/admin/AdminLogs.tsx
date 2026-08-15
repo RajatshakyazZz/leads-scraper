@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, ScrollText } from "lucide-react";
 
 function getRelativeTime(dateString: string) {
   const date = new Date(dateString);
@@ -54,68 +54,74 @@ export function AdminLogs() {
 
   const getActionBadge = (action: string) => {
     if (action.includes("delete") || action.includes("ban") || action.includes("reset")) {
-      return <Badge variant="destructive" className="uppercase text-[10px]">{action.replace("_", " ")}</Badge>;
+      return <Badge variant="outline" className="uppercase text-[9px] font-mono px-2 py-0.5 border-rose-500/40 text-rose-400 bg-rose-500/10">{action.replace("_", " ")}</Badge>;
     }
     if (action.includes("settings")) {
-      return <Badge variant="secondary" className="uppercase text-[10px]">{action.replace("_", " ")}</Badge>;
+      return <Badge variant="outline" className="uppercase text-[9px] font-mono px-2 py-0.5 border-purple-500/40 text-purple-400 bg-purple-500/10">{action.replace("_", " ")}</Badge>;
     }
-    return <Badge variant="outline" className="uppercase text-[10px] border-primary/50 text-primary bg-primary/10">{action.replace("_", " ")}</Badge>;
+    return <Badge variant="outline" className="uppercase text-[9px] font-mono px-2 py-0.5 border-lime-500/40 text-lime-400 bg-lime-500/10">{action.replace("_", " ")}</Badge>;
   };
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-12">
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="font-display text-3xl">Audit Logs</h1>
-          <p className="text-muted-foreground mt-1">Record of all administrative actions taken.</p>
+          <div className="flex items-center gap-2 text-xs font-semibold text-lime-400 uppercase tracking-widest mb-1">
+            <ScrollText className="w-3.5 h-3.5" /> Security & Admin Audit Trail
+          </div>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">Audit Logs</h1>
+          <p className="text-slate-400 text-sm mt-1">Immutable record of all administrative configuration and user quota modifications.</p>
         </div>
-        <Button variant="outline" size="sm" onClick={loadLogs} disabled={loading}>
-          <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} />
-          Refresh
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={loadLogs} 
+          disabled={loading}
+          className="bg-slate-900 border-slate-800 text-slate-200 hover:bg-slate-800 rounded-xl"
+        >
+          <RefreshCw className={`w-3.5 h-3.5 mr-2 text-lime-400 ${loading ? "animate-spin" : ""}`} />
+          Refresh Logs
         </Button>
       </div>
 
-      <Card>
+      <Card className="bg-slate-900/80 border-slate-800/90 shadow-xl backdrop-blur-xl rounded-2xl overflow-hidden">
         <CardContent className="p-0">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-32">Time</TableHead>
-                <TableHead>Action</TableHead>
-                <TableHead>Target</TableHead>
-                <TableHead>Details</TableHead>
+            <TableHeader className="bg-slate-950/60 border-b border-slate-800/80">
+              <TableRow className="border-slate-800/80 hover:bg-transparent">
+                <TableHead className="w-32 text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3">Time</TableHead>
+                <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3">Action</TableHead>
+                <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3">Target</TableHead>
+                <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3">Details</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading && logs.length === 0 ? (
-                [...Array(10)].map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell><Skeleton className="h-6 w-20" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-32" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-48" /></TableCell>
+                [...Array(6)].map((_, i) => (
+                  <TableRow key={i} className="border-slate-800/60">
+                    <TableCell><Skeleton className="h-6 w-20 bg-slate-800" /></TableCell>
+                    <TableCell><Skeleton className="h-6 w-24 bg-slate-800" /></TableCell>
+                    <TableCell><Skeleton className="h-6 w-32 bg-slate-800" /></TableCell>
+                    <TableCell><Skeleton className="h-6 w-48 bg-slate-800" /></TableCell>
                   </TableRow>
                 ))
               ) : logs.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={4} className="h-32 text-center text-muted-foreground">
-                    No logs found.
+                <TableRow className="border-slate-800/60">
+                  <TableCell colSpan={4} className="text-center py-12 text-slate-400 text-xs italic">
+                    No admin audit log entries recorded yet.
                   </TableCell>
                 </TableRow>
               ) : (
-                logs.map((log) => (
-                  <TableRow key={log.id}>
-                    <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
-                      {getRelativeTime(log.createdAt)}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                logs.map((log: any) => (
+                  <TableRow key={log.id} className="border-slate-800/60 hover:bg-slate-800/40 transition-colors">
+                    <TableCell className="font-mono text-xs text-slate-400 whitespace-nowrap">
+                      {log.timestamp ? getRelativeTime(log.timestamp) : "Recently"}
                     </TableCell>
-                    <TableCell>
-                      {getActionBadge(log.action)}
-                    </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">
-                      {log.target}
-                    </TableCell>
-                    <TableCell className="text-sm truncate max-w-xs">
-                      {log.details || "-"}
+                    <TableCell>{getActionBadge(log.action || "system_event")}</TableCell>
+                    <TableCell className="font-mono text-xs text-slate-200 font-semibold">{log.target || "Global"}</TableCell>
+                    <TableCell className="text-xs text-slate-300 font-mono max-w-xs truncate">
+                      {typeof log.details === "object" ? JSON.stringify(log.details) : String(log.details || "-")}
                     </TableCell>
                   </TableRow>
                 ))

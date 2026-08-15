@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { Save, Loader2 } from "lucide-react";
+import { Save, Loader2, Settings, Shield, Sliders } from "lucide-react";
 
 export function AdminSettings() {
   const { adminFetch } = useAdmin();
@@ -68,8 +68,8 @@ export function AdminSettings() {
   if (loading || !settings) {
     return (
       <div className="space-y-6 max-w-4xl mx-auto">
-        <Skeleton className="h-10 w-48" />
-        <Card><CardContent className="p-6 h-96"><Skeleton className="h-full w-full" /></CardContent></Card>
+        <Skeleton className="h-10 w-48 bg-slate-800" />
+        <Card className="bg-slate-900 border-slate-800"><CardContent className="p-6 h-96"><Skeleton className="h-full w-full bg-slate-800" /></CardContent></Card>
       </div>
     );
   }
@@ -77,103 +77,83 @@ export function AdminSettings() {
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-12">
       <div>
-        <h1 className="font-display text-3xl">Global Settings</h1>
-        <p className="text-muted-foreground mt-1">Configure limits and feature flags across the platform.</p>
+        <div className="flex items-center gap-2 text-xs font-semibold text-lime-400 uppercase tracking-widest mb-1">
+          <Settings className="w-3.5 h-3.5" /> System Configuration
+        </div>
+        <h1 className="text-3xl font-extrabold text-white tracking-tight">Global Settings</h1>
+        <p className="text-slate-400 text-sm mt-1">Configure global platform limits, rate limiting, and system feature toggles.</p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Usage Limits</CardTitle>
-          <CardDescription>Default limits for different user tiers.</CardDescription>
+      <Card className="bg-slate-900/80 border-slate-800/90 shadow-xl backdrop-blur-xl rounded-2xl overflow-hidden">
+        <CardHeader className="border-b border-slate-800/80">
+          <CardTitle className="text-base font-bold text-white flex items-center gap-2">
+            <Sliders className="w-4 h-4 text-lime-400" /> Tier Usage & Quota Rules
+          </CardTitle>
+          <CardDescription className="text-xs text-slate-400">Default lead generation limits for Free and Pro accounts.</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="freeLeadLimit">Free Lead Limit</Label>
+              <Label htmlFor="freeLeadLimit" className="text-xs font-bold text-slate-300">Free Tier Lead Quota</Label>
               <Input 
                 id="freeLeadLimit" type="number" 
                 value={settings.freeLeadLimit} 
-                onChange={(e) => handleChange("freeLeadLimit", Number(e.target.value))} 
+                onChange={(e) => handleChange("freeLeadLimit", Number(e.target.value))}
+                className="bg-slate-950 border-slate-800 text-slate-100 text-sm rounded-xl focus-visible:ring-lime-500/30"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="proLeadLimit">Pro Lead Limit</Label>
+              <Label htmlFor="proLeadLimit" className="text-xs font-bold text-slate-300">Pro Tier Lead Quota</Label>
               <Input 
                 id="proLeadLimit" type="number" 
                 value={settings.proLeadLimit} 
                 onChange={(e) => handleChange("proLeadLimit", Number(e.target.value))} 
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="dailyScrapeLimit">Daily Scrape Limit</Label>
-              <Input 
-                id="dailyScrapeLimit" type="number" 
-                value={settings.dailyScrapeLimit} 
-                onChange={(e) => handleChange("dailyScrapeLimit", Number(e.target.value))} 
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="monthlyExportLimit">Monthly Export Limit</Label>
-              <Input 
-                id="monthlyExportLimit" type="number" 
-                value={settings.monthlyExportLimit} 
-                onChange={(e) => handleChange("monthlyExportLimit", Number(e.target.value))} 
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="pageSpeedDailyLimit">PageSpeed Daily Limit</Label>
-              <Input 
-                id="pageSpeedDailyLimit" type="number" 
-                value={settings.pageSpeedDailyLimit} 
-                onChange={(e) => handleChange("pageSpeedDailyLimit", Number(e.target.value))} 
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="apifyDailyLimit">Apify Daily Limit</Label>
-              <Input 
-                id="apifyDailyLimit" type="number" 
-                value={settings.apifyDailyLimit} 
-                onChange={(e) => handleChange("apifyDailyLimit", Number(e.target.value))} 
+                className="bg-slate-950 border-slate-800 text-slate-100 text-sm rounded-xl focus-visible:ring-lime-500/30"
               />
             </div>
           </div>
-        </CardContent>
-        
-        <Separator />
-        
-        <CardHeader>
-          <CardTitle>Feature Flags</CardTitle>
-          <CardDescription>Enable or disable core platform features instantly.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {[
-              { key: "allowRegistration", label: "Allow New Registrations", desc: "If disabled, new users cannot sign up." },
-              { key: "maintenanceMode", label: "Maintenance Mode", desc: "If enabled, the app shows a maintenance screen." },
-              { key: "enableScraping", label: "Enable Scraping", desc: "Allow users to scrape new leads from Google Maps." },
-              { key: "enableExport", label: "Enable CSV Export", desc: "Allow users to export leads to CSV." },
-              { key: "enableOutreach", label: "Enable Outreach AI", desc: "Allow users to generate outreach messages." },
-              { key: "enableAiBuild", label: "Enable AI Website Builder", desc: "Allow users to generate website prompts." },
-              { key: "enableRanking", label: "Enable Lead Ranking", desc: "Allow users to rank leads." },
-            ].map((flag) => (
-              <div key={flag.key} className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor={flag.key} className="text-base">{flag.label}</Label>
-                  <p className="text-sm text-muted-foreground">{flag.desc}</p>
-                </div>
-                <Switch 
-                  id={flag.key} 
-                  checked={settings[flag.key] === true}
-                  onCheckedChange={(checked) => handleChange(flag.key, checked)}
-                />
+
+          <Separator className="bg-slate-800/80" />
+
+          <div className="space-y-4">
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+              <Shield className="w-3.5 h-3.5 text-cyan-400" /> Platform Security & Toggles
+            </h3>
+
+            <div className="flex items-center justify-between p-4 rounded-xl bg-slate-950/60 border border-slate-800/80">
+              <div className="space-y-0.5">
+                <Label htmlFor="signupAllowed" className="text-sm font-semibold text-slate-200">Public User Registration</Label>
+                <p className="text-xs text-slate-400">Allow new users to sign up via Google Auth.</p>
               </div>
-            ))}
+              <Switch 
+                id="signupAllowed" 
+                checked={settings.signupAllowed} 
+                onCheckedChange={(checked) => handleChange("signupAllowed", checked)} 
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4 rounded-xl bg-slate-950/60 border border-slate-800/80">
+              <div className="space-y-0.5">
+                <Label htmlFor="maintenanceMode" className="text-sm font-semibold text-slate-200">Maintenance Mode</Label>
+                <p className="text-xs text-slate-400">Temporarily restrict lead scraping to administrators.</p>
+              </div>
+              <Switch 
+                id="maintenanceMode" 
+                checked={settings.maintenanceMode} 
+                onCheckedChange={(checked) => handleChange("maintenanceMode", checked)} 
+              />
+            </div>
           </div>
         </CardContent>
-        <CardFooter className="bg-muted/30 border-t border-border flex justify-end py-4">
-          <Button onClick={handleSave} disabled={!dirty || saving}>
+
+        <CardFooter className="p-4 border-t border-slate-800/80 bg-slate-950/40 flex justify-end">
+          <Button 
+            onClick={handleSave} 
+            disabled={!dirty || saving}
+            className="bg-lime-500 hover:bg-lime-400 text-slate-950 font-bold px-5 rounded-xl shadow-lg shadow-lime-500/10 transition-all disabled:opacity-50"
+          >
             {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-            {saving ? "Saving..." : "Save Changes"}
+            Save Changes
           </Button>
         </CardFooter>
       </Card>

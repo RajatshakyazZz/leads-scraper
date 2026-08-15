@@ -14,7 +14,6 @@ import {
   RefreshCw,
   Building2,
   Calendar,
-  Layers,
   Database
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -98,93 +97,102 @@ export function AdminPreviews() {
   const totalViews = previews.reduce((acc, p) => acc + (p.viewsCount || 0), 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-6xl mx-auto pb-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <Globe className="h-6 w-6 text-sky-600" /> Published Client Previews
+          <div className="flex items-center gap-2 text-xs font-semibold text-lime-400 uppercase tracking-widest mb-1">
+            <Globe className="w-3.5 h-3.5" /> Client Landing Page Deployments
+          </div>
+          <h2 className="text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
+            Published Previews
           </h2>
-          <p className="text-xs text-slate-500 mt-1 font-sans">
-            Manage live website preview links stored in Cloud Firestore. Delete inactive links to free up database load.
+          <p className="text-slate-400 text-sm mt-1">
+            Manage live website preview links stored in Cloud Firestore. Delete inactive links to optimize storage.
           </p>
         </div>
 
-        <Button onClick={fetchPreviews} disabled={loading} size="sm" variant="outline" className="rounded-xl h-9 border-sky-200 text-sky-700 font-semibold hover:bg-sky-50">
-          <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} /> Refresh List
+        <Button
+          onClick={fetchPreviews}
+          disabled={loading}
+          size="sm"
+          variant="outline"
+          className="bg-slate-900 border-slate-800 text-slate-200 hover:bg-slate-800 rounded-xl"
+        >
+          <RefreshCw className={`h-3.5 w-3.5 mr-1.5 text-lime-400 ${loading ? "animate-spin" : ""}`} /> Refresh List
         </Button>
       </div>
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="rounded-2xl border-sky-100 bg-white shadow-sm">
-          <CardHeader className="py-3 px-4 flex flex-row items-center justify-between">
-            <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Saved Previews</CardTitle>
-            <Database className="h-4 w-4 text-sky-600" />
+        <Card className="bg-slate-900/80 border-slate-800/90 shadow-xl backdrop-blur-xl rounded-2xl">
+          <CardHeader className="py-3.5 px-5 flex flex-row items-center justify-between border-b border-slate-800/60">
+            <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Saved Previews</CardTitle>
+            <Database className="h-4 w-4 text-lime-400" />
           </CardHeader>
-          <CardContent className="py-2 px-4">
-            <div className="text-2xl font-extrabold text-slate-900">{previews.length}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Active Firestore documents</p>
+          <CardContent className="p-5">
+            <div className="text-3xl font-black text-white">{previews.length}</div>
+            <p className="text-xs text-slate-400 mt-1">Active Firestore documents</p>
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-sky-100 bg-white shadow-sm">
-          <CardHeader className="py-3 px-4 flex flex-row items-center justify-between">
-            <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Prospect Views</CardTitle>
-            <Eye className="h-4 w-4 text-emerald-600" />
+        <Card className="bg-slate-900/80 border-slate-800/90 shadow-xl backdrop-blur-xl rounded-2xl">
+          <CardHeader className="py-3.5 px-5 flex flex-row items-center justify-between border-b border-slate-800/60">
+            <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Prospect Views</CardTitle>
+            <Eye className="h-4 w-4 text-cyan-400" />
           </CardHeader>
-          <CardContent className="py-2 px-4">
-            <div className="text-2xl font-extrabold text-slate-900">{totalViews}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Client link opens recorded</p>
+          <CardContent className="p-5">
+            <div className="text-3xl font-black text-white">{totalViews}</div>
+            <p className="text-xs text-slate-400 mt-1">Client link opens recorded</p>
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-sky-100 bg-white shadow-sm">
-          <CardHeader className="py-3 px-4 flex flex-row items-center justify-between">
-            <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">Database Status</CardTitle>
-            <Sparkles className="h-4 w-4 text-amber-500" />
+        <Card className="bg-slate-900/80 border-slate-800/90 shadow-xl backdrop-blur-xl rounded-2xl">
+          <CardHeader className="py-3.5 px-5 flex flex-row items-center justify-between border-b border-slate-800/60">
+            <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Database Health</CardTitle>
+            <Sparkles className="h-4 w-4 text-emerald-400" />
           </CardHeader>
-          <CardContent className="py-2 px-4">
-            <div className="text-2xl font-extrabold text-emerald-600 flex items-center gap-1.5">
+          <CardContent className="p-5">
+            <div className="text-3xl font-black text-emerald-400 flex items-center gap-1.5">
               <span>Healthy</span>
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Cloud Firestore collection: published_previews</p>
+            <p className="text-xs text-slate-400 mt-1">Collection: published_previews</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Search & Table List */}
-      <Card className="rounded-2xl border-sky-100 bg-white shadow-sm overflow-hidden">
-        <CardHeader className="py-4 px-5 border-b border-sky-100 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <CardTitle className="text-base font-bold text-slate-900">
+      <Card className="bg-slate-900/80 border-slate-800/90 shadow-xl backdrop-blur-xl rounded-2xl overflow-hidden">
+        <CardHeader className="py-4 px-5 border-b border-slate-800/80 bg-slate-950/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <CardTitle className="text-base font-bold text-white">
             Saved Previews List ({filteredPreviews.length})
           </CardTitle>
           <div className="relative max-w-xs w-full">
-            <Search className="h-4 w-4 absolute left-3 top-2.5 text-slate-400" />
+            <Search className="h-4 w-4 absolute left-3.5 top-3 text-slate-400" />
             <Input
               type="text"
               placeholder="Search by business name, city..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 h-9 rounded-xl border-sky-200 text-xs focus:ring-1 focus:ring-sky-500"
+              className="pl-9.5 h-10 rounded-xl bg-slate-950 border-slate-800 text-slate-100 placeholder:text-slate-500 text-xs focus-visible:ring-lime-500/30"
             />
           </div>
         </CardHeader>
 
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-12 text-center text-slate-500">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-sky-600 mb-2" />
+            <div className="p-12 text-center text-slate-400">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-lime-400 mb-2" />
               <p className="text-xs font-medium">Loading published previews from Firestore...</p>
             </div>
           ) : filteredPreviews.length === 0 ? (
-            <div className="p-12 text-center text-slate-500">
-              <Globe className="h-10 w-10 text-slate-300 mx-auto mb-2" />
-              <p className="text-sm font-bold text-slate-700">No published previews found</p>
-              <p className="text-xs text-slate-400 mt-1">Generate a client link in Phase 4 to see previews listed here.</p>
+            <div className="p-12 text-center text-slate-400">
+              <Globe className="h-10 w-10 text-slate-600 mx-auto mb-2" />
+              <p className="text-sm font-bold text-slate-200">No published previews found</p>
+              <p className="text-xs text-slate-500 mt-1">Generate a client link in Phase 4 to see previews listed here.</p>
             </div>
           ) : (
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-slate-800/60">
               {filteredPreviews.map((preview) => {
                 const leadName = preview.lead?.name || "Business Preview";
                 const city = preview.lead?.city || "Unknown";
@@ -193,72 +201,60 @@ export function AdminPreviews() {
                 const createdDate = preview.createdAt ? new Date(preview.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "N/A";
 
                 return (
-                  <div key={preview.id} className="p-4 sm:px-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/80 transition-colors">
+                  <div key={preview.id} className="p-4 sm:px-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-800/40 transition-colors">
                     <div className="flex items-start gap-3 overflow-hidden">
-                      <div className="h-10 w-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold shrink-0 border border-amber-200 mt-0.5">
+                      <div className="h-10 w-10 rounded-xl bg-slate-800 text-lime-400 flex items-center justify-center font-bold shrink-0 border border-slate-700 mt-0.5 shadow-sm">
                         <Building2 className="h-5 w-5" />
                       </div>
-                      <div className="truncate space-y-1">
+                      <div className="space-y-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h4 className="font-bold text-sm text-slate-900 truncate">{leadName}</h4>
-                          <Badge variant="outline" className="text-[10px] font-bold border-amber-300 bg-amber-50 text-amber-800 rounded-md py-0">
+                          <h4 className="font-bold text-sm text-slate-100 truncate">{leadName}</h4>
+                          <Badge variant="outline" className="text-[10px] bg-slate-800 text-slate-300 border-slate-700 font-mono">
                             {category}
                           </Badge>
-                          <Badge variant="outline" className="text-[10px] font-semibold border-slate-200 text-slate-600 rounded-md py-0">
+                          <Badge variant="outline" className="text-[10px] bg-slate-800 text-lime-400 border-lime-500/30 font-mono">
                             {city}
                           </Badge>
                         </div>
-
-                        <div className="flex items-center gap-3 text-xs text-slate-500 font-mono truncate">
-                          <span>ID: {preview.id}</span>
-                          <span>•</span>
-                          <span className="text-emerald-700 font-semibold flex items-center gap-1">
-                            <Eye className="h-3 w-3" /> {preview.viewsCount || 0} views
+                        <div className="flex items-center gap-4 text-xs text-slate-400 flex-wrap">
+                          <span className="flex items-center gap-1 font-mono">
+                            <Calendar className="h-3.5 w-3.5 text-slate-500" /> {createdDate}
                           </span>
-                          <span>•</span>
-                          <span>Created: {createdDate}</span>
+                          <span className="flex items-center gap-1 font-mono text-cyan-400">
+                            <Eye className="h-3.5 w-3.5" /> {preview.viewsCount || 0} views
+                          </span>
+                          <span className="font-mono text-[11px] text-slate-500 truncate max-w-[200px]">ID: {preview.id}</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                    <div className="flex items-center gap-2 shrink-0">
                       <Button
-                        size="sm"
+                        size="xs"
                         variant="outline"
                         onClick={() => {
                           navigator.clipboard.writeText(shareUrl);
-                          toast.success("Client link copied to clipboard!");
+                          toast.success("Preview link copied!");
                         }}
-                        className="h-8 rounded-xl border-sky-200 text-sky-700 text-xs font-semibold hover:bg-sky-50"
-                        title="Copy Link"
+                        className="h-8 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700 rounded-lg"
                       >
-                        <Copy className="h-3.5 w-3.5 mr-1" /> Copy Link
+                        <Copy className="h-3.5 w-3.5 mr-1 text-slate-400" /> Copy
                       </Button>
 
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => window.open(`/preview/${preview.id}`, "_blank")}
-                        className="h-8 rounded-xl border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-100"
-                        title="View Preview"
-                      >
-                        <ExternalLink className="h-3.5 w-3.5 mr-1 text-slate-500" /> View
-                      </Button>
+                      <a href={`/preview/${preview.id}`} target="_blank" rel="noopener noreferrer">
+                        <Button size="xs" variant="outline" className="h-8 text-xs bg-slate-800 hover:bg-slate-700 text-lime-400 border-slate-700 rounded-lg">
+                          <ExternalLink className="h-3.5 w-3.5 mr-1" /> Open
+                        </Button>
+                      </a>
 
                       <Button
-                        size="sm"
+                        size="xs"
                         variant="ghost"
-                        onClick={() => handleDelete(preview.id, leadName)}
                         disabled={deletingId === preview.id}
-                        className="h-8 rounded-xl text-rose-600 hover:text-rose-700 hover:bg-rose-50 text-xs font-semibold"
-                        title="Delete from Database"
+                        onClick={() => handleDelete(preview.id, preview.lead?.name)}
+                        className="h-8 text-xs text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg"
                       >
-                        {deletingId === preview.id ? (
-                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        ) : (
-                          <Trash2 className="h-3.5 w-3.5 mr-1" />
-                        )}
-                        Delete
+                        {deletingId === preview.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
                       </Button>
                     </div>
                   </div>
