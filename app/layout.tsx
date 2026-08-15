@@ -19,6 +19,10 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://app.dizopulse.in"),
+  alternates: {
+    canonical: "./",
+  },
   title: "ClientForge · Leads ➔ Conversion",
   description: "ClientForge — High-converting local business scraping, auditing, ranking, website building, and cold outreach engine.",
   icons: {
