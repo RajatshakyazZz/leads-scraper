@@ -48,7 +48,7 @@ export function Phase1Scrape({
   onRequireAuth?: () => void;
 }) {
   const { getIdToken, quota, updateQuota, user } = useAuth();
-  const [input, setInput] = useState<ScrapeInput>({ niche: "Dentist", city: "Bandra, Mumbai", count: 12 });
+  const [input, setInput] = useState<ScrapeInput>({ niche: "Restaurants", city: "Bandra, Mumbai", count: 12 });
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
